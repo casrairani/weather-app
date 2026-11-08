@@ -599,7 +599,16 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
-.nc-checks { position: relative; border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.04); max-height: 300px }
+.nc-checks { position: relative; border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.04) }
+.nc-checks.open .ncc-grid { filter: none; user-select: text; pointer-events: auto; grid-template-columns: 1fr; max-height: 420px; overflow: auto }
+.ncc-head { display: grid; grid-template-columns: 1fr 150px 150px; gap: 10px; padding: 12px 16px 6px; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: #f2c14e }
+.ncc-head .ncc-hh:nth-child(2) { color: #ff3b4e } .ncc-head .ncc-hh:nth-child(3) { color: #5b82ff }
+.nc-checks.open .ncc-row { grid-template-columns: 1fr 150px 150px }
+.ncc-cat { padding: 12px 0 4px; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.45) }
+.ncc-v { display: flex; gap: 6px; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis } .ncc-v.w { color: #fff; font-weight: 700 }
+.ncc-v .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #f2c14e } .ncc-v .dot.good { background: #22c55e } .ncc-v .dot.bad { background: #ef4444 }
+.nc-note { margin: 0; text-align: center; font-size: 13px; color: rgba(255,255,255,.6) }
+@media (max-width: 640px) { .ncc-head, .nc-checks.open .ncc-row { grid-template-columns: 1fr 88px 88px; gap: 6px } .ncc-row { font-size: 12px } }
 .ncc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; padding: 14px 16px; filter: blur(5px); user-select: none; pointer-events: none }
 .ncc-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 13px }
 .ncc-l { color: rgba(255,255,255,.85) } .ncc-v { color: rgba(255,255,255,.6); font-family: var(--f-mono) }
@@ -612,7 +621,7 @@ footer a { color: inherit }
 .hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
 .hero h1 .rot-in.enter { transform: translateY(100%); opacity: 0 } .hero h1 .rot-in.leave { transform: translateY(-100%); opacity: 0 }
 .hero h1 .rot-in small { font-size: .42em; color: var(--muted); vertical-align: middle; margin: 0 .1em }
-.test-wrap { padding-block: 0 24px } #test { padding-top: 0 } #night { padding-bottom: 0 }
+.test-wrap { padding-block: 0 28px } #test { padding-top: 0 } #night { padding-top: 0 }
 
 .tonight { display: inline-grid; justify-items: center; gap: 6px; margin: 22px auto 4px; padding: 16px 26px; border-radius: 24px; background: #0b0d13; color: #fff; text-decoration: none; box-shadow: 0 20px 60px rgba(11,13,19,.25); outline: 2px solid #f2c14e; outline-offset: -2px }
 .tonight .tn-tag { font: 700 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #f2c14e }
@@ -681,23 +690,6 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
     <p class="lede">__LEDE__</p>
   </div>
 
-  <section id="night" hidden><div class="wrap">
-    <div class="night-card">
-      <div class="nc-head"><span class="nc-tag">\u{1F319} Rivalry of the Night result</span><span class="nc-votes" id="ncVotes"></span></div>
-      <div class="nc-tape">
-        <div class="nc-f a"><span class="nc-host" id="ncA"></span><span class="nc-score" id="ncSA"></span><span class="nc-belt" id="ncBA"></span></div>
-        <div class="nc-vs">VS</div>
-        <div class="nc-f b"><span class="nc-host" id="ncB"></span><span class="nc-score" id="ncSB"></span><span class="nc-belt" id="ncBB"></span></div>
-      </div>
-      <div class="nc-rounds" id="ncRounds"></div>
-      <div class="nc-checks" id="ncChecks">
-        <div class="ncc-grid" id="ncGrid" aria-hidden="true"></div>
-        <div class="ncc-lock"><span class="ncc-ico">\u{1F512}</span><b id="ncLockT">See all 31 checks</b><span>Every punch, side by side, plus the fix list.</span><a class="btn fight" id="ncFull" href="#">Sign in to see all 31</a></div>
-      </div>
-      <div class="nc-cta"><a class="btn fight" id="ncMine" href="#top">Can your site beat them?</a></div>
-    </div>
-  </div></section>
-
   <section id="test"><div class="wrap hero test-wrap">
     <p class="test-yours" id="testYours">\u26A1 Now test yours. Your site vs your rival.</p>
     <form class="ring" id="duelForm" novalidate>
@@ -710,6 +702,24 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
     <div class="rival-list" id="rivalList" hidden></div>
     <div class="err" id="err" hidden></div>
     <div class="proof"><span>31 ranking signals</span><span>Real page data, not estimates</span><span>Google + AI-ready checks</span></div>
+  </div></section>
+
+  <section id="night" hidden><div class="wrap">
+    <div class="night-card">
+      <div class="nc-head"><span class="nc-tag">\u{1F319} Rivalry of the Night \xB7 free</span><span class="nc-votes" id="ncVotes"></span></div>
+      <div class="nc-tape">
+        <div class="nc-f a"><span class="nc-host" id="ncA"></span><span class="nc-score" id="ncSA"></span><span class="nc-belt" id="ncBA"></span></div>
+        <div class="nc-vs">VS</div>
+        <div class="nc-f b"><span class="nc-host" id="ncB"></span><span class="nc-score" id="ncSB"></span><span class="nc-belt" id="ncBB"></span></div>
+      </div>
+      <div class="nc-rounds" id="ncRounds"></div>
+      <div class="nc-checks open" id="ncChecks">
+        <div class="ncc-head"><span id="ncLockT">All 31 checks</span><span class="ncc-hh" id="ncHA"></span><span class="ncc-hh" id="ncHB"></span></div>
+        <div class="ncc-grid" id="ncGrid"></div>
+      </div>
+      <div class="nc-cta"><a class="btn fight" id="ncMine" href="#top">Can your site beat them?</a><a class="btn ghost" id="ncFull" href="#">Full fight + fix list</a></div>
+      <p class="nc-note">\u{1F513} Tonight's rivalry is free. Every other fight needs a free account.</p>
+    </div>
   </div></section>
 
   <section id="maincard"><div class="wrap">
@@ -1154,10 +1164,14 @@ function renderNight() {
   $("#ncMine").textContent = \`Can your site beat \${brandName(champ)}?\`;
   $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = ""; $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); });
   const full = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
-  $("#ncFull").href = full; $("#ncLockT").textContent = \`See all \${NIGHT.checks || 31} checks\`;
-  const fake = ["\u2713 0.4s", "\u2717 Missing", "\u2713 1,240 words", "\u2713 Yes", "\u26A0 3 found", "\u2713 200", "\u2717 Blocked", "\u2713 64 chars"];
-  $("#ncGrid").innerHTML = (NIGHT.labels || []).map(([cat, label], k) => \`<div class="ncc-row"><span class="ncc-l">\${esc(label)}</span><span class="ncc-v">\${fake[k % fake.length]}</span><span class="ncc-v">\${fake[(k + 3) % fake.length]}</span></div>\`).join("");
-  $("#ncFull").addEventListener("click", e => { e.preventDefault(); withAccount(() => { location.href = full; }, \`See all \${NIGHT.checks || 31} checks\`, "Free account. Every fight result, 1 fight a week, every tool.", full); });
+  $("#ncFull").href = full;
+  const rows = NIGHT.rows || []; $("#ncLockT").textContent = \`All \${rows.length || 31} checks\`;
+  $("#ncHA").textContent = A; $("#ncHB").textContent = B;
+  let last = "";
+  $("#ncGrid").innerHTML = rows.map(([cat, label, av, as, bv, bs, edge]) => {
+    const head = cat !== last ? \`<div class="ncc-cat">\${esc((CATS.find(c => c[0] === cat) || [, , cat])[2])}</div>\` : ""; last = cat;
+    return head + \`<div class="ncc-row"><span class="ncc-l">\${esc(label)}</span><span class="ncc-v \${edge === "a" ? "w" : ""}"><i class="dot \${as}"></i>\${esc(av)}</span><span class="ncc-v \${edge === "b" ? "w" : ""}"><i class="dot \${bs}"></i>\${esc(bv)}</span></div>\`;
+  }).join("");
   $("#night").hidden = false;
 }
 renderNight();
@@ -1189,7 +1203,7 @@ function headerRivals() {
 headerRivals();
 // Every other result needs an account: tapping a poster opens sign-in first.
 document.addEventListener("click", async e => {
-  const a = e.target.closest("a.poster"); if (!a) return;
+  const a = e.target.closest("a.poster"); if (!a || a.classList.contains("night")) return;
   e.preventDefault(); const href = a.getAttribute("href");
   withAccount(() => { location.href = href; }, "Sign in to see who wins", "Free account. See every fight result, run 1 fight a week, try every tool.", href);
 });
@@ -1232,7 +1246,7 @@ async function fullFight() { // locked pages only carry the names; fetch the res
 async function needUnlock(pick, votes) {
   await meReady;
   if (window.AUTH && AUTH.google) { const g = $("#unlockGoogle"); g.href = "/auth/google?next=" + encodeURIComponent(location.pathname); g.hidden = false; }
-  if (ME) { if (await fullFight()) reveal(pick, votes); return; }
+  if (ME || D.slug === FOTN) { if (await fullFight()) reveal(pick, votes); return; }
   pendingPick = pick; pendingVotes = votes;
   $("#gate").hidden = true; $("#unlock").hidden = false;
   $("#unlockEyebrow").textContent = pick === "a" || pick === "b" ? \`You picked \${D[pick].host}\` : "Result is ready";
@@ -1642,7 +1656,16 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
-.nc-checks { position: relative; border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.04); max-height: 300px }
+.nc-checks { position: relative; border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.04) }
+.nc-checks.open .ncc-grid { filter: none; user-select: text; pointer-events: auto; grid-template-columns: 1fr; max-height: 420px; overflow: auto }
+.ncc-head { display: grid; grid-template-columns: 1fr 150px 150px; gap: 10px; padding: 12px 16px 6px; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: #f2c14e }
+.ncc-head .ncc-hh:nth-child(2) { color: #ff3b4e } .ncc-head .ncc-hh:nth-child(3) { color: #5b82ff }
+.nc-checks.open .ncc-row { grid-template-columns: 1fr 150px 150px }
+.ncc-cat { padding: 12px 0 4px; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.45) }
+.ncc-v { display: flex; gap: 6px; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis } .ncc-v.w { color: #fff; font-weight: 700 }
+.ncc-v .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #f2c14e } .ncc-v .dot.good { background: #22c55e } .ncc-v .dot.bad { background: #ef4444 }
+.nc-note { margin: 0; text-align: center; font-size: 13px; color: rgba(255,255,255,.6) }
+@media (max-width: 640px) { .ncc-head, .nc-checks.open .ncc-row { grid-template-columns: 1fr 88px 88px; gap: 6px } .ncc-row { font-size: 12px } }
 .ncc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; padding: 14px 16px; filter: blur(5px); user-select: none; pointer-events: none }
 .ncc-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 13px }
 .ncc-l { color: rgba(255,255,255,.85) } .ncc-v { color: rgba(255,255,255,.6); font-family: var(--f-mono) }
@@ -1655,7 +1678,7 @@ footer a { color: inherit }
 .hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
 .hero h1 .rot-in.enter { transform: translateY(100%); opacity: 0 } .hero h1 .rot-in.leave { transform: translateY(-100%); opacity: 0 }
 .hero h1 .rot-in small { font-size: .42em; color: var(--muted); vertical-align: middle; margin: 0 .1em }
-.test-wrap { padding-block: 0 24px } #test { padding-top: 0 } #night { padding-bottom: 0 }
+.test-wrap { padding-block: 0 28px } #test { padding-top: 0 } #night { padding-top: 0 }
 
 .tonight { display: inline-grid; justify-items: center; gap: 6px; margin: 22px auto 4px; padding: 16px 26px; border-radius: 24px; background: #0b0d13; color: #fff; text-decoration: none; box-shadow: 0 20px 60px rgba(11,13,19,.25); outline: 2px solid #f2c14e; outline-offset: -2px }
 .tonight .tn-tag { font: 700 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #f2c14e }
@@ -2436,7 +2459,7 @@ async function nightData(env) {
   let f = await storedFight(env, FOTN);
   if (!f) return null;
   let d = f.d;
-  return { slug: d.slug, winner: d.winner, votes_a: d.votes_a, votes_b: d.votes_b, a: { host: d.a.host, score: d.a.score, scores: d.a.scores }, b: { host: d.b.host, score: d.b.score, scores: d.b.scores }, checks: (d.rows || []).length, labels: (d.rows || []).map((r) => [r.cat, r.label]) };
+  return { slug: d.slug, winner: d.winner, votes_a: d.votes_a, votes_b: d.votes_b, a: { host: d.a.host, score: d.a.score, scores: d.a.scores }, b: { host: d.b.host, score: d.b.score, scores: d.b.scores }, checks: (d.rows || []).length, rows: (d.rows || []).map((r) => [r.cat, r.label, r.a ? r.a.value : "", r.a ? r.a.status : "", r.b ? r.b.value : "", r.b ? r.b.status : "", r.edge || ""]) };
 }
 async function refreshFotn(env) {
   if (!(!env.DB || Date.now() - FOTN_AT < 6e5)) {
@@ -2900,7 +2923,7 @@ var worker_default = {
     }
     if (p === "/api/fight") {
       let slug = String(u.searchParams.get("slug") || "").toLowerCase(), m = await member(req, env);
-      if (!m) return NEED_ACCOUNT();
+      if (FOTN || (FOTN_AT = 0), await refreshFotn(env), !m && slug !== FOTN) return NEED_ACCOUNT();
       let f = await storedFight(env, slug);
       return f ? json(withReport(f.d, paid(m)), 200, { "cache-control": "no-store" }) : json({ error: "Fight not found." }, 404);
     }
@@ -3225,7 +3248,7 @@ var worker_default = {
     if (p === "/privacy") return infoPage(env, { path: p, title: "Privacy \xB7 SEO Fights", h1: "Privacy", lede: "What we collect and why.", body: PRIVACY_HTML });
     if (p.startsWith("/fight/")) {
       let slug = decodeURIComponent(p.slice(7)).toLowerCase(), old = await storedFight(env, slug);
-      if (old) return fightPage(env, old.d, `/fight/${encodeURIComponent(slug)}`, !await member(req, env));
+      if (old) return fightPage(env, old.d, `/fight/${encodeURIComponent(slug)}`, slug !== FOTN && !await member(req, env));
       let mm = slug.match(/^(.+\.[a-z]{2,})-vs-(.+\.[a-z]{2,})$/);
       return mm ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: mm[1], b: mm[2], path: p, cache: "no-store" }) : page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: "", b: "", status: 404, cache: "no-store" });
     }
