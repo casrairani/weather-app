@@ -861,7 +861,7 @@ html[data-me] .gen-lock { display: none }
 .ko-v em { font: 600 12px var(--f-body); font-style: normal; width: 76px; flex: none; color: rgba(255,255,255,.5); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
 .ko-v .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; background: #f2c14e } .ko-v .dot.good { background: #22c55e } .ko-v .dot.bad { background: #ef4444 }
 .ko p { margin: 4px 0 0; font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.65) }
-.bc-checks { display: grid; gap: 0; border-radius: 14px; background: rgba(255,255,255,.04); padding: 4px 14px 8px }
+.bc-checks { display: grid; color: #fff; gap: 0; border-radius: 14px; background: rgba(255,255,255,.04); padding: 4px 14px 8px }
 .nacc-head { display: grid; grid-template-columns: 1fr 150px 150px; gap: 10px; padding: 10px 0 4px; font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase } .nacc-head .ra { color: #ff6b79 } .nacc-head .rb { color: #8aa6ff }
 .nacc { background: none; box-shadow: none; border-radius: 0; padding: 0; margin: 0; border-top: 1px solid rgba(255,255,255,.1) } .nacc + .nacc { margin-top: 0 } .nacc:first-of-type { border-top: 0 } .nacc summary::after { content: none } .nacc[open] summary::after { content: none } .nacc-b { padding-bottom: 8px }
 .nacc summary { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 46px; cursor: pointer; list-style: none }
@@ -890,6 +890,21 @@ footer.site-foot .ft-bar { display: flex; flex-wrap: wrap; justify-content: spac
 .ft-legal { display: inline-flex; gap: 8px; align-items: center } .ft-legal i { font-style: normal; opacity: .5 } .ft-legal a { text-decoration: none } .ft-legal a:hover { color: var(--ink) }
 footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 12px; opacity: .8 }
 @media (max-width: 860px) { footer.site-foot .ft-grid { grid-template-columns: 1fr 1fr; gap: 22px 18px } .ft-brand { grid-column: 1 / -1 } }
+
+/* night checks: clearly openable rounds */
+.nacc-cap { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 12px 0 8px } .nacc-cap b { font: 800 20px/1 var(--f-display); text-transform: uppercase } .nacc-cap span { font-size: 13px; color: rgba(255,255,255,.65) }
+.nacc summary { padding: 4px 8px; margin: 4px -8px; border-radius: 12px; transition: background .15s } .nacc summary:hover { background: rgba(255,255,255,.07) }
+.nacc summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px }
+.nacc-open { flex: none; display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--gold); color: var(--gold); font: 700 12px/1 var(--f-body); white-space: nowrap }
+.nacc-open .o2 { display: none } .nacc[open] .nacc-open .o1 { display: none } .nacc[open] .nacc-open .o2 { display: inline } .nacc[open] .nacc-open { background: var(--gold); color: var(--ink) }
+.nacc-t { margin-left: auto }
+@media (max-width: 640px) { .nacc summary { flex-wrap: wrap; row-gap: 6px } .nacc-t { order: 3; width: 100%; margin-left: 26px } .nacc-open { margin-left: auto } }
+.pg-hint b { color: var(--gold); font-weight: 700 }
+.pg.nudge .pg-s { animation: nudge .5s ease 2 } @keyframes nudge { 50% { transform: translateY(-4px); box-shadow: 0 0 0 4px rgba(232,178,28,.55) } }
+.modal .box { padding: 24px; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink) }
+#suFields input { width: 100%; box-sizing: border-box; min-height: 52px }
+#suForm .btn { width: 100%; box-sizing: border-box }
+@media (prefers-reduced-motion: reduce) { .pg.nudge .pg-s { animation: none } }
 </style>
 
 <header class="top"><div class="wrap">
@@ -946,7 +961,7 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 12px; op
         <div class="bc-rounds" id="ncRounds"></div>
       </div>
       <div class="bc-ko"><span class="bc-h">Knockout punches</span><div class="ko-list" id="ncKO"></div></div>
-      <div class="bc-checks" id="ncChecks" hidden></div>
+      <div class="bc-checks" id="ncChecks"></div>
       <div class="bc-foot"><a class="btn fight" id="ncMine" href="#test">Can your site beat them?</a><button type="button" class="bc-all" id="ncAll" aria-expanded="false">Open all 31 checks</button><a class="bc-full" id="ncFull" href="#">Full fight page \u2192</a></div>
     </div>
   </div></section>
@@ -1465,7 +1480,7 @@ function posterHTML(c) {
   return \`<article class="pg\${picked ? " picked" : ""}\${night ? " night" : ""}" data-slug="\${esc(c.slug)}">
     <div class="pg-top"><span class="pg-cat">\${night ? "\u{1F319} Tonight" : esc(c.category || "Featured")}</span><span class="pg-q">Who wins?</span></div>
     <div class="pg-sides"><button type="button" class="pg-s a\${p === "a" ? " mine" : ""}" data-side="a" aria-label="Pick \${esc(A)}" style="--fs:\${fit(A)}px"\${picked ? " disabled" : ""}>\${esc(A)}</button><span class="pg-vs">VS</span><button type="button" class="pg-s b\${p === "b" ? " mine" : ""}" data-side="b" aria-label="Pick \${esc(B)}" style="--fs:\${fit(B)}px"\${picked ? " disabled" : ""}>\${esc(B)}</button></div>
-    <div class="pg-res">\${picked ? splitHTML(c, p) : \`<span class="pg-hint">\${tot ? tot.toLocaleString() + (tot === 1 ? " pick" : " picks") + " so far \xB7 " : ""}Tap your winner</span>\`}</div>
+    <div class="pg-res">\${picked ? splitHTML(c, p) : \`<span class="pg-hint"><b>\u{1F446} Pick a side</b>\${tot ? " \xB7 " + tot.toLocaleString() + (tot === 1 ? " pick" : " picks") + " so far" : ""}</span>\`}</div>
   </article>\`;
 }
 function renderCards(cat) {
@@ -1481,13 +1496,15 @@ $("#cards").addEventListener("click", async e => {
     if (!ME) { e.preventDefault(); withAccount(() => { location.href = go.getAttribute("href"); }, "Sign up free to see if you called it", "Free account, no card. See who really won every big rivalry, plus 1 fight of your own every week.", go.getAttribute("href")); }
     return;
   }
-  const s = e.target.closest(".pg-s"); if (!s) return;
+  const s = e.target.closest(".pg-s");
+  if (!s) { const card = e.target.closest(".pg:not(.picked)"); if (card) { card.classList.remove("nudge"); void card.offsetWidth; card.classList.add("nudge"); toast("Pick a side: tap the red or the blue corner"); } return; }
   const card = s.closest(".pg"), slug = card.dataset.slug, side = s.dataset.side, c = CARDS.find(x => x.slug === slug);
   if (!c || card.classList.contains("picked")) return;
   store.set("pick:" + slug, side);
   c["votes_" + side] = (c["votes_" + side] || 0) + 1;
   card.classList.add("picked", "just"); s.classList.add("mine"); card.querySelectorAll(".pg-s").forEach(x => { x.disabled = true; });
   card.querySelector(".pg-res").innerHTML = splitHTML(c, side);
+  toast(\`Locked in: \${brandName(c[side])} \u{1F94A} Now see who really won\`);
   try {
     const r = await fetch("/api/vote", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ slug, side }) });
     if (r.ok) { const v = await r.json(); if (v.votes_a + v.votes_b >= 1) { c.votes_a = v.votes_a; c.votes_b = v.votes_b; card.querySelector(".pg-res").innerHTML = splitHTML(c, side); } }
@@ -1522,10 +1539,10 @@ function renderNight() {
     <p>\${esc(WHY_L[label] || WHY[cat] || "")}</p></div>\`).join("");
   document.querySelector(".bc-ko").hidden = !ko.length;
   const groups = CATS.map(([k, , rn]) => { const rs = rows.filter(r => r[0] === k); const ta = rs.filter(r => r[6] === "a").length, tb = rs.filter(r => r[6] === "b").length;
-    return rs.length ? \`<details class="nacc"><summary><span class="nacc-n">\${rn}</span><span class="nacc-t"><b class="ra">\${esc(A)} \${ta}</b> \xB7 <b class="rb">\${esc(B)} \${tb}</b></span></summary><div class="nacc-b">\${rs.map(([, label, av, as, bv, bs, edge]) => \`<div class="ncc-row"><span class="ncc-l">\${esc(label)}</span><span class="ncc-v \${edge === "a" ? "w" : ""}"><i class="dot \${as}"></i>\${esc(av)}</span><span class="ncc-v \${edge === "b" ? "w" : ""}"><i class="dot \${bs}"></i>\${esc(bv)}</span></div>\`).join("")}</div></details>\` : ""; }).join("");
-  $("#ncChecks").innerHTML = \`<div class="nacc-head"><span></span><span class="ra">\${esc(A)}</span><span class="rb">\${esc(B)}</span></div>\` + groups;
-  $("#ncAll").textContent = \`Open all \${rows.length || 31} checks\`;
-  $("#ncAll").addEventListener("click", () => { const open = $("#ncChecks").hidden; $("#ncChecks").hidden = !open; $("#ncAll").setAttribute("aria-expanded", String(open)); $("#ncAll").textContent = open ? "Hide the checks" : \`Open all \${rows.length || 31} checks\`; });
+    return rs.length ? \`<details class="nacc"><summary><span class="nacc-n">\${rn}</span><span class="nacc-t"><b class="ra">\${esc(A)} \${ta}</b> \xB7 <b class="rb">\${esc(B)} \${tb}</b></span><span class="nacc-open"><span class="o1">\${rs.length} checks \xB7 Open</span><span class="o2">Close</span></span></summary><div class="nacc-b"><div class="nacc-head"><span></span><span class="ra">\${esc(A)}</span><span class="rb">\${esc(B)}</span></div>\${rs.map(([, label, av, as, bv, bs, edge]) => \`<div class="ncc-row"><span class="ncc-l">\${esc(label)}</span><span class="ncc-v \${edge === "a" ? "w" : ""}"><i class="dot \${as}"></i>\${esc(av)}</span><span class="ncc-v \${edge === "b" ? "w" : ""}"><i class="dot \${bs}"></i>\${esc(bv)}</span></div>\`).join("")}</div></details>\` : ""; }).join("");
+  $("#ncChecks").innerHTML = \`<div class="nacc-cap"><b>All \${rows.length || 31} checks</b><span>Tap a round to see every check</span></div>\` + groups;
+  $("#ncAll").textContent = "Open every round";
+  $("#ncAll").addEventListener("click", () => { const ds = [...document.querySelectorAll("#ncChecks details")], open = ds.some(d => !d.open); ds.forEach(d => { d.open = open; }); $("#ncAll").setAttribute("aria-expanded", String(open)); $("#ncAll").textContent = open ? "Close every round" : "Open every round"; });
   const champ = W ? NIGHT[W].host : NIGHT.b.host;
   $("#ncMine").textContent = \`Can your site beat \${brandName(champ)}?\`;
   $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = (window.ME && (ME.site || store.get("mysite"))) || ""; $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); });
@@ -2368,7 +2385,7 @@ html[data-me] .gen-lock { display: none }
 .ko-v em { font: 600 12px var(--f-body); font-style: normal; width: 76px; flex: none; color: rgba(255,255,255,.5); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
 .ko-v .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; background: #f2c14e } .ko-v .dot.good { background: #22c55e } .ko-v .dot.bad { background: #ef4444 }
 .ko p { margin: 4px 0 0; font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.65) }
-.bc-checks { display: grid; gap: 0; border-radius: 14px; background: rgba(255,255,255,.04); padding: 4px 14px 8px }
+.bc-checks { display: grid; color: #fff; gap: 0; border-radius: 14px; background: rgba(255,255,255,.04); padding: 4px 14px 8px }
 .nacc-head { display: grid; grid-template-columns: 1fr 150px 150px; gap: 10px; padding: 10px 0 4px; font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase } .nacc-head .ra { color: #ff6b79 } .nacc-head .rb { color: #8aa6ff }
 .nacc { background: none; box-shadow: none; border-radius: 0; padding: 0; margin: 0; border-top: 1px solid rgba(255,255,255,.1) } .nacc + .nacc { margin-top: 0 } .nacc:first-of-type { border-top: 0 } .nacc summary::after { content: none } .nacc[open] summary::after { content: none } .nacc-b { padding-bottom: 8px }
 .nacc summary { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 46px; cursor: pointer; list-style: none }
@@ -2397,6 +2414,21 @@ footer.site-foot .ft-bar { display: flex; flex-wrap: wrap; justify-content: spac
 .ft-legal { display: inline-flex; gap: 8px; align-items: center } .ft-legal i { font-style: normal; opacity: .5 } .ft-legal a { text-decoration: none } .ft-legal a:hover { color: var(--ink) }
 footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 12px; opacity: .8 }
 @media (max-width: 860px) { footer.site-foot .ft-grid { grid-template-columns: 1fr 1fr; gap: 22px 18px } .ft-brand { grid-column: 1 / -1 } }
+
+/* night checks: clearly openable rounds */
+.nacc-cap { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 12px 0 8px } .nacc-cap b { font: 800 20px/1 var(--f-display); text-transform: uppercase } .nacc-cap span { font-size: 13px; color: rgba(255,255,255,.65) }
+.nacc summary { padding: 4px 8px; margin: 4px -8px; border-radius: 12px; transition: background .15s } .nacc summary:hover { background: rgba(255,255,255,.07) }
+.nacc summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px }
+.nacc-open { flex: none; display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--gold); color: var(--gold); font: 700 12px/1 var(--f-body); white-space: nowrap }
+.nacc-open .o2 { display: none } .nacc[open] .nacc-open .o1 { display: none } .nacc[open] .nacc-open .o2 { display: inline } .nacc[open] .nacc-open { background: var(--gold); color: var(--ink) }
+.nacc-t { margin-left: auto }
+@media (max-width: 640px) { .nacc summary { flex-wrap: wrap; row-gap: 6px } .nacc-t { order: 3; width: 100%; margin-left: 26px } .nacc-open { margin-left: auto } }
+.pg-hint b { color: var(--gold); font-weight: 700 }
+.pg.nudge .pg-s { animation: nudge .5s ease 2 } @keyframes nudge { 50% { transform: translateY(-4px); box-shadow: 0 0 0 4px rgba(232,178,28,.55) } }
+.modal .box { padding: 24px; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink) }
+#suFields input { width: 100%; box-sizing: border-box; min-height: 52px }
+#suForm .btn { width: 100%; box-sizing: border-box }
+@media (prefers-reduced-motion: reduce) { .pg.nudge .pg-s { animation: none } }
 
 #agOut[hidden] { display: none !important }
 [data-tool] { display: none }
