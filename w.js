@@ -609,7 +609,7 @@ footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap:
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
 footer .fcols b { color: var(--ink); font-size: 14px }
 footer .fcols a { text-decoration: none } footer .fcols a:hover { color: var(--ink) }
-footer .fbrand span { font-size: 13px } footer .xlink { font-weight: 700; color: var(--ink) !important; display: inline-flex; align-items: center; gap: 8px } footer .xlink img { width: 28px; height: 28px; border-radius: 50% }
+footer .fbrand span { font-size: 13px } footer .xlink { color: var(--ink) !important; display: inline-flex; align-items: center; gap: 10px; margin-top: 6px; padding: 8px 14px 8px 8px; border-radius: 999px; background: var(--surface); box-shadow: var(--shadow); justify-self: start } footer .xlink img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #f2c14e } footer .xlink span { display: grid; line-height: 1.25 } footer .xlink b { font-size: 14px } footer .xlink small { font-size: 12px; color: var(--muted) }
 footer .fcopy { margin-top: 24px; font-size: 13px }
 @media (max-width: 760px) { footer .fcols { grid-template-columns: 1fr 1fr } footer .fbrand { grid-column: 1 / -1 } }
 .cards-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px }
@@ -624,7 +624,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 </style>
 
 <header class="top"><div class="wrap">
-  <a class="logo" href="/" aria-label="SEO Fight home"><i></i>SEO Fight</a>
+  <a class="logo" href="/" aria-label="SEO Fights home"><i></i>SEO Fights</a>
   <nav class="links"><a href="/fights">Fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
   <a class="btn sm" href="/#top">Start a fight</a>
 </div></header>
@@ -683,7 +683,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
           <span class="up-tag gold">Champion badge</span>
           <h3 id="upBadgeTitle">Won? Wear the belt</h3>
           <p class="sub">Put the winner badge on your site. Visitors see you won, and it links back to the fight.</p>
-          <div class="badge-prev"><img id="badgeImg" alt="SEO Fight winner badge" width="280" height="72"></div>
+          <div class="badge-prev"><img id="badgeImg" alt="SEO Fights winner badge" width="280" height="72"></div>
           <pre class="code" id="badgeCode"></pre>
           <button class="btn sm" type="button" id="badgeCopy">Copy badge code</button>
         </div>
@@ -743,8 +743,8 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
     </div>
 
     <div class="panel" style="margin-top:20px">
-      <h3>SEO Fight vs other SEO tools</h3>
-      <div class="tbl-wrap"><table class="vs-table"><thead><tr><th>What you get</th><th>Others</th><th>SEO Fight</th></tr></thead><tbody>
+      <h3>SEO Fights vs other SEO tools</h3>
+      <div class="tbl-wrap"><table class="vs-table"><thead><tr><th>What you get</th><th>Others</th><th>SEO Fights</th></tr></thead><tbody>
         <tr><td>Checks per site</td><td>14</td><td>31</td></tr>
         <tr><td>AI-ready round (can AI read you?)</td><td>\u2014</td><td>\u2713</td></tr>
         <tr><td>Pay once, keep it</td><td>\u2014</td><td>Lifetime from $__LIFEPRICE__</td></tr>
@@ -788,12 +788,12 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 </main>
 
 <footer><div class="wrap fcols">
-<div class="fbrand"><b>SEO Fight</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="" width="28" height="28" loading="lazy" onerror="this.remove()">\u{1D54F} Built in public by @kas_irani</a></div>
+<div class="fbrand"><b>SEO Fights</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="44" height="44" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a></div>
 <div><b>Product</b><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
 <div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
 <div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
 <div><b>Company</b><a href="/about">About</a><a href="/blog">Blog</a><a href="/contact">Contact</a><a href="/account">Account</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/cookie-policy">Cookies</a></div>
-</div><div class="wrap fcopy">\xA9 2026 SEO Fight</div></footer>
+</div><div class="wrap fcopy">\xA9 2026 SEO Fights</div></footer>
 
 <div class="modal" id="modal" hidden>
   <div class="box">
@@ -910,7 +910,7 @@ function personalizeUpsell(pick) {
   }
 }
 const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
-const site = /claude|localhost/.test(location.host) ? "seofight.app" : location.host.replace(/^www\\./, "");
+const site = /claude|localhost/.test(location.host) ? "seofights.com" : location.host.replace(/^www\\./, "");
 const pretty = h => h.replace(/\\.(com|co|io|org|net|app)$/i, "");
 
 function countUp(el, to) {
@@ -957,7 +957,7 @@ function render(d, live, keepLabel) {
   const rm = $("#rematchBtn"); if (rm) { const champ = d.winner ? d[d.winner].host : d.b.host; rm.href = \`/?b=\${encodeURIComponent(champ)}#top\`; rm.textContent = \`Can your site beat \${brandName(champ)}?\`; }
   const winner = d.winner ? d[d.winner].host : d.a.host;
   $("#badgeImg").src = \`/badge/\${d.slug}.svg\`;
-  $("#badgeCode").textContent = \`<a href="\${url}"><img src="\${location.origin}/badge/\${d.slug}.svg" alt="\${winner} won the SEO Fight" width="280" height="72"></a>\`;
+  $("#badgeCode").textContent = \`<a href="\${url}"><img src="\${location.origin}/badge/\${d.slug}.svg" alt="\${winner} won the SEO Fights" width="280" height="72"></a>\`;
 }
 
 const NAMES = { "coca-cola.com": "Coca-Cola", "hm.com": "H&M", "bankofamerica.com": "Bank of America", "open.spotify.com": "Spotify", "mint.intuit.com": "Mint", "turbotax.intuit.com": "TurboTax", "primevideo.com": "Prime Video", "disneyplus.com": "Disney+", "dunkindonuts.com": "Dunkin'", "pizzahut.com": "Pizza Hut", "burgerking.com": "Burger King", "jimmyjohns.com": "Jimmy John's", "ubereats.com": "Uber Eats", "doordash.com": "DoorDash", "hellofresh.com": "HelloFresh", "blueapron.com": "Blue Apron", "timhortons.ca": "Tim Hortons", "starbucks.ca": "Starbucks", "redbull.com": "Red Bull", "monsterenergy.com": "Monster", "rayban.com": "Ray-Ban", "bestbuy.com": "Best Buy", "homedepot.com": "Home Depot", "chess.com": "Chess.com", "x.com": "X", "mercedes-benz.com": "Mercedes-Benz", "se-ranking.com": "SE Ranking", "openai.com": "OpenAI", "github.com": "GitHub", "gitlab.com": "GitLab", "hubspot.com": "HubSpot", "linkedin.com": "LinkedIn", "youtube.com": "YouTube", "tiktok.com": "TikTok", "paypal.com": "PayPal", "playstation.com": "PlayStation", "steampowered.com": "Steam", "epicgames.com": "Epic Games", "chatgpt.com": "ChatGPT", "perplexity.ai": "Perplexity", "huggingface.co": "Hugging Face", "elevenlabs.io": "ElevenLabs", "runwayml.com": "Runway", "character.ai": "Character.AI", "copy.ai": "Copy.ai", "jasper.ai": "Jasper", "leonardo.ai": "Leonardo", "bolt.new": "Bolt", "lovable.dev": "Lovable", "linear.app": "Linear", "zoom.us": "Zoom", "obsidian.md": "Obsidian", "wordpress.com": "WordPress", "godaddy.com": "GoDaddy", "squarespace.com": "Squarespace", "mailchimp.com": "Mailchimp", "convertkit.com": "Kit", "khanacademy.org": "Khan Academy", "masterclass.com": "MasterClass", "nerdwallet.com": "NerdWallet", "creditkarma.com": "Credit Karma", "hrblock.com": "H&R Block", "simplisafe.com": "SimpliSafe", "sharkclean.com": "Shark", "dollarshaveclub.com": "Dollar Shave Club", "fentybeauty.com": "Fenty Beauty", "myfitnesspal.com": "MyFitnessPal", "aircanada.com": "Air Canada", "westjet.com": "WestJet", "carmax.com": "CarMax", "wealthsimple.com": "Wealthsimple", "soundcloud.com": "SoundCloud", "lg.com": "LG", "hp.com": "HP", "kfc.com": "KFC", "bmw.com": "BMW", "ikea.com": "IKEA", "on.com": "On", "vrbo.com": "Vrbo", "ynab.com": "YNAB", "asus.com": "ASUS", "ebay.com": "eBay" };
@@ -1532,7 +1532,7 @@ footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap:
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
 footer .fcols b { color: var(--ink); font-size: 14px }
 footer .fcols a { text-decoration: none } footer .fcols a:hover { color: var(--ink) }
-footer .fbrand span { font-size: 13px } footer .xlink { font-weight: 700; color: var(--ink) !important; display: inline-flex; align-items: center; gap: 8px } footer .xlink img { width: 28px; height: 28px; border-radius: 50% }
+footer .fbrand span { font-size: 13px } footer .xlink { color: var(--ink) !important; display: inline-flex; align-items: center; gap: 10px; margin-top: 6px; padding: 8px 14px 8px 8px; border-radius: 999px; background: var(--surface); box-shadow: var(--shadow); justify-self: start } footer .xlink img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #f2c14e } footer .xlink span { display: grid; line-height: 1.25 } footer .xlink b { font-size: 14px } footer .xlink small { font-size: 12px; color: var(--muted) }
 footer .fcopy { margin-top: 24px; font-size: 13px }
 @media (max-width: 760px) { footer .fcols { grid-template-columns: 1fr 1fr } footer .fbrand { grid-column: 1 / -1 } }
 .cards-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px }
@@ -1589,7 +1589,7 @@ td.url { max-width: 340px; overflow-wrap: anywhere; font-size: 13px } td.url sma
 <style>__SHOW__</style>
 
 <header class="top"><div class="wrap">
-  <a class="logo" href="/" aria-label="SEO Fight home"><i></i>SEO Fight</a>
+  <a class="logo" href="/" aria-label="SEO Fights home"><i></i>SEO Fights</a>
   <nav class="links"><a href="/fights">Fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
   <a class="btn sm" href="/">Start a fight</a>
 </div></header>
@@ -1713,12 +1713,12 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
 </main>
 
 <footer><div class="wrap fcols">
-<div class="fbrand"><b>SEO Fight</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="" width="28" height="28" loading="lazy" onerror="this.remove()">\u{1D54F} Built in public by @kas_irani</a></div>
+<div class="fbrand"><b>SEO Fights</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="44" height="44" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a></div>
 <div><b>Product</b><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
 <div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
 <div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
 <div><b>Company</b><a href="/about">About</a><a href="/blog">Blog</a><a href="/contact">Contact</a><a href="/account">Account</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/cookie-policy">Cookies</a></div>
-</div><div class="wrap fcopy">\xA9 2026 SEO Fight</div></footer>
+</div><div class="wrap fcopy">\xA9 2026 SEO Fights</div></footer>
 <div class="toast" id="toast" hidden></div>
 
 <div class="modal" id="suModal" hidden role="dialog" aria-modal="true" aria-labelledby="suTitle">
@@ -1819,7 +1819,7 @@ document.querySelectorAll("#rbBots .seg, #rbAll").forEach(seg => seg.addEventLis
   if (seg.id === "rbAll") rbAll = v; else botState[seg.dataset.bot] = v; robots();
 }));
 function robots() {
-  const L = ["# robots.txt made with SEO Fight", "User-agent: *"];
+  const L = ["# robots.txt made with SEO Fights", "User-agent: *"];
   if (rbAll === "block") L.push("Disallow: /"); else {
     const paths = $("#rbPaths").value.split("\\n").map(s => s.trim()).filter(Boolean);
     paths.length ? paths.forEach(p => L.push("Disallow: " + (p.startsWith("/") ? p : "/" + p))) : L.push("Allow: /");
@@ -1988,19 +1988,19 @@ var og_b64_default = "iVBORw0KGgoAAAANSUhEUgAABLAAAAJ2CAIAAADAIuwLAAEAAElEQVR42u
 
 // src/pages.js
 var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Start a free fight", h = "/") => `<p style="margin-top:20px"><a class="btn fight" href="${h}">${t}</a></p>`, xBtn = `<a class="btn ghost xfollow" href="${X_URL}" target="_blank" rel="noopener">\u{1D54F} Follow @${X_HANDLE}</a>`, ABOUT = {
-  title: "About SEO Fight \xB7 Built in public by @" + X_HANDLE,
-  desc: "Why SEO Fight exists: SEO only makes sense next to a rival. Built in public on X by @" + X_HANDLE + ".",
+  title: "About SEO Fights \xB7 Built in public by @" + X_HANDLE,
+  desc: "Why SEO Fights exists: SEO only makes sense next to a rival. Built in public on X by @" + X_HANDLE + ".",
   h1: `Hey, I'm <span class="r">Kas</span>`,
-  lede: "I build SEO Fight in public, one post at a time on X.",
+  lede: "I build SEO Fights in public, one post at a time on X.",
   body: `<div class="panel terms about">
-<div class="founder"><a href="${X_URL}" target="_blank" rel="noopener" class="ava-link"><img class="ava" src="/kas.jpg" alt="Kas, founder of SEO Fight" width="72" height="72" onerror="this.outerHTML='<div class=ava>K</div>'"></a><div><b>Kas</b><span class="muted">Founder, SEO Fight</span><a href="${X_URL}" target="_blank" rel="noopener">@${X_HANDLE} on X</a></div></div>
-<h3>Why this exists</h3><p>SEO tools hand you hundreds of numbers and no answer. A score of 72 means nothing on its own. It only matters if your competitor has 81. So SEO Fight does one thing: puts your site in the ring with a rival, runs 31 live checks, names a winner and tells the loser exactly what to fix.</p>
+<div class="founder"><a href="${X_URL}" target="_blank" rel="noopener" class="ava-link"><img class="ava" src="/kas.jpg" alt="Kas, founder of SEO Fights" width="72" height="72" onerror="this.outerHTML='<div class=ava>K</div>'"></a><div><b>Kas</b><span class="muted">Founder, SEO Fights</span><a href="${X_URL}" target="_blank" rel="noopener">@${X_HANDLE} on X</a></div></div>
+<h3>Why this exists</h3><p>SEO tools hand you hundreds of numbers and no answer. A score of 72 means nothing on its own. It only matters if your competitor has 81. So SEO Fights does one thing: puts your site in the ring with a rival, runs 31 live checks, names a winner and tells the loser exactly what to fix.</p>
 <h3>What I believe</h3><p><b>Context beats metrics.</b> Every check is shown side by side, so you see the gap, not just a grade.</p><p><b>Plain words.</b> If a fix needs a tutorial, I rewrite it until it doesn't.</p><p><b>Do the next thing.</b> Every fight ends with a ranked fix list and the points each fix is worth.</p><p><b>AI search counts now.</b> ChatGPT, Claude and Perplexity send real traffic, so every fight checks if AI can read and quote your site.</p>
 <h3>Built in public</h3><p>I share the numbers, the fights, the wins and the mistakes on X. Follow along, send me a fight you want to see, or tell me what's broken.</p>
 <p style="margin-top:18px">${xBtn} <a class="btn ghost" href="/contact">Contact</a></p></div>${cta()}`
 }, COOKIES = {
-  title: "Cookie policy \xB7 SEO Fight",
-  desc: "The cookies and storage SEO Fight uses. No ad or tracking cookies.",
+  title: "Cookie policy \xB7 SEO Fights",
+  desc: "The cookies and storage SEO Fights uses. No ad or tracking cookies.",
   h1: "Cookie policy",
   lede: "Short version: no ad cookies, no trackers.",
   body: `<div class="panel terms">
@@ -2008,9 +2008,9 @@ var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Sta
 <h3>Storage in your browser</h3><p>We remember that you've unlocked results and which fights you've voted on, so you don't have to do it twice. This stays on your device.</p>
 <h3>Payments</h3><p>Checkout runs on Stripe. Stripe may set its own cookies to prevent fraud. See Stripe's privacy policy.</p>
 <h3>What we don't use</h3><p>No advertising cookies, no cross-site tracking, no selling your data.</p>
-<h3>Clearing them</h3><p>Clear your browser's site data for SEO Fight any time. If you have a paid plan, get your access link again from <a href="/account">your account</a>.</p></div>`
+<h3>Clearing them</h3><p>Clear your browser's site data for SEO Fights any time. If you have a paid plan, get your access link again from <a href="/account">your account</a>.</p></div>`
 }, CONTACT = {
-  title: "Contact \xB7 SEO Fight",
+  title: "Contact \xB7 SEO Fights",
   desc: "Questions, billing, partnerships or a fight you want to see. We reply within 24 hours.",
   h1: 'Talk to <span class="b">us</span>',
   lede: "Questions, billing, partnerships, or a fight you want to see. We reply within 24 hours.",
@@ -2053,7 +2053,7 @@ var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Sta
     desc: "AI assistants now send real visitors. Here's how to check if they can read and quote you.",
     body: `<p>People ask ChatGPT, Claude and Perplexity which tool, shop or service to pick. Those answers come from sites the AI can read. If yours isn't one of them, you're not in the conversation.</p>
 <h3>The quick checklist</h3><ul><li><b>Let AI crawlers in.</b> Check robots.txt isn't blocking GPTBot, ClaudeBot or PerplexityBot by accident.</li><li><b>Add llms.txt.</b> A short file that says who you are and links your key pages.</li><li><b>Write answers, not slogans.</b> Clear sentences AI can quote: what you do, who it's for, what it costs.</li><li><b>Use structured data.</b> Organization, Product and FAQ schema help machines understand you.</li></ul>
-<p>Every SEO Fight has an "AI-ready" round that checks all of this for both sites. Our free <a href="/tools/llms-txt-generator">llms.txt generator</a> and <a href="/tools/robots-txt-generator">robots.txt generator</a> fix most of it in five minutes.</p>`
+<p>Every SEO Fights has an "AI-ready" round that checks all of this for both sites. Our free <a href="/tools/llms-txt-generator">llms.txt generator</a> and <a href="/tools/robots-txt-generator">robots.txt generator</a> fix most of it in five minutes.</p>`
   },
   {
     slug: "track-10-keywords-not-500",
@@ -2071,7 +2071,7 @@ var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Sta
     title: "What to fix first: rank SEO fixes by points",
     desc: "Stop working down the list. Do the fixes that close the most gap first.",
     body: `<p>The worst way to fix SEO is top to bottom. You burn a week on small stuff while the one fix that matters waits at item 31.</p>
-<h3>Score every fix</h3><p>Each fix in an SEO Fight is worth points: how much it moves your score if you do it. Critical problems the rival doesn't have are worth the most.</p>
+<h3>Score every fix</h3><p>Each fix in an SEO Fights is worth points: how much it moves your score if you do it. Critical problems the rival doesn't have are worth the most.</p>
 <h3>The order that works</h3><ol><li>Anything blocking Google or AI from reading the page.</li><li>Titles, descriptions and headings on your key pages.</li><li>Speed and mobile basics.</li><li>Content depth on the pages that should rank.</li><li>Structured data and polish.</li></ol>
 <p>Do the top three fixes on your list, then run a rematch. Watching your score climb past theirs is the best motivation there is.</p>`
   },
@@ -2088,7 +2088,7 @@ var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Sta
 <p>Put your site against the giant and see which rounds you can already win.</p>`
   }
 ], BLOG_INDEX = {
-  title: "Blog \xB7 SEO Fight",
+  title: "Blog \xB7 SEO Fights",
   desc: "Short, plain guides to winning SEO against the sites you compete with.",
   h1: 'Win <span class="r">SEO</span> by beating <span class="b">rivals</span>',
   lede: "Short, plain guides. No fluff.",
@@ -2097,7 +2097,7 @@ var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Sta
 function postPage(p) {
   let i = POSTS.indexOf(p), next = POSTS[(i + 1) % POSTS.length];
   return {
-    title: `${p.title} \xB7 SEO Fight`,
+    title: `${p.title} \xB7 SEO Fights`,
     desc: p.desc,
     h1: p.title,
     lede: p.desc,
@@ -2130,18 +2130,18 @@ var ALTS = [
     ["Starting price", "$12 / month", "Check their pricing page"]
   ];
   return [`/alternatives/${slug}-alternative`, {
-    title: `The best ${name} alternative for comparing sites \xB7 SEO Fight`,
-    desc: `Looking for a ${name} alternative? SEO Fight puts your site against a competitor, picks a winner and ranks the fixes. Free to try.`,
+    title: `The best ${name} alternative for comparing sites \xB7 SEO Fights`,
+    desc: `Looking for a ${name} alternative? SEO Fights puts your site against a competitor, picks a winner and ranks the fixes. Free to try.`,
     h1: `The simple <span class="r">${name}</span> <span class="b">alternative</span>`,
-    lede: `${name} is known for ${known}. If you just want to know why a competitor beats you and what to fix, SEO Fight does that in 20 seconds.`,
-    body: `<div class="panel"><h3>${name} vs SEO Fight</h3><div class="tbl-wrap"><table><thead><tr><th>Feature</th><th>SEO Fight</th><th>${name}</th></tr></thead><tbody>${rows.map(([f, a, b]) => `<tr><td>${f}</td><td class="v">${a}</td><td class="v">${b}</td></tr>`).join("")}</tbody></table></div></div>
+    lede: `${name} is known for ${known}. If you just want to know why a competitor beats you and what to fix, SEO Fights does that in 20 seconds.`,
+    body: `<div class="panel"><h3>${name} vs SEO Fights</h3><div class="tbl-wrap"><table><thead><tr><th>Feature</th><th>SEO Fights</th><th>${name}</th></tr></thead><tbody>${rows.map(([f, a, b]) => `<tr><td>${f}</td><td class="v">${a}</td><td class="v">${b}</td></tr>`).join("")}</tbody></table></div></div>
 <div class="panel terms" style="margin-top:16px"><h3>When to pick ${name}</h3><p>Pick ${name} if you need ${known}, and you have the time to learn a big tool.</p>
-<h3>When to pick SEO Fight</h3><p>Pick SEO Fight if you want one clear answer: who wins, why, and the exact moves to take the lead. Plain words, a winner, and a fix list worth points. Many people use both.</p></div>
+<h3>When to pick SEO Fights</h3><p>Pick SEO Fights if you want one clear answer: who wins, why, and the exact moves to take the lead. Plain words, a winner, and a fix list worth points. Many people use both.</p></div>
 <p style="margin-top:20px"><a class="btn fight" href="/">Start a free fight</a> <a class="btn ghost" href="/keywords-battle">Try Keyword Battle</a> <a class="btn ghost" href="/tools-like">More alternatives</a></p>`,
     name
   }];
 })), TOOLS_LIKE = {
-  title: "SEO tools like Ahrefs, Semrush and Moz \xB7 SEO Fight",
+  title: "SEO tools like Ahrefs, Semrush and Moz \xB7 SEO Fights",
   desc: "Simple alternatives to the big SEO tools. Compare your site to a competitor for free.",
   h1: 'Tools <span class="b">like</span>',
   lede: "Simple alternatives to the big SEO suites.",
@@ -2149,7 +2149,7 @@ var ALTS = [
 };
 
 // src/worker.js
-var SITE = "https://seofight.app", UA = "Mozilla/5.0 (compatible; SEOFightBot/1.0; +https://seofight.app/llms.txt)", LIMITS = {
+var SITE = "https://seofight.dailygym.workers.dev", UA = "Mozilla/5.0 (compatible; SEOFightsBot/1.0; +https://seofight.dailygym.workers.dev/llms.txt)", LIMITS = {
   free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"], rivals: [1, "week"], links: [1, "week"], gen: [1, "week"] },
   pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"] },
   agency: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"] },
@@ -2173,7 +2173,7 @@ var SITE = "https://seofight.app", UA = "Mozilla/5.0 (compatible; SEOFightBot/1.
 }, WATERMARK = `
 
 ---
-_Made with SEO Fight free \xB7 ${SITE} \xB7 Go Pro for clean reports, AI strategy and Keyword Battles._
+_Made with SEO Fights free \xB7 ${SITE} \xB7 Go Pro for clean reports, AI strategy and Keyword Battles._
 `;
 async function get(url, ms = 9e3) {
   let ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms);
@@ -2258,7 +2258,7 @@ function head(o) {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 ${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="canonical" href="${SITE}${o.path || "/"}"><meta property="og:title" content="${esc(o.title)}"><meta property="og:description" content="${esc(o.desc)}"><meta property="og:url" content="${SITE}${o.path || "/"}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 30 16 16 30 2 16Z' fill='%23e0263a'/%3E%3Cpath d='M16 2 30 16 16 30Z' fill='%232457f5'/%3E%3C/svg%3E">
-<script type="application/ld+json">${JSON.stringify(o.ld || { "@context": "https://schema.org", "@graph": [{ "@type": "WebSite", name: "SEO Fight", url: SITE }, { "@type": "SoftwareApplication", name: "SEO Fight", applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }] }).replace(/</g, "\\u003c")}</script>
+<script type="application/ld+json">${JSON.stringify(o.ld || { "@context": "https://schema.org", "@graph": [{ "@type": "WebSite", name: "SEO Fights", url: SITE }, { "@type": "SoftwareApplication", name: "SEO Fights", applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }] }).replace(/</g, "\\u003c")}</script>
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 `;
 }
@@ -2301,7 +2301,7 @@ function page(env, o) {
   return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFEN|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE|FOTN)__/g, (m) => fill[m]), o);
 }
 var HOME = {
-  title: "SEO Fight \xB7 Compare website SEO side by side",
+  title: "SEO Fights \xB7 Compare website SEO side by side",
   desc: "Compare your website's SEO against a competitor in seconds. 31 live checks across Google and AI readiness, a clear winner, and the exact fixes to win.",
   h1: 'Who wins<br>the <span class="r">SEO</span> <span class="b">fight?</span>',
   lede: "Enter your website and a competitor. 31 real checks, a clear winner, and the exact moves to take the belt.",
@@ -2326,7 +2326,7 @@ Checked ${new Date(d.at || Date.now()).toISOString().slice(0, 10)}.</p></section
     noindex: !(d.category || (d.votes_a || 0) + (d.votes_b || 0) >= 5),
     view: "fight",
     lede: "31 checks. 5 rounds. One winner. Pick your champion below, then see who really wins.",
-    ld: { "@context": "https://schema.org", "@type": "Article", headline: title, dateModified: new Date(d.at || Date.now()).toISOString(), publisher: { "@type": "Organization", name: "SEO Fight", url: SITE } }
+    ld: { "@context": "https://schema.org", "@type": "Article", headline: title, dateModified: new Date(d.at || Date.now()).toISOString(), publisher: { "@type": "Organization", name: "SEO Fights", url: SITE } }
   });
 }
 async function cardsList(env, limit) {
@@ -2340,7 +2340,7 @@ async function boardPage(env) {
     cards: await cardsList(env, 300),
     a: "",
     b: "",
-    title: "Biggest SEO fights \xB7 SEO Fight",
+    title: "Biggest SEO fights \xB7 SEO Fights",
     desc: "Brand vs brand SEO fights: Apple vs Samsung, Uber vs Lyft, Netflix vs Disney+ and more. Pick a winner, then see the result.",
     h1: 'Every<br><span class="r">SEO</span> <span class="b">fight</span>',
     lede: "Brand vs brand, scored on 31 live checks. Tap a fight, pick your champion, see who wins."
@@ -2349,7 +2349,7 @@ async function boardPage(env) {
 var TOOL_PAGES = {
   "/tools": {
     show: "hub",
-    title: "Free SEO tools \xB7 SEO Fight",
+    title: "Free SEO tools \xB7 SEO Fights",
     h1: 'Free <span class="r">SEO</span> <span class="b">tools</span>',
     desc: "Free SEO tools: broken link checker, robots.txt generator, schema markup generator and llms.txt generator. Free account, 5-second sign-up.",
     lede: "Fix the technical stuff in minutes. Free account, no card.",
@@ -2358,7 +2358,7 @@ var TOOL_PAGES = {
   },
   "/tools/broken-link-checker": {
     show: "broken",
-    title: "Free Broken Link Checker \xB7 SEO Fight",
+    title: "Free Broken Link Checker \xB7 SEO Fights",
     h1: "Broken link<br>checker",
     desc: "Free broken link checker. Scan any page for broken links, redirects and errors that hurt your SEO.",
     lede: "Scan any page for broken links, redirects and errors that could hurt your rankings.",
@@ -2367,7 +2367,7 @@ var TOOL_PAGES = {
   },
   "/tools/robots-txt-generator": {
     show: "robots",
-    title: "Free Robots.txt Generator \xB7 SEO Fight",
+    title: "Free Robots.txt Generator \xB7 SEO Fights",
     h1: "Robots.txt<br>generator",
     desc: "Free robots.txt generator with AI crawler controls for GPTBot, ClaudeBot and PerplexityBot. Copy a correct file in seconds.",
     lede: "Build a correct robots.txt to control how search engines and AI crawlers read your site.",
@@ -2376,7 +2376,7 @@ var TOOL_PAGES = {
   },
   "/tools/schema-markup-generator": {
     show: "schema",
-    title: "Free Schema Markup Generator (JSON-LD) \xB7 SEO Fight",
+    title: "Free Schema Markup Generator (JSON-LD) \xB7 SEO Fights",
     h1: "Schema markup<br>generator",
     desc: "Free JSON-LD schema markup generator for Organization, LocalBusiness, Product, FAQ, Article, Breadcrumb, Event and more.",
     lede: "Generate JSON-LD structured data to help Google show rich results for your pages.",
@@ -2385,7 +2385,7 @@ var TOOL_PAGES = {
   },
   "/tools/llms-txt-generator": {
     show: "llms",
-    title: "Free llms.txt Generator \xB7 SEO Fight",
+    title: "Free llms.txt Generator \xB7 SEO Fights",
     h1: "llms.txt<br>generator",
     desc: "Free llms.txt generator. Tell ChatGPT, Claude and Perplexity what your site is about so AI can recommend you.",
     lede: "Tell AI assistants what your site is about, in the file they look for.",
@@ -2394,7 +2394,7 @@ var TOOL_PAGES = {
   },
   "/agency": {
     show: "agency",
-    title: "Prospect Hunter for SEO agencies \xB7 SEO Fight",
+    title: "Prospect Hunter for SEO agencies \xB7 SEO Fights",
     h1: '<span class="r">Find clients</span><br>losing to <span class="b">rivals</span>',
     desc: "Prospect Hunter for SEO agencies: pick an industry and city, find businesses losing to competitors, and get a ready-to-send pitch for each.",
     lede: "Pick an industry and a city. We find the businesses losing to competitors and hand you the proof and the pitch.",
@@ -2403,7 +2403,7 @@ var TOOL_PAGES = {
   },
   "/keywords-battle": {
     show: "battle",
-    title: "Keyword Battle: who ranks higher on Google? \xB7 SEO Fight",
+    title: "Keyword Battle: who ranks higher on Google? \xB7 SEO Fights",
     h1: '<span class="r">Keyword</span><br><span class="b">battle</span>',
     desc: "Pick 10 keywords and see who ranks higher on Google, you or your competitor. Any country. Weekly movement emails on Pro.",
     lede: "Pick 10 keywords. See who ranks higher on Google for each one, you or your rival.",
@@ -2437,7 +2437,7 @@ Write my game plan to beat them: 1) why they're ahead (or why I'm ahead), 2) the
   if (env.OPENROUTER_KEY) {
     let r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
-      headers: { authorization: `Bearer ${env.OPENROUTER_KEY}`, "content-type": "application/json", "HTTP-Referer": SITE, "X-Title": "SEO Fight" },
+      headers: { authorization: `Bearer ${env.OPENROUTER_KEY}`, "content-type": "application/json", "HTTP-Referer": SITE, "X-Title": "SEO Fights" },
       body: JSON.stringify({ model: env.AI_MODEL || "anthropic/claude-sonnet-4.5", messages })
     });
     if (!r.ok) throw new Error("ai");
@@ -2614,16 +2614,16 @@ for(let i=0;i<20;i++){try{const r=await fetch("/api/welcome?session_id="+encodeU
 box.innerHTML='<h3>Payment received</h3><p class="muted">It is taking a moment to switch on. Check your email for your access link, or refresh this page.</p>';})();</script>`, RESTORE_HTML = `<form class="panel waitbox" id="restore" novalidate><h3>Get your access link</h3><p class="muted">Enter the email you paid with. If you have an active plan, we'll email you a link that switches it on in this browser.</p><div class="wrow"><input id="rEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn" type="submit">Email me a link</button></div><p class="muted" id="rMsg"></p></form>
 <p style="margin-top:16px"><a class="btn ghost" href="/#pricing">See plans</a></p>
 <script>document.getElementById("restore").addEventListener("submit",async e=>{e.preventDefault();const email=document.getElementById("rEmail").value.trim();const m=document.getElementById("rMsg");try{const r=await fetch("/api/restore",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email})});const j=await r.json();m.textContent=r.ok?"If that email has a plan, your link is on its way.":(j.error||"Try again.");}catch{m.textContent="Try again.";}});</script>`, TERMS_HTML = `<div class="panel terms">
-<h3>1. What you get</h3><p>SEO Fight compares public websites and gives you scores, checks and suggestions. Results come from public pages at the time of the check. We don't promise rankings, traffic or sales.</p>
+<h3>1. What you get</h3><p>SEO Fights compares public websites and gives you scores, checks and suggestions. Results come from public pages at the time of the check. We don't promise rankings, traffic or sales.</p>
 <h3>2. Plans and billing</h3><p>Pro and Agency are monthly subscriptions that renew automatically until you cancel. Lifetime is a single payment for the life of the product. Prices are shown before you pay. Payments are handled by Stripe.</p>
 <h3>3. All payments are final</h3><p><b>We do not offer refunds</b>, including for partial months, unused fights, downgrades or plans you didn't use, except where the law requires it. Please use the free plan before you buy.</p>
 <h3>4. Cancelling</h3><p>Cancel any time from your account. You keep access until the end of the period you already paid for. Nothing is charged after that.</p>
 <h3>5. Chargebacks</h3><p>If a payment is disputed or reversed, access to the paid plan ends right away.</p>
-<h3>6. Fair use</h3><p>Plans include the limits shown on the pricing page. Don't use SEO Fight to attack, overload or scrape sites, or to resell results in bulk. We can suspend accounts that abuse the service.</p>
+<h3>6. Fair use</h3><p>Plans include the limits shown on the pricing page. Don't use SEO Fights to attack, overload or scrape sites, or to resell results in bulk. We can suspend accounts that abuse the service.</p>
 <h3>7. Changes</h3><p>We may change features, limits or prices. Price changes for existing subscriptions apply from your next billing period, and we'll tell you first.</p>
-<h3>8. Liability</h3><p>SEO Fight is provided "as is". Our total liability is limited to what you paid us in the last 3 months.</p></div>`, PRIVACY_HTML = `<div class="panel terms">
+<h3>8. Liability</h3><p>SEO Fights is provided "as is". Our total liability is limited to what you paid us in the last 3 months.</p></div>`, PRIVACY_HTML = `<div class="panel terms">
 <h3>What we collect</h3><p>Your email when you sign up or unlock a result, the websites you enter, your picks on fights, and your IP address to enforce free limits. Payment details go to Stripe, not to us.</p>
-<h3>Why</h3><p>To run fights, unlock results, enforce plan limits, send the emails you asked for, and improve SEO Fight.</p>
+<h3>Why</h3><p>To run fights, unlock results, enforce plan limits, send the emails you asked for, and improve SEO Fights.</p>
 <h3>What we don't do</h3><p>We don't sell your data.</p>
 <h3>Deleting your data</h3><p>Ask us and we'll delete your email and history.</p></div>`;
 function badgeSvg(d) {
@@ -2631,7 +2631,7 @@ function badgeSvg(d) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="72" viewBox="0 0 280 72" role="img" aria-label="${e(top + " " + sub)}">
 <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#e0263a"/><stop offset="1" stop-color="#2457f5"/></linearGradient></defs>
 <rect width="280" height="72" rx="14" fill="#0b0d13"/><rect x="1" y="1" width="278" height="70" rx="13" fill="none" stroke="url(#g)" stroke-width="2"/>
-<text x="18" y="20" fill="#f2c14e" font-family="Arial Narrow,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">\u2605 SEO FIGHT CHAMPION</text>
+<text x="18" y="20" fill="#f2c14e" font-family="Arial Narrow,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">\u2605 SEO FIGHTS CHAMPION</text>
 <text x="18" y="44" fill="#fff" font-family="Arial,sans-serif" font-size="17" font-weight="800">${e(top.toUpperCase().slice(0, 26))}</text>
 <text x="18" y="61" fill="#9aa2b4" font-family="Arial,sans-serif" font-size="11">${e(sub.slice(0, 40))}</text></svg>`;
 }
@@ -2645,7 +2645,7 @@ async function sendEmail(env, to, subject, body) {
   return env.RESEND_KEY ? (await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { authorization: `Bearer ${env.RESEND_KEY}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: env.FROM_EMAIL || "SEO Fight <fights@seofight.app>", to, subject, html: body })
+    body: JSON.stringify({ from: env.FROM_EMAIL || "SEO Fights <fights@seofights.com>", to, subject, html: body })
   })).ok : !1;
 }
 async function weekly(env) {
@@ -2935,7 +2935,7 @@ var worker_default = {
         ctx.waitUntil(sendEmail(
           env,
           email,
-          `You're ${PLAN_NAMES[plan]} on SEO Fight \u{1F94A}`,
+          `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`,
           `<p>Welcome to the main card.</p><p><a href="${SITE}/activate?key=${row.key}">Switch on ${PLAN_NAMES[plan]} on another device</a> (keep this email).</p><p>Manage or cancel any time from <a href="${SITE}/account">your account</a>. All payments are final.</p>`
         )), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `\u{1F4B0} New ${PLAN_NAMES[plan]}: ${email}`, `<p>${email} bought ${PLAN_NAMES[plan]} (${(o.amount_total || 0) / 100} ${String(o.currency || "").toUpperCase()}).</p>`));
       }
@@ -2945,14 +2945,14 @@ var worker_default = {
       }
       return ev.type === "customer.subscription.deleted" && await env.DB.prepare("UPDATE members SET active=0 WHERE (subscription=?1 OR customer=?2) AND plan IN ('pro','agency')").bind(o.id, o.customer).run(), (ev.type === "charge.dispute.created" || ev.type === "charge.refunded") && await env.DB.prepare("UPDATE members SET active=0 WHERE customer=?1 AND plan != 'owner'").bind(o.customer || "").run(), json({ received: !0 });
     }
-    if (p === "/welcome") return infoPage(env, { path: p, noindex: !0, title: "Welcome to SEO Fight", h1: `You're <span class="r">in</span> \u{1F94A}`, lede: "Switching on your plan\u2026", body: WELCOME_HTML });
+    if (p === "/welcome") return infoPage(env, { path: p, noindex: !0, title: "Welcome to SEO Fights", h1: `You're <span class="r">in</span> \u{1F94A}`, lede: "Switching on your plan\u2026", body: WELCOME_HTML });
     if (p === "/api/welcome") {
       let sid = u.searchParams.get("session_id") || "", m = sid && env.DB && await env.DB.prepare("SELECT key, email, plan FROM members WHERE session_id=?1 AND active=1").bind(sid).first();
       return m ? json({ ready: !0, plan: PLAN_NAMES[m.plan] || "Pro", email: m.email }, 200, { "set-cookie": cookieFor(m.key) }) : json({ ready: !1 });
     }
     if (p === "/activate") {
       let key = u.searchParams.get("key") || "", m = env.DB && await env.DB.prepare("SELECT key FROM members WHERE key=?1 AND active=1").bind(key).first();
-      return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fight", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
+      return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fights", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
     }
     if (p === "/signout") return new Response(null, { status: 302, headers: { location: "/", "set-cookie": "rf_key=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax" } });
     if (p === "/api/restore" && req.method === "POST") {
@@ -2966,12 +2966,12 @@ var worker_default = {
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "Enter a valid email." }, 400);
       if (!await toolUse(env, req, "rivals")) return json({ error: "Too many tries today." }, 429);
       let m = env.DB && await env.DB.prepare("SELECT key, plan FROM members WHERE email=?1 AND active=1").bind(email).first();
-      return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fight access link", `<p><a href="${SITE}/activate?key=${m.key}">Tap to switch on ${PLAN_NAMES[m.plan] || "Pro"} on this device</a></p>`)), json({ ok: !0 });
+      return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fights access link", `<p><a href="${SITE}/activate?key=${m.key}">Tap to switch on ${PLAN_NAMES[m.plan] || "Pro"} on this device</a></p>`)), json({ ok: !0 });
     }
     if (p === "/login" || p === "/signup") return new Response(null, { status: 302, headers: { location: "/account" } });
     if (p === "/account") {
       let m = await member(req, env);
-      if (!m) return infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fight", h1: 'Your <span class="b">account</span>', lede: "Already paid? Get your access link by email.", body: RESTORE_HTML });
+      if (!m) return infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fights", h1: 'Your <span class="b">account</span>', lede: "Already paid? Get your access link by email.", body: RESTORE_HTML });
       let plan = planOf(m), L = LIMITS[plan], used = async (what) => {
         if (!env.LIMITS) return 0;
         let per = L[what][1];
@@ -2981,7 +2981,7 @@ var worker_default = {
         path: p,
         noindex: !0,
         cache: "no-store",
-        title: "Your account \xB7 SEO Fight",
+        title: "Your account \xB7 SEO Fights",
         h1: `<span class="r">${esc(PLAN_NAMES[plan] || "Pro")}</span> account`,
         lede: esc(m.email),
         body: `<div class="panel"><h3>This month</h3><div class="tbl-wrap"><table><tbody>${row("Fights", f, L.fights[0])}${row("Keyword Battles", kb, L.battles[0])}${row("AI strategies", ai, L.strategy[0])}</tbody></table></div></div>
@@ -2995,11 +2995,11 @@ var worker_default = {
       let post = POSTS.find((x) => x.slug === p.slice(6));
       if (post) {
         let o = postPage(post);
-        return infoPage(env, { ...o, path: p, ld: { "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.desc, url: SITE + p, author: { "@type": "Person", name: "Kas", url: X_URL }, publisher: { "@type": "Organization", name: "SEO Fight", url: SITE } } });
+        return infoPage(env, { ...o, path: p, ld: { "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.desc, url: SITE + p, author: { "@type": "Person", name: "Kas", url: X_URL }, publisher: { "@type": "Organization", name: "SEO Fights", url: SITE } } });
       }
     }
-    if (p === "/terms") return infoPage(env, { path: p, title: "Terms \xB7 SEO Fight", h1: "Terms", lede: "Short and plain.", body: TERMS_HTML });
-    if (p === "/privacy") return infoPage(env, { path: p, title: "Privacy \xB7 SEO Fight", h1: "Privacy", lede: "What we collect and why.", body: PRIVACY_HTML });
+    if (p === "/terms") return infoPage(env, { path: p, title: "Terms \xB7 SEO Fights", h1: "Terms", lede: "Short and plain.", body: TERMS_HTML });
+    if (p === "/privacy") return infoPage(env, { path: p, title: "Privacy \xB7 SEO Fights", h1: "Privacy", lede: "What we collect and why.", body: PRIVACY_HTML });
     if (p.startsWith("/fight/")) {
       let slug = decodeURIComponent(p.slice(7)).toLowerCase(), old = await storedFight(env, slug);
       if (old) return fightPage(env, old.d, `/fight/${encodeURIComponent(slug)}`, slug !== FOTN && !await member(req, env));
@@ -3018,9 +3018,9 @@ Disallow: /api/
 Disallow: /activate
 
 Sitemap: ${SITE}/sitemap.xml
-`, { headers: { "content-type": "text/plain" } }) : p === "/llms.txt" ? new Response(`# SEO Fight
+`, { headers: { "content-type": "text/plain" } }) : p === "/llms.txt" ? new Response(`# SEO Fights
 
-> SEO Fight compares two websites head to head on 31 live SEO and AI-search checks, names a winner, and gives the loser a ranked fix list.
+> SEO Fights compares two websites head to head on 31 live SEO and AI-search checks, names a winner, and gives the loser a ranked fix list.
 
 ## Pages
 
