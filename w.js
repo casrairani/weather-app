@@ -711,6 +711,53 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
 .price .pill.gold { background: var(--gold); color: var(--ink) }
 .btn:not(.fight):not(.ghost):not(.google) { border: 2px solid var(--ink) }
 @media (prefers-reduced-motion: reduce) { .fight, .logo .gloves { transition: none; animation: none } }
+/* ===== prospect cards (homepage hunt mode, /agency, account) ===== */
+.prospects { display: grid; gap: 14px; margin-top: 14px } .prospect { border: 2px solid var(--ink); border-radius: 16px; padding: 16px; display: grid; gap: 8px; background: var(--surface) }
+.pr-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap } .pr-score i { font-style: normal; font-weight: 800 } .pr-score .r { color: var(--red) } .pr-score .b { color: var(--blue) }
+.prospect .pitch { white-space: pre-wrap; max-height: 220px; overflow: auto; margin: 0 } .pr-act { display: flex; gap: 8px; flex-wrap: wrap }
+pre.out { margin: 0; padding: 18px; border-radius: 16px; background: #0d1017; color: #e8ebf2; font: 13px/1.6 var(--f-mono); overflow-x: auto; white-space: pre; min-height: 160px }
+/* ===== signed-in: header avatar, mode switch, ringside bar, your corner, hunt mode ===== */
+header.top .btn.sm.hdr-fight { background: var(--red); color: #fff; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transition: transform .08s, box-shadow .08s }
+header.top .btn.sm.hdr-fight:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink) } header.top .btn.sm.hdr-fight:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); opacity: 1 }
+.avatar { flex: none; width: 38px; height: 38px; margin-left: -12px; border-radius: 50%; display: grid; place-items: center; text-decoration: none; color: #fff; font: 900 21px/1 var(--f-display); text-transform: uppercase; background: linear-gradient(135deg, var(--red) 50%, var(--blue) 50%); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); transition: transform .08s, box-shadow .08s }
+.avatar:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink) }
+.modes { display: flex; width: max-content; max-width: 100%; gap: 4px; padding: 4px; margin: 16px auto 0; border-radius: 999px; background: var(--surface); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink) }
+.modes button { appearance: none; border: 0; cursor: pointer; border-radius: 999px; padding: 10px 16px; background: transparent; color: var(--ink); font: 600 15px/1 var(--f-body); display: inline-flex; align-items: center; gap: 8px; white-space: nowrap }
+.modes button[aria-selected="true"][data-mode="fight"] { background: var(--red); color: #fff } .modes button[aria-selected="true"][data-mode="hunt"] { background: var(--blue); color: #fff }
+.ag-tag { font: 700 10px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 4px 6px; border-radius: 6px; background: var(--gold); color: var(--ink) }
+.modes ~ .ring { margin-top: 16px }
+@media (max-width: 420px) { .modes button { padding: 10px 11px; font-size: 14px; gap: 6px } }
+.ring.hunt .hunt-row { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(180px, 260px) 1fr; gap: 12px }
+.ring.hunt .fight { grid-column: auto; background: var(--blue) !important }
+.corner.gold { position: relative; background: color-mix(in srgb, var(--gold) 20%, transparent) } .corner.gold::after { content: "\u25BE"; position: absolute; right: 16px; bottom: 15px; font-size: 16px; color: var(--ink); pointer-events: none } .corner.gold label { color: color-mix(in srgb, var(--gold) 45%, var(--ink)) }
+.corner select { border: 0; background: transparent; font: 600 17px/1.3 var(--f-body); color: var(--ink); width: 100%; padding: 4px 0; outline: none; appearance: none; cursor: pointer }
+@media (max-width: 640px) { .ring.hunt .hunt-row { grid-template-columns: 1fr } }
+.ringside { display: flex; align-items: center; justify-content: center; gap: 6px 10px; flex-wrap: wrap; max-width: 860px; margin: 14px auto 0; padding: 9px 14px; border-radius: 14px; background: var(--surface); border: 2px solid var(--ink); font: 500 14px/1.35 var(--f-body) }
+.ringside a { color: inherit; text-decoration: none } .ringside .main { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center } .ringside .main:hover .txt { text-decoration: underline; text-underline-offset: 3px }
+.ringside .pl { font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: 5px 8px; border-radius: 6px; background: var(--ink); color: var(--bg) }
+.ringside .pl.pro { background: var(--red); color: #fff } .ringside .pl.agency, .ringside .pl.owner { background: var(--blue); color: #fff } .ringside .pl.lifetime { background: var(--gold); color: var(--ink) }
+@media (max-width: 560px) { .ringside { font-size: 13px; padding: 9px 10px; gap: 6px } .ringside .go, .ringside .sep.g { display: none } }
+.ringside b { font-variant-numeric: tabular-nums } .ringside .sep { color: var(--muted) } .ringside .up { font-weight: 700; color: var(--red); text-decoration: underline; text-underline-offset: 3px } .ringside .go { color: var(--muted) }
+.corner-strip, .hunt-zone { max-width: 860px; margin: 24px auto 0; text-align: left }
+.cs-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px } .cs-head .eyebrow { color: var(--ink) } .cs-head a { font-size: 14px; color: var(--muted); text-decoration: none } .cs-head a:hover { color: var(--ink) }
+.cs-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px }
+.mini { display: grid; gap: 10px; padding: 14px; border-radius: 18px; color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); min-width: 0;
+  background: radial-gradient(110% 90% at 0% 0%, rgba(225,35,46,.42), transparent 60%), radial-gradient(110% 90% at 100% 100%, rgba(29,78,216,.5), transparent 60%), var(--arena) }
+.mini-link { display: grid; gap: 2px; text-decoration: none; color: inherit }
+.mini-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; min-width: 0 }
+.mh { font: 800 21px/1.1 var(--f-display); text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0 } .mh.w::before { content: "\u2605 "; color: var(--gold) }
+.ms { font: 900 34px/1 var(--f-display); font-variant-numeric: tabular-nums } .a.mh, .a.ms { color: #ff5a66 } .b.mh, .b.ms { color: #8aa6ff }
+.mvs { font: 700 10px/1 var(--f-mono); letter-spacing: .14em; color: rgba(255,255,255,.45) }
+.mini-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,.14); padding-top: 10px; font: 500 12px/1.3 var(--f-mono); color: rgba(255,255,255,.72) }
+.mini .rematch { flex: none; background: var(--red); color: #fff; border: 2px solid #fff !important; box-shadow: 3px 3px 0 #fff; padding: 7px 12px; font-size: 13px; font-weight: 700 }
+.mini .rematch:active { transform: translate(3px, 3px); box-shadow: none }
+@media (max-width: 760px) { .cs-list { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 82%; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 8px 10px 2px; margin-right: -16px; scrollbar-width: none } .cs-list::-webkit-scrollbar { display: none } .mini { scroll-snap-align: start } }
+.hz-msg { margin: 0 0 12px; text-align: center; color: var(--muted) }
+.rh-list { display: grid; gap: 10px }
+details.rh { padding: 0; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); border-radius: 14px; background: var(--surface) } details.rh + details.rh { margin-top: 0 }
+details.rh > summary { padding: 13px 16px; align-items: center } details.rh > summary > span { display: flex; gap: 6px 12px; flex-wrap: wrap; align-items: baseline } details.rh small { color: var(--muted); font: 500 12px/1.2 var(--f-mono) }
+details.rh .prospects { padding: 0 12px 12px; margin-top: 0 }
+#huntOut { margin-bottom: 22px } #huntOut .prospects { margin-top: 0 }
 </style>
 
 <header class="top"><div class="wrap">
@@ -727,15 +774,30 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
 
   <section id="test"><div class="wrap hero test-wrap">
     <p class="test-yours" id="testYours">Now put your site in the ring</p>
+    <div class="modes" id="modes" role="tablist" aria-label="What do you want to do?" hidden><button type="button" role="tab" data-mode="fight" aria-selected="true">Fight a site</button><button type="button" role="tab" data-mode="hunt" aria-selected="false">Hunt clients \u{1F3AF}<span class="ag-tag" id="agTag">Agency</span></button></div>
     <form class="ring" id="duelForm" novalidate>
       <div class="corner red"><label for="a">Red corner \xB7 You</label><input id="a" name="a" inputmode="url" autocomplete="off" placeholder="yoursite.com" value="__A__"></div>
       <div class="vs" aria-hidden="true">VS</div>
       <div class="corner blue"><label for="b">Blue corner \xB7 Rival</label><input id="b" name="b" inputmode="url" autocomplete="off" placeholder="rival.com" value="__B__"></div>
       <button class="btn fight" id="fightBtn" type="submit">Fight</button>
     </form>
-    <p class="rivals-q">Don't know your rival? <button type="button" class="linkbtn" id="rivalBtn">Find SEO rivals for me</button></p>
+    <form class="ring hunt" id="huntForm" novalidate hidden>
+      <div class="corner red"><label for="hIndustry">Industry</label><input id="hIndustry" autocomplete="off" placeholder="Roofers"></div>
+      <div class="vs" aria-hidden="true">IN</div>
+      <div class="corner blue"><label for="hCity">City</label><input id="hCity" autocomplete="off" placeholder="Vancouver BC"></div>
+      <div class="hunt-row"><div class="corner gold"><label for="hCountry">Country</label><select id="hCountry"><option value="us">United States</option><option value="ca">Canada</option><option value="gb">United Kingdom</option><option value="au">Australia</option><option value="nz">New Zealand</option><option value="ie">Ireland</option></select></div>
+      <button class="btn fight" id="huntBtn" type="submit">Hunt clients</button></div>
+    </form>
+    <div class="ringside" id="ringside" hidden></div>
+    <p class="rivals-q" id="rivalsQ">Don't know your rival? <button type="button" class="linkbtn" id="rivalBtn">Find SEO rivals for me</button></p>
     <div class="rival-list" id="rivalList" hidden></div>
     <div class="err" id="err" hidden></div>
+    <div class="hunt-zone" id="huntZone" hidden>
+      <p class="hz-msg" id="huntMsg" hidden></p>
+      <div id="huntOut" hidden><div class="cs-head"><span class="eyebrow" id="huntTitle">Prospects</span><span class="muted" id="huntSub"></span></div><div class="prospects" id="huntList"></div></div>
+      <div id="recentHunts" hidden><div class="cs-head"><span class="eyebrow">Recent hunts</span><a href="/agency">All your hunts \u2192</a></div><div class="rh-list" id="rhList"></div></div>
+    </div>
+    <div class="corner-strip" id="yourCorner" hidden><div class="cs-head"><span class="eyebrow">Your corner</span><a href="/account#fights">All your fights \u2192</a></div><div class="cs-list" id="csList"></div></div>
     <div class="proof"><span>31 live checks</span><span>Real page data, not estimates</span><span>Google + AI-ready checks</span></div>
   </div></section>
 
@@ -944,10 +1006,27 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
 (() => {
   const q = s => document.querySelector(s);
   window.ME = null; window.AUTH = {};
-  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
-  // Signed in: the header button goes to the dashboard instead of "Start a fight".
-  const dashBtn = () => { if (!window.ME) return; document.querySelectorAll("header.top .btn.sm").forEach(b => { b.textContent = "Dashboard"; b.href = "/dashboard"; }); };
-  window.dashBtn = dashBtn; window.meReady.then(dashBtn);
+  window.meReady = fetch("/api/me" + (location.pathname === "/" ? "?home=1" : ""), { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
+  // Signed in: the header keeps a red "Start a fight" button (to the form) and gets a round avatar that opens the account page.
+  const meHeader = () => {
+    if (!window.ME) return;
+    document.querySelectorAll("header.top .wrap").forEach(w => {
+      const b = w.querySelector(":scope > .btn.sm");
+      if (b) {
+        b.textContent = "Start a fight"; b.classList.add("hdr-fight");
+        const home = location.pathname === "/" && document.getElementById("duelForm");
+        b.href = home ? "#test" : "/#test";
+        if (home && !b.dataset.bound) { b.dataset.bound = 1; b.addEventListener("click", e => { e.preventDefault(); const f = document.getElementById("huntForm"); if (f && !f.hidden && window.setMode) setMode("fight", true); document.getElementById("test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => { const a = document.getElementById(document.getElementById("a").value ? "b" : "a"); a && a.focus({ preventScroll: true }); }, 450); }); }
+      }
+      if (!w.querySelector(".avatar")) {
+        const av = document.createElement("a"); av.className = "avatar"; av.href = "/account";
+        av.textContent = (String(window.ME.email || "?").trim()[0] || "?").toUpperCase();
+        av.title = "Your account"; av.setAttribute("aria-label", "Your account (" + window.ME.email + ")");
+        w.appendChild(av);
+      }
+    });
+  };
+  window.dashBtn = meHeader; window.meReady.then(meHeader);
   let next = null, nextUrl = null;
   const open = (mode, title, text) => {
     const pay = mode === "pay";
@@ -988,7 +1067,7 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
       const j = await r.json();
       if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
       if (j.sent) { q("#suEyebrow").textContent = "Almost there"; q("#suTitle").textContent = "Check your inbox \u{1F4EC}"; q("#suText").textContent = \`We sent a sign-in link to \${email}. Tap it and you're in.\`; q("#suFields").hidden = true; q("#suBtn").hidden = true; q("#suGoogle").hidden = true; return; }
-      window.ME = j; dashBtn(); try { localStorage.setItem("fan", email); } catch {}
+      window.ME = j; meHeader(); try { localStorage.setItem("fan", email); } catch {}
       q("#suModal").hidden = true; const f = next; next = null; f && f();
     } catch { q("#suText").textContent = "Try again."; }
     finally { btn.disabled = false; btn.textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account"; }
@@ -1146,7 +1225,8 @@ $("#duelForm").addEventListener("submit", async e => {
   await meReady; if (!ME) { withAccount(() => $("#duelForm").requestSubmit(), "Sign up to start your fight", "Free account: 1 fight a week, every fight result, and 1 try of each tool. Takes 5 seconds."); return; }
   const btn = $("#fightBtn"); btn.disabled = true; btn.textContent = "Fighting\u2026";
   try {
-    const r = await fetch(\`/api/duel?a=\${encodeURIComponent(a)}&b=\${encodeURIComponent(b)}\`);
+    store.set("mysite", a);
+    const r = await fetch(\`/api/duel?a=\${encodeURIComponent(a)}&b=\${encodeURIComponent(b)}\${window.FRESH ? "&fresh=1" : ""}\`);
     const j = await r.json();
     if (!(await gateCheck(r))) { btn.disabled = false; btn.textContent = "Fight"; return; }
     if (!r.ok) throw new Error(j.error || "Fight failed");
@@ -1203,7 +1283,7 @@ function renderNight() {
     return \`<div class="nr"><span class="v \${x >= y ? "w" : ""}">\${x}</span><div class="bar a"><i style="width:\${x}%"></i></div><span class="nm">\${name}</span><div class="bar b"><i style="width:\${y}%"></i></div><span class="v \${y >= x ? "w" : ""}">\${y}</span></div>\`; }).join("");
   const champ = W ? NIGHT[W].host : NIGHT.b.host;
   $("#ncMine").textContent = \`Can your site beat \${brandName(champ)}?\`;
-  $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = ""; $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); });
+  $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = (window.ME && (ME.site || store.get("mysite"))) || ""; $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); });
   const full = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
   $("#ncFull").href = full;
   const rows = NIGHT.rows || []; $("#ncLockT").textContent = \`All \${rows.length || 31} checks\`;
@@ -1258,6 +1338,101 @@ if (VIEW === "home") {
   });
   renderCards("");
   if (location.pathname === "/fights") { $("#mcTitle").textContent = "Every fight"; $("#mcMore").hidden = true; }
+}
+
+/* ---------- signed-in homepage: ringside bar, your corner, hunt clients mode ---------- */
+const IS_HOME = VIEW === "home" && location.pathname === "/";
+const HUNTERS = ["agency", "owner"];
+const shortDate = t => new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function setMode(m, save) {
+  const hunt = m === "hunt";
+  document.querySelectorAll("#modes button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
+  $("#duelForm").hidden = hunt; $("#huntForm").hidden = !hunt; $("#rivalsQ").hidden = hunt; if (hunt) $("#rivalList").hidden = true;
+  $("#huntZone").hidden = !hunt; $("#yourCorner").hidden = hunt || !$("#csList").children.length; $("#err").hidden = true;
+  $("#testYours").textContent = hunt ? "Find clients losing on Google" : "Now put your site in the ring";
+  if (save) store.set("ringMode", m);
+}
+const prospectCard = (x, id) => \`<div class="prospect"><div class="pr-top"><b>\${esc(x.host)}</b><span class="pr-score"><i class="r">\${x.score}</i> vs <i class="b">\${x.rivalScore}</i></span></div>
+  <p class="sub" style="margin:0">Google rank #\${esc(x.rank)}. Losing by \${esc(x.gap)} points to \${esc(x.rival)}. Top gaps: \${(x.fixes || []).map(esc).join(", ") || "polish"}.</p>
+  <pre class="out pitch" id="\${id}">\${esc(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
+  <div class="pr-act"><button class="btn sm" type="button" data-pitch="\${id}">Copy pitch</button><a class="btn ghost sm" href="\${esc(x.fight)}" target="_blank" rel="noopener">Open the fight</a></div></div>\`;
+document.addEventListener("click", e => { const b = e.target.closest("[data-pitch]"); if (b) copy($("#" + b.dataset.pitch).textContent); });
+let huntsLoaded = false;
+async function loadHunts() {
+  if (huntsLoaded) return; huntsLoaded = true;
+  try {
+    const r = await fetch("/api/hunts?n=3"); if (!r.ok) return; const j = await r.json();
+    if (!j.hunts.length) return;
+    $("#rhList").innerHTML = j.hunts.map(h => \`<details class="rh"><summary><span><b>\${esc(h.industry)} in \${esc(h.city)}</b><small>\${h.prospects.length} prospect\${h.prospects.length === 1 ? "" : "s"} \xB7 \${shortDate(h.at)}</small></span></summary><div class="prospects">\${h.prospects.map((x, k) => prospectCard(x, \`rh\${h.id}-\${k}\`)).join("")}</div></details>\`).join("");
+    $("#recentHunts").hidden = false;
+  } catch {}
+}
+function ringsideBar(me) {
+  const f = me.ring && me.ring.fights, h = me.ring && me.ring.hunts; if (!f) return;
+  const per = f.per === "week" ? "this week" : "this month";
+  const label = me.plan === "free" ? "Free plan" : me.name;
+  const txt = HUNTERS.includes(me.plan) ? \`<b>\${f.left}</b> fights \xB7 <b>\${h.left}</b> hunts left\` : \`<b>\${f.left}</b> of \${f.max} fights left \${per}\`;
+  const up = me.plan === "free" ? \`<span class="sep">\xB7</span><a class="up" href="/go/pro">Go Pro</a>\` : "";
+  $("#ringside").innerHTML = \`<a class="main" href="/account"><span class="pl \${esc(me.plan)}">\${esc(label)}</span><span class="txt">\${txt}</span></a>\${up}<span class="sep g">\xB7</span><a class="go" href="/account">Account \u2192</a>\`;
+  $("#ringside").hidden = false;
+}
+function yourCorner(list) {
+  if (!list || !list.length) return;
+  $("#csList").innerHTML = list.map(f => {
+    const wa = f.winner === "a", wb = f.winner === "b", who = wa ? f.a : wb ? f.b : null;
+    return \`<div class="mini"><a class="mini-link" href="/fight/\${encodeURIComponent(f.slug)}" aria-label="\${esc(f.a)} vs \${esc(f.b)}">
+      <span class="mini-row"><span class="mh a\${wa ? " w" : ""}">\${esc(pretty(f.a))}</span><span class="ms a">\${f.a_score ?? "\u2013"}</span></span><span class="mvs">VS</span>
+      <span class="mini-row"><span class="mh b\${wb ? " w" : ""}">\${esc(pretty(f.b))}</span><span class="ms b">\${f.b_score ?? "\u2013"}</span></span></a>
+      <div class="mini-foot"><span>\${shortDate(f.at)} \xB7 \${who ? esc(pretty(who)) + " won" : "Tie"}</span><button class="btn sm rematch" type="button" data-a="\${esc(f.a)}" data-b="\${esc(f.b)}">Rematch</button></div></div>\`;
+  }).join("");
+  $("#csList").querySelectorAll(".rematch").forEach(b => b.addEventListener("click", () => {
+    setMode("fight", false); $("#a").value = b.dataset.a; $("#b").value = b.dataset.b; window.FRESH = true;
+    $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); b.textContent = "Fighting\u2026"; setTimeout(() => { b.textContent = "Rematch"; }, 5000); $("#duelForm").requestSubmit();
+  }));
+  $("#yourCorner").hidden = false;
+}
+if (IS_HOME) {
+  $("#modes").hidden = false;
+  $("#modes").addEventListener("click", async e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.mode === "fight") { setMode("fight", true); return; }
+    await meReady;
+    const pw = () => paywall("Prospect Hunter finds local businesses losing on Google and writes the pitch for you.", "agency");
+    if (!ME) { withAccount(() => { if (HUNTERS.includes(ME.plan)) { setMode("hunt", true); loadHunts(); } else pw(); }, "Sign up to hunt clients", "Free account first, 5 seconds. Prospect Hunter is part of the Agency plan."); return; }
+    if (!HUNTERS.includes(ME.plan)) { pw(); return; }
+    setMode("hunt", true); loadHunts();
+  });
+  $("#huntForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const industry = $("#hIndustry").value.trim(), city = $("#hCity").value.trim(), msg = $("#huntMsg");
+    const say = t => { msg.textContent = t; msg.hidden = !t; };
+    if (industry.length < 2 || city.length < 2) { say("Enter an industry and a city."); return; }
+    await meReady; if (!ME || !HUNTERS.includes(ME.plan)) { paywall("Prospect Hunter finds local businesses losing on Google and writes the pitch for you.", "agency"); return; }
+    const btn = $("#huntBtn"); btn.disabled = true; btn.textContent = "Hunting\u2026 about a minute";
+    say("Searching Google, then fighting each business against the #1 site.");
+    try {
+      const r = await fetch("/api/prospects", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ industry, city, country: $("#hCountry").value }) });
+      if (r.status === 402) { paywall("Prospect Hunter finds local businesses losing on Google and writes the pitch for you.", "agency"); say(""); return; }
+      if (!(await gateCheck(r))) { say(""); return; }
+      const j = await r.json(); if (!r.ok) throw new Error(j.error);
+      if (!j.prospects.length) { say("No local businesses found for that search. Try a broader industry or a bigger city."); return; }
+      say("");
+      $("#huntTitle").textContent = \`\${j.prospects.length} \${j.industry} in \${j.city} losing to \${j.leader.host}\`;
+      $("#huntSub").textContent = "Biggest gap first.";
+      $("#huntList").innerHTML = j.prospects.map((x, k) => prospectCard(x, "hn" + k)).join("");
+      $("#huntOut").hidden = false; $("#huntOut").scrollIntoView({ behavior: "smooth", block: "start" });
+      if (window.ME && ME.ring) { ME.ring.hunts.left = Math.max(0, ME.ring.hunts.left - 1); ringsideBar(ME); }
+    } catch (x) { say(x && x.message && !/fetch|JSON/i.test(x.message) ? x.message : "Prospect Hunter runs on the live site."); }
+    finally { btn.disabled = false; btn.textContent = "Hunt clients"; }
+  });
+  meReady.then(me => {
+    if (!me) return;
+    if (!$("#a").value) $("#a").value = me.site || store.get("mysite") || "";
+    ringsideBar(me); yourCorner(me.corner);
+    const tag = document.querySelector("#maincard .tag"); if (tag) tag.textContent = "Tap a fight to see who wins";
+    document.querySelector("#test .proof").hidden = true;
+    if (HUNTERS.includes(me.plan)) { $("#agTag").hidden = true; loadHunts(); if (store.get("ringMode") === "hunt") setMode("hunt", false); }
+  });
 }
 
 /* ---------- fight page: pick, then reveal ---------- */
@@ -1801,10 +1976,54 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
 .price .pill.gold { background: var(--gold); color: var(--ink) }
 .btn:not(.fight):not(.ghost):not(.google) { border: 2px solid var(--ink) }
 @media (prefers-reduced-motion: reduce) { .fight, .logo .gloves { transition: none; animation: none } }
-
+/* ===== prospect cards (homepage hunt mode, /agency, account) ===== */
 .prospects { display: grid; gap: 14px; margin-top: 14px } .prospect { border: 2px solid var(--ink); border-radius: 16px; padding: 16px; display: grid; gap: 8px; background: var(--surface) }
 .pr-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap } .pr-score i { font-style: normal; font-weight: 800 } .pr-score .r { color: var(--red) } .pr-score .b { color: var(--blue) }
 .prospect .pitch { white-space: pre-wrap; max-height: 220px; overflow: auto; margin: 0 } .pr-act { display: flex; gap: 8px; flex-wrap: wrap }
+pre.out { margin: 0; padding: 18px; border-radius: 16px; background: #0d1017; color: #e8ebf2; font: 13px/1.6 var(--f-mono); overflow-x: auto; white-space: pre; min-height: 160px }
+/* ===== signed-in: header avatar, mode switch, ringside bar, your corner, hunt mode ===== */
+header.top .btn.sm.hdr-fight { background: var(--red); color: #fff; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transition: transform .08s, box-shadow .08s }
+header.top .btn.sm.hdr-fight:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink) } header.top .btn.sm.hdr-fight:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); opacity: 1 }
+.avatar { flex: none; width: 38px; height: 38px; margin-left: -12px; border-radius: 50%; display: grid; place-items: center; text-decoration: none; color: #fff; font: 900 21px/1 var(--f-display); text-transform: uppercase; background: linear-gradient(135deg, var(--red) 50%, var(--blue) 50%); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); transition: transform .08s, box-shadow .08s }
+.avatar:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink) }
+.modes { display: flex; width: max-content; max-width: 100%; gap: 4px; padding: 4px; margin: 16px auto 0; border-radius: 999px; background: var(--surface); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink) }
+.modes button { appearance: none; border: 0; cursor: pointer; border-radius: 999px; padding: 10px 16px; background: transparent; color: var(--ink); font: 600 15px/1 var(--f-body); display: inline-flex; align-items: center; gap: 8px; white-space: nowrap }
+.modes button[aria-selected="true"][data-mode="fight"] { background: var(--red); color: #fff } .modes button[aria-selected="true"][data-mode="hunt"] { background: var(--blue); color: #fff }
+.ag-tag { font: 700 10px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 4px 6px; border-radius: 6px; background: var(--gold); color: var(--ink) }
+.modes ~ .ring { margin-top: 16px }
+@media (max-width: 420px) { .modes button { padding: 10px 11px; font-size: 14px; gap: 6px } }
+.ring.hunt .hunt-row { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(180px, 260px) 1fr; gap: 12px }
+.ring.hunt .fight { grid-column: auto; background: var(--blue) !important }
+.corner.gold { position: relative; background: color-mix(in srgb, var(--gold) 20%, transparent) } .corner.gold::after { content: "\u25BE"; position: absolute; right: 16px; bottom: 15px; font-size: 16px; color: var(--ink); pointer-events: none } .corner.gold label { color: color-mix(in srgb, var(--gold) 45%, var(--ink)) }
+.corner select { border: 0; background: transparent; font: 600 17px/1.3 var(--f-body); color: var(--ink); width: 100%; padding: 4px 0; outline: none; appearance: none; cursor: pointer }
+@media (max-width: 640px) { .ring.hunt .hunt-row { grid-template-columns: 1fr } }
+.ringside { display: flex; align-items: center; justify-content: center; gap: 6px 10px; flex-wrap: wrap; max-width: 860px; margin: 14px auto 0; padding: 9px 14px; border-radius: 14px; background: var(--surface); border: 2px solid var(--ink); font: 500 14px/1.35 var(--f-body) }
+.ringside a { color: inherit; text-decoration: none } .ringside .main { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center } .ringside .main:hover .txt { text-decoration: underline; text-underline-offset: 3px }
+.ringside .pl { font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: 5px 8px; border-radius: 6px; background: var(--ink); color: var(--bg) }
+.ringside .pl.pro { background: var(--red); color: #fff } .ringside .pl.agency, .ringside .pl.owner { background: var(--blue); color: #fff } .ringside .pl.lifetime { background: var(--gold); color: var(--ink) }
+@media (max-width: 560px) { .ringside { font-size: 13px; padding: 9px 10px; gap: 6px } .ringside .go, .ringside .sep.g { display: none } }
+.ringside b { font-variant-numeric: tabular-nums } .ringside .sep { color: var(--muted) } .ringside .up { font-weight: 700; color: var(--red); text-decoration: underline; text-underline-offset: 3px } .ringside .go { color: var(--muted) }
+.corner-strip, .hunt-zone { max-width: 860px; margin: 24px auto 0; text-align: left }
+.cs-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px } .cs-head .eyebrow { color: var(--ink) } .cs-head a { font-size: 14px; color: var(--muted); text-decoration: none } .cs-head a:hover { color: var(--ink) }
+.cs-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px }
+.mini { display: grid; gap: 10px; padding: 14px; border-radius: 18px; color: #fff; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); min-width: 0;
+  background: radial-gradient(110% 90% at 0% 0%, rgba(225,35,46,.42), transparent 60%), radial-gradient(110% 90% at 100% 100%, rgba(29,78,216,.5), transparent 60%), var(--arena) }
+.mini-link { display: grid; gap: 2px; text-decoration: none; color: inherit }
+.mini-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; min-width: 0 }
+.mh { font: 800 21px/1.1 var(--f-display); text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0 } .mh.w::before { content: "\u2605 "; color: var(--gold) }
+.ms { font: 900 34px/1 var(--f-display); font-variant-numeric: tabular-nums } .a.mh, .a.ms { color: #ff5a66 } .b.mh, .b.ms { color: #8aa6ff }
+.mvs { font: 700 10px/1 var(--f-mono); letter-spacing: .14em; color: rgba(255,255,255,.45) }
+.mini-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,.14); padding-top: 10px; font: 500 12px/1.3 var(--f-mono); color: rgba(255,255,255,.72) }
+.mini .rematch { flex: none; background: var(--red); color: #fff; border: 2px solid #fff !important; box-shadow: 3px 3px 0 #fff; padding: 7px 12px; font-size: 13px; font-weight: 700 }
+.mini .rematch:active { transform: translate(3px, 3px); box-shadow: none }
+@media (max-width: 760px) { .cs-list { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 82%; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 8px 10px 2px; margin-right: -16px; scrollbar-width: none } .cs-list::-webkit-scrollbar { display: none } .mini { scroll-snap-align: start } }
+.hz-msg { margin: 0 0 12px; text-align: center; color: var(--muted) }
+.rh-list { display: grid; gap: 10px }
+details.rh { padding: 0; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); border-radius: 14px; background: var(--surface) } details.rh + details.rh { margin-top: 0 }
+details.rh > summary { padding: 13px 16px; align-items: center } details.rh > summary > span { display: flex; gap: 6px 12px; flex-wrap: wrap; align-items: baseline } details.rh small { color: var(--muted); font: 500 12px/1.2 var(--f-mono) }
+details.rh .prospects { padding: 0 12px 12px; margin-top: 0 }
+#huntOut { margin-bottom: 22px } #huntOut .prospects { margin-top: 0 }
+
 #agOut[hidden] { display: none !important }
 html:not([data-me]) pre.out { filter: blur(5px); user-select: none; -webkit-user-select: none }
 [data-tool] { display: none }
@@ -1830,7 +2049,6 @@ html:not([data-me]) pre.out { filter: blur(5px); user-select: none; -webkit-user
 .seg button { border: 0; background: transparent; color: var(--muted); font: 600 13px/1 var(--f-body); padding: 8px 12px; border-radius: 999px; cursor: pointer }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg) }
 .bots { display: grid; gap: 8px; margin-top: 8px } .bot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--bg) } .bot b { font-weight: 600 } .bot span { color: var(--muted); font-size: 13px; display: block }
-pre.out { margin: 0; padding: 18px; border-radius: 16px; background: #0d1017; color: #e8ebf2; font: 13px/1.6 var(--f-mono); overflow-x: auto; white-space: pre; min-height: 160px }
 .out-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px } .chip { font: 600 13px/1 var(--f-mono); padding: 8px 12px; border-radius: 999px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line) }
 .chip.bad { color: var(--bad) } .chip.warn { color: var(--warn) } .chip.good { color: var(--good) }
@@ -1941,7 +2159,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
 
   <!-- AGENCY: PROSPECT HUNTER -->
   <section data-tool="agency"><div class="tool">
-    <div class="panel">
+    <div class="panel" id="agHow">
       <span class="eyebrow" style="color:var(--blue)">Prospect Hunter</span>
       <h3 style="margin-top:8px">How it works</h3>
       <ol class="steps">
@@ -1996,10 +2214,27 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
 (() => {
   const q = s => document.querySelector(s);
   window.ME = null; window.AUTH = {};
-  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
-  // Signed in: the header button goes to the dashboard instead of "Start a fight".
-  const dashBtn = () => { if (!window.ME) return; document.querySelectorAll("header.top .btn.sm").forEach(b => { b.textContent = "Dashboard"; b.href = "/dashboard"; }); };
-  window.dashBtn = dashBtn; window.meReady.then(dashBtn);
+  window.meReady = fetch("/api/me" + (location.pathname === "/" ? "?home=1" : ""), { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
+  // Signed in: the header keeps a red "Start a fight" button (to the form) and gets a round avatar that opens the account page.
+  const meHeader = () => {
+    if (!window.ME) return;
+    document.querySelectorAll("header.top .wrap").forEach(w => {
+      const b = w.querySelector(":scope > .btn.sm");
+      if (b) {
+        b.textContent = "Start a fight"; b.classList.add("hdr-fight");
+        const home = location.pathname === "/" && document.getElementById("duelForm");
+        b.href = home ? "#test" : "/#test";
+        if (home && !b.dataset.bound) { b.dataset.bound = 1; b.addEventListener("click", e => { e.preventDefault(); const f = document.getElementById("huntForm"); if (f && !f.hidden && window.setMode) setMode("fight", true); document.getElementById("test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => { const a = document.getElementById(document.getElementById("a").value ? "b" : "a"); a && a.focus({ preventScroll: true }); }, 450); }); }
+      }
+      if (!w.querySelector(".avatar")) {
+        const av = document.createElement("a"); av.className = "avatar"; av.href = "/account";
+        av.textContent = (String(window.ME.email || "?").trim()[0] || "?").toUpperCase();
+        av.title = "Your account"; av.setAttribute("aria-label", "Your account (" + window.ME.email + ")");
+        w.appendChild(av);
+      }
+    });
+  };
+  window.dashBtn = meHeader; window.meReady.then(meHeader);
   let next = null, nextUrl = null;
   const open = (mode, title, text) => {
     const pay = mode === "pay";
@@ -2040,7 +2275,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
       const j = await r.json();
       if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
       if (j.sent) { q("#suEyebrow").textContent = "Almost there"; q("#suTitle").textContent = "Check your inbox \u{1F4EC}"; q("#suText").textContent = \`We sent a sign-in link to \${email}. Tap it and you're in.\`; q("#suFields").hidden = true; q("#suBtn").hidden = true; q("#suGoogle").hidden = true; return; }
-      window.ME = j; dashBtn(); try { localStorage.setItem("fan", email); } catch {}
+      window.ME = j; meHeader(); try { localStorage.setItem("fan", email); } catch {}
       q("#suModal").hidden = true; const f = next; next = null; f && f();
     } catch { q("#suText").textContent = "Try again."; }
     finally { btn.disabled = false; btn.textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account"; }
@@ -3005,19 +3240,19 @@ var TOOL_PAGES = {
     about: "<h2>How Keyword Battle works</h2><p>We search Google for each keyword in the country you pick and find where both sites appear in the top 30. Free shows 1 of 10 keywords. Pro shows all 10, any country, and emails you every Monday when positions move.</p>"
   }
 };
-function toolPage(env, path, url) {
-  let t = TOOL_PAGES[path], crumbs = [["Home", "/"], ...t.crumbs].map(([n, h]) => `<a href="${h}">${n}</a><span>/</span>`).join("") + `<span>${t.h1.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()}</span>`, fill = {
+function toolPage(env, path, url, over) {
+  let t = { ...TOOL_PAGES[path], ...over || {} }, crumbs = [["Home", "/"], ...t.crumbs].map(([n, h]) => `<a href="${h}">${n}</a><span>/</span>`).join("") + `<span>${t.h1.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()}</span>`, fill = {
     __TITLE__: esc2(t.title),
     __DESC__: esc2(t.desc),
     __H1__: t.h1,
     __LEDE__: esc2(t.lede),
     __CRUMBS__: crumbs,
-    __SHOW__: `[data-tool="${t.show}"]{display:block}`,
+    __SHOW__: `[data-tool="${t.show}"]{display:block}${t.css || ""}`,
     __ABOUT__: t.about,
     __KBA__: esc2(url.searchParams.get("a") || ""),
     __KBB__: esc2(url.searchParams.get("b") || "")
   }, ld = { "@context": "https://schema.org", "@type": "WebApplication", name: t.title.split(" \xB7 ")[0], url: SITE + path, applicationCategory: "BusinessApplication", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } };
-  return html(head({ ...t, path, ld }) + tools_default.replace(/__(TITLE|DESC|H1|LEDE|CRUMBS|SHOW|ABOUT|KBA|KBB)__/g, (m) => fill[m]), {});
+  return html(head({ ...t, path, ld }) + tools_default.replace(/__(TITLE|DESC|H1|LEDE|CRUMBS|SHOW|ABOUT|KBA|KBB)__/g, (m) => fill[m]), { cache: t.cache });
 }
 function infoPage(env, o) {
   let fill = { __TITLE__: esc2(o.title), __DESC__: esc2(o.desc || o.title), __H1__: o.h1, __LEDE__: o.lede || "", __CRUMBS__: "", __SHOW__: "", __ABOUT__: o.body, __KBA__: "", __KBB__: "" };
@@ -3025,7 +3260,7 @@ function infoPage(env, o) {
 }
 var WELCOME_HTML = `<div class="panel" id="wbox"><h3>One second\u2026</h3><p class="muted">Confirming your payment with Stripe.</p></div>
 <script>(async()=>{const sid=new URLSearchParams(location.search).get("session_id");const box=document.getElementById("wbox");if(!sid){box.innerHTML='<h3>No payment found</h3><p class="muted">If you just paid, check your email for your access link.</p><p><a class="btn" href="/account">Your account</a></p>';return;}
-for(let i=0;i<20;i++){try{const r=await fetch("/api/welcome?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.ready){box.innerHTML='<h3>'+j.plan+' is on \u{1F94A}</h3><p class="muted">Signed in as '+j.email.replace(/[<>&]/g,"")+'.</p><p><a class="btn fight" href="/">Start fighting</a> <a class="btn ghost" href="/dashboard">Your dashboard</a></p>';return;}}catch(e){}await new Promise(r=>setTimeout(r,1500));}
+for(let i=0;i<20;i++){try{const r=await fetch("/api/welcome?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.ready){box.innerHTML='<h3>'+j.plan+' is on \u{1F94A}</h3><p class="muted">Signed in as '+j.email.replace(/[<>&]/g,"")+'.</p><p><a class="btn fight" href="/">Start fighting</a> <a class="btn ghost" href="/account">Your account</a></p>';return;}}catch(e){}await new Promise(r=>setTimeout(r,1500));}
 box.innerHTML='<h3>Payment received</h3><p class="muted">It is taking a moment to set up. Check your email for your access link, or refresh this page.</p>';})();</script>`, RESTORE_HTML = `<form class="panel waitbox" id="restore" novalidate><h3>Get your access link</h3><p class="muted">Enter the email you paid with. If you have an active plan, we'll email you a link that signs you in on this browser.</p><div class="wrow"><input id="rEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn" type="submit">Email me a link</button></div><p class="muted" id="rMsg"></p></form>
 <p style="margin-top:16px"><a class="btn ghost" href="/#pricing">See plans</a></p>
 <script>document.getElementById("restore").addEventListener("submit",async e=>{e.preventDefault();const email=document.getElementById("rEmail").value.trim();const m=document.getElementById("rMsg");try{const r=await fetch("/api/restore",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email})});const j=await r.json();m.textContent=r.ok?(j.email===false?"Email sign-in links are being set up. Use the contact page and we'll switch your plan on by hand.":"If that email has a plan, your link is on its way."):(j.error||"Try again.");}catch{m.textContent="Try again.";}});</script>`, TERMS_HTML = `<div class="panel terms">
@@ -3072,7 +3307,7 @@ var M = (o) => mail({ site: SITE, ...o }), portalFor = (env, email) => env.STRIP
     footer: "You got this because someone asked for an access link for this email on SEO Fights."
   }),
   welcome: (env, plan, email, key) => {
-    let portal = portalFor(env, email), manage = plan === "pro" || plan === "agency" ? portal ? `Manage your card, see invoices or cancel any time from ${mailLink("billing", portal)} or ${mailLink("your dashboard", `${SITE}/dashboard#billing`)}. If you cancel, you keep access until the end of the period you paid for.` : `Manage or cancel any time from ${mailLink("your dashboard", `${SITE}/dashboard#billing`)}.` : "Lifetime is a single payment. There is nothing to cancel.";
+    let portal = portalFor(env, email), manage = plan === "pro" || plan === "agency" ? portal ? `Manage your card, see invoices or cancel any time from ${mailLink("billing", portal)} or ${mailLink("your account", `${SITE}/account#billing`)}. If you cancel, you keep access until the end of the period you paid for.` : `Manage or cancel any time from ${mailLink("your account", `${SITE}/account#billing`)}.` : "Lifetime is a single payment. There is nothing to cancel.";
     return M({
       title: `Thanks, you're ${PLAN_NAMES[plan]}`,
       preheader: `Your ${PLAN_NAMES[plan]} plan is on.`,
@@ -3099,7 +3334,7 @@ var M = (o) => mail({ site: SITE, ...o }), portalFor = (env, email) => env.STRIP
       preheader: `${bt.a} vs ${bt.b} this week`,
       body: mailP(`Google positions changed this week in <b style="color:#E1232E">${mailEsc(bt.a)}</b> vs <b style="color:#1D4ED8">${mailEsc(bt.b)}</b>.`) + mailTable(moves.map((r) => [mailEsc(r.keyword), `${f(prev[r.keyword].a)} \u2192 <b>${f(r.a)}</b>`, `${f(prev[r.keyword].b)} \u2192 <b>${f(r.b)}</b>`]), ["Keyword", "You", "Rival"]),
       button: { text: "Open Keyword Battle", href: `${SITE}/keywords-battle?a=${encodeURIComponent(bt.a)}&b=${encodeURIComponent(bt.b)}` },
-      footer: `You get this because you track this battle on SEO Fights. Manage it from ${mailLink("your dashboard", `${SITE}/dashboard#battles`)}.`
+      footer: `You get this because you track this battle on SEO Fights. Manage it from ${mailLink("your account", `${SITE}/account#battles`)}.`
     });
   }
 };
@@ -3260,6 +3495,34 @@ async function weekly(env) {
     } catch {
     }
 }
+async function usedOf(env, m, what) {
+  let [max, per] = LIMITS[planOf(m)][what.split(":")[0]], used = env.LIMITS && max ? parseInt(await env.LIMITS.get(`u:${what}:${period(per)}:${m.key}`) || "0", 10) : 0;
+  return { left: Math.max(0, max - used), max, per };
+}
+async function huntList(env, m, n) {
+  try {
+    return await tables(env), (await env.DB.prepare("SELECT id, industry, city, result, at FROM hunts WHERE member_key = ?1 ORDER BY at DESC LIMIT ?2").bind(m.key, n).all()).results.map((h) => {
+      let r = { leader: null, prospects: [] };
+      try {
+        r = JSON.parse(h.result);
+      } catch {
+      }
+      return { id: h.id, industry: h.industry, city: h.city, at: h.at, leader: r.leader, prospects: r.prospects || [] };
+    });
+  } catch {
+    return [];
+  }
+}
+async function homeExtras(env, m) {
+  let [fights, hunts, corner] = await Promise.all([usedOf(env, m, "fights"), usedOf(env, m, "hunts"), (async () => {
+    try {
+      return await tables(env), (await env.DB.prepare("SELECT mf.slug, mf.at, f.a, f.b, f.a_score, f.b_score, f.winner FROM member_fights mf JOIN fights f ON f.slug = mf.slug WHERE mf.member_key = ?1 ORDER BY mf.at DESC LIMIT 3").bind(m.key).all()).results;
+    } catch {
+      return [];
+    }
+  })()]);
+  return { site: corner[0]?.a || null, ring: { fights, hunts }, corner: corner.map((f) => ({ slug: f.slug, at: f.at, a: f.a, b: f.b, a_score: f.a_score, b_score: f.b_score, winner: f.winner || null })) };
+}
 var USAGE = [
   ["fights", "fights", "Fights"],
   ["battles", "battles", "Keyword Battles"],
@@ -3313,7 +3576,14 @@ async function dashboardData(env, m) {
     billing: { kind: plan === "free" ? "free" : plan === "lifetime" || plan === "owner" ? plan : "sub", portal: plan === "pro" || plan === "agency" ? portalFor(env, m.email) : null, lifePrice: lp }
   };
 }
-var DASH_TABS = [["overview", "Overview"], ["fights", "My fights"], ["battles", "Keyword Battles"], ["hunts", "Prospect Hunts"], ["watching", "Watching"], ["billing", "Billing"]], DASH_CSS = `<style>
+function huntsHtml(list, openFirst = !0) {
+  let e = esc2, day = (t) => t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : "";
+  return `<div class="dlist">${list.map((h, i) => `<details class="hunt"${i === 0 && openFirst ? " open" : ""}><summary><span><b>${e(h.industry)} in ${e(h.city)}</b><small>${day(h.at)} \xB7 ${(h.prospects || []).length} prospects${h.leader ? ` \xB7 leader ${e(h.leader.host)}` : ""}</small></span></summary><div class="prospects">${(h.prospects || []).map((x, k) => `<div class="prospect"><div class="pr-top"><b>${e(x.host)}</b><span class="pr-score"><i class="r">${x.score}</i> vs <i class="b">${x.rivalScore}</i></span></div>
+<p class="muted">Google rank #${e(x.rank)}. Losing by ${e(x.gap)} points to ${e(x.rival)}. Top gaps: ${(x.fixes || []).map(e).join(", ") || "polish"}.</p>
+<pre class="out pitch" id="hp${h.id}-${k}">${e(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
+<div class="pr-act"><button class="btn sm" type="button" data-dcopy="hp${h.id}-${k}">Copy pitch</button><a class="btn ghost sm" href="${e(x.fight)}" target="_blank" rel="noopener">Open the fight</a></div></div>`).join("")}</div></details>`).join("")}</div>` + COPY_PITCH;
+}
+var COPY_PITCH = '<script>document.querySelectorAll("[data-dcopy]").forEach(b=>{if(b.dataset.bound)return;b.dataset.bound=1;b.addEventListener("click",async()=>{const t=document.getElementById(b.dataset.dcopy).textContent;try{await navigator.clipboard.writeText(t);b.textContent="Copied";}catch(e){b.textContent="Select and copy";}setTimeout(()=>b.textContent="Copy pitch",1800);});});</script>', DASH_TABS = [["overview", "Overview"], ["fights", "My fights"], ["battles", "Keyword Battles"], ["hunts", "Prospect Hunts"], ["watching", "Watching"], ["billing", "Billing"]], DASH_CSS = `<style>
 .seo-sum:has(.dash) { max-width: none; color: var(--ink); padding-top: 8px }
 .tools-hero:has(~ .seo-sum .dash) { padding-block: 40px 0 } .tools-hero:has(~ .seo-sum .dash) h1 { font-size: clamp(48px, 8vw, 88px) }
 .dash { display: grid; gap: 18px } .dash h3 { margin-bottom: 6px } .dash .muted { margin: 0 }
@@ -3323,13 +3593,14 @@ var DASH_TABS = [["overview", "Overview"], ["fights", "My fights"], ["battles", 
 .dtab .n { font: 600 11px/1 var(--f-mono); padding: 3px 6px; border-radius: 99px; background: var(--bg); color: var(--muted) } .dtab[aria-selected="true"] .n { background: color-mix(in srgb, var(--bg) 18%, transparent); color: var(--bg) }
 .dpane[hidden] { display: none !important } .dpane { display: grid; gap: 16px }
 .dash .panel.punch { border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink) }
-.dgrid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px; align-items: start } @media (max-width: 820px) { .dgrid { grid-template-columns: 1fr } }
+.dgrid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 16px; align-items: start } @media (max-width: 820px) { .dgrid { grid-template-columns: 1fr } }
+@media (min-width: 821px) { .plancard { position: sticky; top: 84px } }
 .plancard { background: radial-gradient(120% 90% at 100% 0%, var(--arena-2), var(--arena) 70%); color: #fff; border-radius: 22px; padding: 22px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); display: grid; gap: 10px; align-content: start }
 .plancard .eyebrow { color: var(--gold) } .plancard .pname { font: 900 clamp(48px, 9vw, 72px)/.9 var(--f-display); text-transform: uppercase } .plancard .pname.free { color: #fff } .plancard .pmeta { color: rgba(255,255,255,.72); font-size: 14px; overflow-wrap: anywhere }
 .plancard .belt { justify-self: start; margin: 0; background: color-mix(in srgb, var(--gold) 22%, transparent); color: var(--gold) }
 .plancard .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px } .plancard .btn.ghost { color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35) } .plancard .fight { border-color: #fff; box-shadow: 4px 4px 0 #fff }
 .dash .btn.fight { grid-column: auto; font-size: 20px; padding: 13px 20px }
-.meters { display: grid; gap: 16px 32px; margin-top: 12px } @media (min-width: 821px) { .meters { grid-template-columns: 1fr 1fr } }
+.meters { display: grid; gap: 14px; margin-top: 12px }
 .meter { display: grid; gap: 6px } .meter .top { display: flex; justify-content: space-between; gap: 10px; font-size: 15px } .meter .top b { font-weight: 600 } .meter .x { font: 600 13px/1.2 var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap }
 .meter .track { height: 12px; border-radius: 99px; border: 2px solid var(--ink); background: var(--bg); overflow: hidden } .meter .track i { display: block; height: 100%; background: var(--blue); border-radius: 99px } .meter.full .track i { background: var(--red) } .meter.hot .track i { background: var(--gold) }
 .meter small { color: var(--muted); font: 500 12px/1 var(--f-mono) } .meter.off { opacity: .55 } .meter.off .track { border-style: dashed }
@@ -3352,33 +3623,27 @@ details.hunt .prospects { padding: 0 14px 14px; margin-top: 0 }
 @media (max-width: 560px) { .frow { padding: 12px 14px } .frow .s { font-size: 26px } .frow .h { font-size: 14px } }
 </style>`;
 function dashboardHtml(D) {
-  let e = esc2, day = (t) => t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : "", btn = ([h, t, k]) => `<a class="btn ${k === "fight" ? "fight" : k}" href="${h}">${e(t)}</a>`, count = { fights: D.fights.length, battles: D.battles.list.length, hunts: D.hunts.list.length, watching: D.watches.length }, tabs = `<div class="dtabs" role="tablist" aria-label="Dashboard">${DASH_TABS.map(([k, n], i) => `<a class="dtab" role="tab" id="t-${k}" href="#${k}" data-tab="${k}" aria-controls="p-${k}" aria-selected="${i === 0}">${n}${count[k] ? `<span class="n">${count[k]}</span>` : ""}</a>`).join("")}</div>`, empty = (title, text, cta2) => `<div class="panel punch empty"><h3>${title}</h3><p class="muted">${text}</p>${cta2 || ""}</div>`, meters = D.usage.map((u) => {
+  let e = esc2, day = (t) => t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : "", btn = ([h, t, k]) => `<a class="btn ${k === "fight" ? "fight" : k}" href="${h}">${e(t)}</a>`, count = { fights: D.fights.length, battles: D.battles.list.length, hunts: D.hunts.list.length, watching: D.watches.length }, tabs = `<div class="dtabs" role="tablist" aria-label="Account">${DASH_TABS.map(([k, n], i) => `<a class="dtab" role="tab" id="t-${k}" href="#${k}" data-tab="${k}" aria-controls="p-${k}" aria-selected="${i === 0}">${n}${count[k] ? `<span class="n">${count[k]}</span>` : ""}</a>`).join("")}</div>`, empty = (title, text, cta2) => `<div class="panel punch empty"><h3>${title}</h3><p class="muted">${text}</p>${cta2 || ""}</div>`, meters = D.usage.map((u) => {
     if (!u.max) return `<div class="meter off"><div class="top"><b>${u.label}</b><span class="x">Not in ${e(D.name)}</span></div><div class="track"><i style="width:0"></i></div></div>`;
     let pct = Math.min(100, Math.round(u.used / u.max * 100));
     return `<div class="meter${pct >= 100 ? " full" : pct >= 80 ? " hot" : ""}"><div class="top"><b>${u.label}</b><span class="x">${u.used} of ${u.max}</span></div><div class="track" role="progressbar" aria-label="${u.label}" aria-valuemin="0" aria-valuemax="${u.max}" aria-valuenow="${u.used}"><i style="width:${pct}%"></i></div><small>${u.per === "week" ? "This week" : "This month"} \xB7 ${u.reset}</small></div>`;
   }).join(""), blurb = { free: "1 fight and 1 try of each tool every week.", pro: "40 fights a month, every tool, AI strategy and Keyword Battles.", agency: "200 fights a month, Prospect Hunter and every tool.", lifetime: "40 fights a month and every free tool, paid once.", owner: "Owner access. Everything is on." }[D.plan], overview = `<div class="dgrid"><div class="plancard"><span class="eyebrow">Your plan</span><div class="pname">${e(D.name)}</div><p class="pmeta">${blurb}</p>
 <dl class="kv" style="color:#fff"><dt style="color:rgba(255,255,255,.55)">Email</dt><dd>${e(D.email)}</dd>${D.since ? `<dt style="color:rgba(255,255,255,.55)">Since</dt><dd>${day(D.since)}</dd>` : ""}</dl>
-<div class="acts">${D.upgrades.length ? D.upgrades.map(btn).join("") : '<a class="btn fight" href="/">Start a fight</a>'}</div></div>
-<div class="panel punch"><h3>Quick start</h3><p class="muted">Jump back in.</p><div class="dlist" style="margin-top:12px">
-<a class="btn ghost" href="/">Start a fight</a><a class="btn ghost" href="/keywords-battle">Keyword Battle</a><a class="btn ghost" href="/tools">Free SEO tools</a>${D.hunts.allowed ? '<a class="btn ghost" href="/agency">Prospect Hunter</a>' : ""}</div></div></div>
-<div class="panel punch"><h3>Your usage</h3><p class="muted">What you've used so far this period.</p><div class="meters">${meters}</div></div>`, fights = D.fights.length ? `<div class="dlist">${D.fights.map((f) => `<a class="frow" href="/fight/${encodeURIComponent(f.slug)}"><span class="h${f.winner === f.a ? " w" : ""}">${e(f.a)}</span><span class="s"><span class="ra">${f.a_score ?? "\u2013"}</span><i>vs</i><span class="rb">${f.b_score ?? "\u2013"}</span></span><span class="h b${f.winner === f.b ? " w" : ""}">${e(f.b)}</span><span class="meta"><span>${day(f.at)} \xB7 ${f.winner ? `${e(f.winner)} won` : "Tie"}</span><span class="go">Open fight \u2192</span></span></a>`).join("")}</div>` : empty("No fights yet", "Put your site in the ring with a rival. Every fight you run shows up here.", '<a class="btn fight" href="/">Start a fight</a>'), battles = D.battles.allowed ? D.battles.list.length ? `<div class="dlist">${D.battles.list.map((b) => `<a class="frow" href="${e(b.link)}"><span class="h${b.winsA > b.winsB ? " w" : ""}">${e(b.a)}</span><span class="s"><span class="ra">${b.winsA}</span><i>vs</i><span class="rb">${b.winsB}</span></span><span class="h b${b.winsB > b.winsA ? " w" : ""}">${e(b.b)}</span><span class="meta"><span>${b.keywords} keywords \xB7 ${e(COUNTRY[b.gl] || String(b.gl || "us").toUpperCase())} \xB7 checked ${day(b.checked)}</span><span class="go">Open battle \u2192</span></span></a>`).join("")}</div><p class="muted" style="font-size:14px">Scores are keywords won. Saved battles re-run every Monday and email you when positions move.</p>` : empty("No Keyword Battles yet", "Pick 10 keywords and a rival. We check who ranks higher on Google, then re-check every Monday.", '<a class="btn fight" href="/keywords-battle">Start a Keyword Battle</a>') : '<div class="panel upsell-box"><h3>Keyword Battle is part of Pro</h3><p>See who ranks higher on Google for 10 keywords, in any country, with a Monday email when positions move.</p><p style="margin-top:12px"><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/keywords-battle">Try it free</a></p></div>', hunts = D.hunts.allowed ? D.hunts.list.length ? `<div class="dlist">${D.hunts.list.map((h, i) => `<details class="hunt"${i === 0 ? " open" : ""}><summary><span><b>${e(h.industry)} in ${e(h.city)}</b><small>${day(h.at)} \xB7 ${(h.prospects || []).length} prospects${h.leader ? ` \xB7 leader ${e(h.leader.host)}` : ""}</small></span></summary><div class="prospects">${(h.prospects || []).map((x, k) => `<div class="prospect"><div class="pr-top"><b>${e(x.host)}</b><span class="pr-score"><i class="r">${x.score}</i> vs <i class="b">${x.rivalScore}</i></span></div>
-<p class="muted">Google rank #${e(x.rank)}. Losing by ${e(x.gap)} points to ${e(x.rival)}. Top gaps: ${(x.fixes || []).map(e).join(", ") || "polish"}.</p>
-<pre class="out pitch" id="hp${h.id}-${k}">${e(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
-<div class="pr-act"><button class="btn sm" type="button" data-dcopy="hp${h.id}-${k}">Copy pitch</button><a class="btn ghost sm" href="${e(x.fight)}" target="_blank" rel="noopener">Open the fight</a></div></div>`).join("")}</div></details>`).join("")}</div>` : empty("No hunts yet", "Pick an industry and a city. Every hunt you run is saved here with its prospects and pitches.", '<a class="btn fight" href="/agency">Hunt prospects</a>') : '<div class="panel upsell-box"><h3>Prospect Hunter is part of Agency</h3><p>Pick an industry and a city. We find local businesses losing to their top competitor, fight each one, and write the pitch. 30 hunts a month.</p><p style="margin-top:12px"><a class="btn fight" href="/go/agency">Go Agency \xB7 $99/month</a> <a class="btn ghost" href="/agency">How it works</a></p></div>', watching = D.watches.length ? `${D.paid ? "" : '<div class="panel upsell-box"><p><b>Monday reports are paused.</b> They need a paid plan. <a href="/go/pro">Go Pro</a> to switch them back on.</p></div>'}<div class="dlist" id="wlist">${D.watches.map((w) => `<div class="wrowd" data-w="${w.id}"><div class="who"><b><span style="color:var(--red)">${e(w.a)}</span> vs <span style="color:var(--blue)">${e(w.b)}</span></b><small>Last scores ${w.last_a} vs ${w.last_b}${w.checked ? ` \xB7 checked ${day(w.checked)}` : ""}</small></div><div class="acts"><a class="btn ghost sm" href="/fight/${encodeURIComponent(w.slug)}">Open</a><button class="btn sm" type="button" data-stop="${w.id}" data-t="${e(w.token)}">Stop</button></div></div>`).join("")}</div><p class="muted" style="font-size:14px">We re-run each fight every Monday and email ${e(D.email)} when a score moves.</p>` : empty("Not watching anything", D.paid ? "Open any fight and tap \u201CWatch\u201D to get a Monday email when the scores move." : "Monday email reports are part of Pro. Watch a fight and we email you when the scores move.", D.paid ? '<a class="btn fight" href="/">Start a fight</a>' : '<a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a>'), B2 = D.billing, billing = `<div class="panel punch"><h3>${B2.kind === "free" ? "Upgrade" : "Billing"}</h3>${B2.kind === "free" ? `<p class="muted">Free: 1 fight and 1 try of each tool a week. Pro: 40 fights a month, every tool, AI strategy and Keyword Battles.</p><p style="margin-top:14px"><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/go/lifetime">Lifetime \xB7 $${B2.lifePrice} once</a> <a class="btn ghost" href="/go/agency">Agency \xB7 $99/month</a></p>` : B2.kind === "lifetime" || B2.kind === "owner" ? `<p class="muted">${B2.kind === "owner" ? "Owner access." : "Lifetime: paid once, nothing to cancel."}</p>` : B2.portal ? `<p class="muted">Change card, see invoices or cancel. If you cancel, you keep access until the end of the period you paid for. All payments are final.</p><p style="margin-top:14px"><a class="btn" href="${e(B2.portal)}" target="_blank" rel="noopener">Manage billing or cancel</a></p>` : '<p class="muted">Billing management is being set up.</p>'}
+<div class="acts">${D.upgrades.length ? D.upgrades.map(btn).join("") : ""}<a class="btn ghost" href="/#test">Back to the ring</a></div></div>
+<div class="panel punch"><h3>Your usage</h3><p class="muted">What you've used so far this period.</p><div class="meters">${meters}</div></div></div>`, fights = D.fights.length ? `<div class="dlist">${D.fights.map((f) => `<a class="frow" href="/fight/${encodeURIComponent(f.slug)}"><span class="h${f.winner === f.a ? " w" : ""}">${e(f.a)}</span><span class="s"><span class="ra">${f.a_score ?? "\u2013"}</span><i>vs</i><span class="rb">${f.b_score ?? "\u2013"}</span></span><span class="h b${f.winner === f.b ? " w" : ""}">${e(f.b)}</span><span class="meta"><span>${day(f.at)} \xB7 ${f.winner ? `${e(f.winner)} won` : "Tie"}</span><span class="go">Open fight \u2192</span></span></a>`).join("")}</div>` : empty("No fights yet", "Put your site in the ring with a rival. Every fight you run shows up here.", '<a class="btn fight" href="/">Start a fight</a>'), battles = D.battles.allowed ? D.battles.list.length ? `<div class="dlist">${D.battles.list.map((b) => `<a class="frow" href="${e(b.link)}"><span class="h${b.winsA > b.winsB ? " w" : ""}">${e(b.a)}</span><span class="s"><span class="ra">${b.winsA}</span><i>vs</i><span class="rb">${b.winsB}</span></span><span class="h b${b.winsB > b.winsA ? " w" : ""}">${e(b.b)}</span><span class="meta"><span>${b.keywords} keywords \xB7 ${e(COUNTRY[b.gl] || String(b.gl || "us").toUpperCase())} \xB7 checked ${day(b.checked)}</span><span class="go">Open battle \u2192</span></span></a>`).join("")}</div><p class="muted" style="font-size:14px">Scores are keywords won. Saved battles re-run every Monday and email you when positions move.</p>` : empty("No Keyword Battles yet", "Pick 10 keywords and a rival. We check who ranks higher on Google, then re-check every Monday.", '<a class="btn fight" href="/keywords-battle">Start a Keyword Battle</a>') : '<div class="panel upsell-box"><h3>Keyword Battle is part of Pro</h3><p>See who ranks higher on Google for 10 keywords, in any country, with a Monday email when positions move.</p><p style="margin-top:12px"><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/keywords-battle">Try it free</a></p></div>', hunts = D.hunts.allowed ? D.hunts.list.length ? huntsHtml(D.hunts.list) : empty("No hunts yet", "Pick an industry and a city. Every hunt you run is saved here with its prospects and pitches.", '<a class="btn fight" href="/agency">Hunt prospects</a>') : '<div class="panel upsell-box"><h3>Prospect Hunter is part of Agency</h3><p>Pick an industry and a city. We find local businesses losing to their top competitor, fight each one, and write the pitch. 30 hunts a month.</p><p style="margin-top:12px"><a class="btn fight" href="/go/agency">Go Agency \xB7 $99/month</a> <a class="btn ghost" href="/agency">How it works</a></p></div>', watching = D.watches.length ? `${D.paid ? "" : '<div class="panel upsell-box"><p><b>Monday reports are paused.</b> They need a paid plan. <a href="/go/pro">Go Pro</a> to switch them back on.</p></div>'}<div class="dlist" id="wlist">${D.watches.map((w) => `<div class="wrowd" data-w="${w.id}"><div class="who"><b><span style="color:var(--red)">${e(w.a)}</span> vs <span style="color:var(--blue)">${e(w.b)}</span></b><small>Last scores ${w.last_a} vs ${w.last_b}${w.checked ? ` \xB7 checked ${day(w.checked)}` : ""}</small></div><div class="acts"><a class="btn ghost sm" href="/fight/${encodeURIComponent(w.slug)}">Open</a><button class="btn sm" type="button" data-stop="${w.id}" data-t="${e(w.token)}">Stop</button></div></div>`).join("")}</div><p class="muted" style="font-size:14px">We re-run each fight every Monday and email ${e(D.email)} when a score moves.</p>` : empty("Not watching anything", D.paid ? "Open any fight and tap \u201CWatch\u201D to get a Monday email when the scores move." : "Monday email reports are part of Pro. Watch a fight and we email you when the scores move.", D.paid ? '<a class="btn fight" href="/">Start a fight</a>' : '<a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a>'), B2 = D.billing, billing = `<div class="panel punch"><h3>${B2.kind === "free" ? "Upgrade" : "Billing"}</h3>${B2.kind === "free" ? `<p class="muted">Free: 1 fight and 1 try of each tool a week. Pro: 40 fights a month, every tool, AI strategy and Keyword Battles.</p><p style="margin-top:14px"><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/go/lifetime">Lifetime \xB7 $${B2.lifePrice} once</a> <a class="btn ghost" href="/go/agency">Agency \xB7 $99/month</a></p>` : B2.kind === "lifetime" || B2.kind === "owner" ? `<p class="muted">${B2.kind === "owner" ? "Owner access." : "Lifetime: paid once, nothing to cancel."}</p>` : B2.portal ? `<p class="muted">Change card, see invoices or cancel. If you cancel, you keep access until the end of the period you paid for. All payments are final.</p><p style="margin-top:14px"><a class="btn" href="${e(B2.portal)}" target="_blank" rel="noopener">Manage billing or cancel</a></p>` : '<p class="muted">Billing management is being set up.</p>'}
 <dl class="kv"><dt>Plan</dt><dd>${e(D.name)}</dd><dt>Email</dt><dd>${e(D.email)}</dd></dl></div>
 <div class="dfoot"><a class="btn ghost" href="/terms">Terms</a><a class="btn ghost" href="/contact">Help</a><a class="btn ghost" href="/signout">Sign out</a></div>`, panes = { overview, fights, battles, hunts, watching, billing };
   return `${DASH_CSS}<div class="dash">${tabs}${DASH_TABS.map(([k], i) => `<div class="dpane" role="tabpanel" id="p-${k}" aria-labelledby="t-${k}"${i ? " hidden" : ""}>${panes[k]}</div>`).join("")}</div>
 <script>(()=>{const tabs=[...document.querySelectorAll(".dtab")],ok=tabs.map(t=>t.dataset.tab);
-function show(k,push){if(!ok.includes(k))k="overview";tabs.forEach(t=>{const on=t.dataset.tab===k;t.setAttribute("aria-selected",on);if(on){const bar=t.parentNode;bar.scrollLeft=Math.max(0,t.offsetLeft-bar.offsetLeft-24);}});document.querySelectorAll(".dpane").forEach(p=>p.hidden=p.id!=="p-"+k);if(push)history.replaceState(null,"","/dashboard#"+k);}
+function show(k,push){if(!ok.includes(k))k="overview";tabs.forEach(t=>{const on=t.dataset.tab===k;t.setAttribute("aria-selected",on);if(on){const bar=t.parentNode;bar.scrollLeft=Math.max(0,t.offsetLeft-bar.offsetLeft-24);}});document.querySelectorAll(".dpane").forEach(p=>p.hidden=p.id!=="p-"+k);if(push)history.replaceState(null,"",location.pathname+"#"+k);}
 tabs.forEach(t=>t.addEventListener("click",e=>{e.preventDefault();show(t.dataset.tab,true);}));
 show(location.hash.slice(1)||new URLSearchParams(location.search).get("tab")||"overview");addEventListener("hashchange",()=>show(location.hash.slice(1)));
-document.querySelectorAll("[data-dcopy]").forEach(b=>b.addEventListener("click",async()=>{const t=document.getElementById(b.dataset.dcopy).textContent;try{await navigator.clipboard.writeText(t);b.textContent="Copied";}catch(e){b.textContent="Select and copy";}setTimeout(()=>b.textContent="Copy pitch",1800);}));
 document.querySelectorAll("[data-stop]").forEach(b=>b.addEventListener("click",async()=>{b.disabled=true;b.textContent="Stopping\u2026";try{const r=await fetch("/api/unwatch?id="+encodeURIComponent(b.dataset.stop)+"&t="+encodeURIComponent(b.dataset.t));if(!r.ok)throw 0;const row=b.closest(".wrowd");row.innerHTML='<div class="who"><b>Stopped</b><small>No more Monday emails for this fight.</small></div>';}catch(e){b.disabled=false;b.textContent="Try again";}}));})();</script>`;
 }
-var DASH_SIGNIN = `<div class="panel punch empty" style="border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)"><span class="eyebrow">Members</span><h3>Sign in to see your dashboard</h3><p class="muted">Your fights, Keyword Battles, usage and billing, in one place. Free account, no password.</p>
-<p style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn fight" type="button" id="dSign" style="grid-column:auto;font-size:20px;padding:13px 22px">Sign in or sign up</button><a class="btn ghost" href="/account">Already paid? Get your access link</a></p></div>
+var DASH_SIGNIN = `<div class="panel punch empty" style="border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)"><span class="eyebrow">Members</span><h3>Sign in to your account</h3><p class="muted">Your plan, usage, fights and billing. Free account, no password.</p>
+<p style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn fight" type="button" id="dSign" style="grid-column:auto;font-size:20px;padding:13px 22px">Sign in or sign up</button></p></div>
 <style>.seo-sum:has(#dSign){max-width:640px;margin-inline:auto;color:var(--ink)}.empty{text-align:center;display:grid;gap:10px;justify-items:center;padding:30px 20px}</style>
-<script>document.getElementById("dSign").addEventListener("click",()=>withAccount(()=>location.reload(),"Sign in to SEO Fights","Enter your email. Free accounts get 1 fight a week and 1 try of each tool.","/dashboard"));</script>`;
+<script>document.getElementById("dSign").addEventListener("click",()=>withAccount(()=>location.reload(),"Sign in to SEO Fights","Enter your email. Free accounts get 1 fight a week and 1 try of each tool.","/account"));</script>`;
 async function autoBlog(env, { force = !1, slug = null } = {}) {
   if (!env.DB) return { error: "No database." };
   if (!env.AI) return { error: "Workers AI isn't connected." };
@@ -3455,7 +3720,7 @@ var worker_default = {
       let m = await member(req, env);
       if (!m) return NEED_ACCOUNT();
       let slug = slugOf(hostOf(a), hostOf(b)), old = await storedFight(env, slug);
-      if (old && old.age < 36e5)
+      if (old && old.age < 36e5 && !u.searchParams.get("fresh"))
         return ctx.waitUntil(Promise.all([env.DB.prepare("UPDATE fights SET views=views+1 WHERE slug=?1").bind(slug).run(), logFight(env, m.key, slug)])), json(withReport(old.d, paid(m)));
       let who = m.key, plan = planOf(m);
       if (!await canUse(env, who, "fights", plan))
@@ -3682,7 +3947,16 @@ var worker_default = {
     }
     if (p === "/api/me") {
       let m = await member(req, env), auth = { google: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET), link: !!env.RESEND_KEY };
-      return json(m ? { plan: planOf(m), name: PLAN_NAMES[planOf(m)], email: m.email, auth } : { auth }, 200, { "cache-control": "no-store" });
+      if (!m) return json({ auth }, 200, { "cache-control": "no-store" });
+      let out = { plan: planOf(m), name: PLAN_NAMES[planOf(m)], email: m.email, auth };
+      return u.searchParams.get("home") && Object.assign(out, await homeExtras(env, m)), json(out, 200, { "cache-control": "no-store" });
+    }
+    if (p === "/api/hunts") {
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      if (!LIMITS[planOf(m)].hunts[0]) return json({ error: "Prospect Hunter is part of the Agency plan." }, 402);
+      let n = Math.max(1, Math.min(30, parseInt(u.searchParams.get("n") || "3", 10) || 3));
+      return json({ hunts: await huntList(env, m, n) }, 200, { "cache-control": "no-store" });
     }
     if (p === "/api/signup" && req.method === "POST") {
       let body;
@@ -3756,11 +4030,10 @@ var worker_default = {
       return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fights", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
     }
     if (p === "/dashboard" || p === "/account") {
-      let m = await member(req, env);
-      if (!m && p === "/account") return infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fights", h1: 'Your <span class="b">account</span>', lede: "Already paid? Get your access link by email.", body: RESTORE_HTML });
-      if (!m) return infoPage(env, { path: "/dashboard", noindex: !0, cache: "no-store", title: "Dashboard \xB7 SEO Fights", h1: 'Your <span class="r">dash</span><span class="b">board</span>', lede: "Sign in to see your fights, battles and billing.", body: DASH_SIGNIN });
+      let m = await member(req, env), H1 = 'Your <span class="r">acc</span><span class="b">ount</span>';
+      if (!m) return infoPage(env, { path: "/account", noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fights", h1: H1, lede: "Sign in, or get your access link if you already paid.", body: DASH_SIGNIN + `<div style="margin-top:18px">${RESTORE_HTML}</div>` });
       let D = await dashboardData(env, m);
-      return infoPage(env, { path: "/dashboard", noindex: !0, cache: "no-store", title: "Dashboard \xB7 SEO Fights", h1: 'Your <span class="r">dash</span><span class="b">board</span>', lede: `Signed in as ${esc2(m.email)} \xB7 ${esc2(D.name)} plan`, body: dashboardHtml(D) });
+      return infoPage(env, { path: "/account", noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fights", h1: H1, lede: `Signed in as ${esc2(m.email)} \xB7 ${esc2(D.name)} plan`, body: dashboardHtml(D) });
     }
     if (p === "/api/dashboard") {
       let m = await member(req, env);
@@ -3857,6 +4130,21 @@ var worker_default = {
       return mm ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: mm[1], b: mm[2], path: p, cache: "no-store" }) : page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: "", b: "", status: 404, cache: "no-store" });
     }
     if (p === "/fights") return boardPage(env);
+    if (p === "/agency") {
+      let m = await member(req, env);
+      if (m && LIMITS[planOf(m)].hunts[0]) {
+        let [left, list] = await Promise.all([usedOf(env, m, "hunts"), huntList(env, m, 30)]);
+        return toolPage(env, p, u, {
+          cache: "private, no-store",
+          noindex: !0,
+          crumbs: [],
+          h1: '<span class="r">Prospect</span> <span class="b">Hunter</span>',
+          lede: `${left.left} of ${left.max} hunts left this month. Pick an industry and a city.`,
+          css: `#agHow{display:none!important}[data-tool="agency"] .tool{grid-template-columns:1fr}.seo-sum:has(.dash){max-width:none;color:var(--ink)}${DASH_CSS.replace(/<\/?style>/g, "")}`,
+          about: `<div class="dash"><div class="sec-head" style="margin:0;align-items:center"><h2 class="display" style="font-size:clamp(32px,4.4vw,44px)">Your hunts</h2><span class="tag">${list.length} saved</span></div>${list.length ? huntsHtml(list, !0) : '<div class="panel punch empty"><h3>No hunts yet</h3><p class="muted">Every hunt you run is saved here with its prospects and pitches.</p></div>'}</div>`
+        });
+      }
+    }
     if (TOOL_PAGES[p]) return toolPage(env, p, u);
     if (p === "/sitemap.xml") {
       let rows = env.DB ? (await env.DB.prepare("SELECT slug, updated_at FROM fights WHERE category IS NOT NULL OR COALESCE(votes_a,0) + COALESCE(votes_b,0) >= 5 ORDER BY views DESC LIMIT 45000").all()).results : [], posts = [];
