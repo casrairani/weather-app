@@ -2429,7 +2429,7 @@ var ALTS = [
 };
 
 // src/worker.js
-var SITE = "https://seofight.dailygym.workers.dev", UA = "Mozilla/5.0 (compatible; SEOFightsBot/1.0; +https://seofight.dailygym.workers.dev/llms.txt)", esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
+var SITE = "https://seofights.com", UA = "Mozilla/5.0 (compatible; SEOFightsBot/1.0; +https://seofight.dailygym.workers.dev/llms.txt)", esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
   s = (s || "").trim(), /^https?:\/\//i.test(s) || (s = "https://" + s);
   let u = new URL(s);
   if (unsafeHost(u.hostname) || u.port) throw 0;
