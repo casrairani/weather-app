@@ -225,7 +225,7 @@ function duel(a, b) {
 }
 function toMarkdown(d) {
   let L = [
-    `# SEO duel: ${d.a.host} (${d.a.score}) vs ${d.b.host} (${d.b.score})`,
+    `# SEO fight: ${d.a.host} (${d.a.score}) vs ${d.b.host} (${d.b.score})`,
     "",
     `Winner: **${d.winner ? d[d.winner].host : "Tie"}**`,
     "",
@@ -593,6 +593,7 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.hero h1 .l1 { display: block; white-space: nowrap }
 .hero h1 .rot { position: relative; display: block; height: 1.05em; overflow: hidden }
 .hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
 .hero h1 .rot-in.enter { transform: translateY(100%); opacity: 0 } .hero h1 .rot-in.leave { transform: translateY(-100%); opacity: 0 }
@@ -1028,7 +1029,7 @@ const LEADS = {
   agency: ["For agencies", "Get Agency", "Agency is $99/month with Prospect Hunter. Leave your email and we'll set you up personally."],
   lifetime: ["Founder price", "Get lifetime", "Lifetime is $__LIFEPRICE__ once, and the price goes up as spots sell. Leave your email to lock it."],
   fix: ["Done for you", "Fix my site", "Leave your email and website. We'll reply with a fix plan and a price."],
-  battle: ["Pro feature", "Keyword Battle", "Leave your email and your first full Keyword Battle is on us."],
+  battle: ["Pro feature", "Keyword Battle", "Sign in and your first full Keyword Battle is on us."],
   rivals: ["Pro feature", "Rival finder", "Leave your email and we'll send your top 5 rivals."],
   ai: ["Pro feature", "AI strategy", "AI strategy is part of Pro ($19/month). Leave your email and we'll send your checkout link."],
   watch: ["Pro feature", "Monday reports", "Monday movement reports are part of Pro ($19/month). Leave your email and we'll send your checkout link."],
@@ -1147,10 +1148,11 @@ function headerRivals() {
   ["apple.com-vs-samsung.com", "nike.com-vs-adidas.com", "coca-cola.com-vs-pepsi.com", "openai.com-vs-anthropic.com", "uber.com-vs-lyft.com", "netflix.com-vs-disneyplus.com", "playstation.com-vs-xbox.com", "instagram.com-vs-tiktok.com"].forEach(sl => { const c = CARDS.find(x => x.slug === sl); if (c) add(c.a, c.b); });
   CARDS.filter(c => c.category).slice(0, 8).forEach(c => add(c.a, c.b));
   if (!pairs.length) return;
-  const items = [\`the <span class="r">SEO</span> <span class="b">fight?</span>\`, ...pairs.slice(0, 10).map(([a, b]) => \`<span class="r">\${esc(a)}</span> <small>vs</small> <span class="b">\${esc(b)}?</span>\`)];
-  h1.innerHTML = \`Who wins<br><span class="rot" aria-live="polite"><span class="rot-in">\${items[0]}</span></span>\`;
+  const items = [\`<span class="r">Yours</span> <small>or</small> <span class="b">your rival's?</span>\`, ...pairs.slice(0, 10).map(([a, b]) => \`<span class="r">\${esc(a)}</span> <small>or</small> <span class="b">\${esc(b)}?</span>\`)];
+  h1.innerHTML = \`<span class="l1">Whose <span class="r">SEO</span> wins?</span><span class="rot" aria-live="polite"><span class="rot-in">\${items[0]}</span></span>\`;
   const rot = h1.querySelector(".rot"), still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fit = el => { el.style.fontSize = ""; let f = 1; while (el.scrollWidth > rot.clientWidth + 2 && f > .45) { f -= .05; el.style.fontSize = f + "em"; } };
+  const l1 = h1.querySelector(".l1"); { let f = 1; while (l1.scrollWidth > l1.clientWidth + 2 && f > .4) { f -= .04; l1.style.fontSize = f + "em"; } }
   fit(rot.firstChild);
   let i = 0;
   setInterval(() => {
@@ -1618,6 +1620,7 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.hero h1 .l1 { display: block; white-space: nowrap }
 .hero h1 .rot { position: relative; display: block; height: 1.05em; overflow: hidden }
 .hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
 .hero h1 .rot-in.enter { transform: translateY(100%); opacity: 0 } .hero h1 .rot-in.leave { transform: translateY(-100%); opacity: 0 }
@@ -1803,12 +1806,6 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
       <div style="margin-top:16px"><button class="btn fight" type="submit" id="kbBtn" style="width:100%">Start keyword battle</button></div>
       <div class="err" id="kbErr" hidden></div>
     </form>
-    <form class="panel waitbox" id="kbWait" hidden novalidate>
-      <span class="eyebrow" style="color:var(--red)">Opening this week</span>
-      <h3>Get your first Keyword Battle free</h3>
-      <p class="muted">Keyword Battle is switching on in a few days. Leave your email and we'll run your first battle for free.</p>
-      <div class="wrow"><input id="kbWaitEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn" type="submit">Get early access</button></div>
-    </form>
     <div class="panel" id="kbOut" hidden>
       <div class="mini-tape"><div><div class="eyebrow" style="color:var(--red)" id="kbHa"></div><div class="s a" id="kbSa">0</div></div><div class="c">KEYWORDS<br>WON</div><div style="text-align:right"><div class="eyebrow" style="color:var(--blue)" id="kbHb"></div><div class="s b" id="kbSb">0</div></div></div>
       <div class="tbl-wrap"><table><thead><tr><th>Keyword</th><th>You</th><th>Rival</th><th>#1 on Google</th></tr></thead><tbody id="kbRows"></tbody></table></div>
@@ -1934,10 +1931,6 @@ document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click"
 }, "Sign up to copy this", "Free account: copy each generator's file once a week. Pro: unlimited.")));
 async function sendLead(body) { const r = await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }); if (!r.ok) throw new Error("Try again"); }
 const okEmail = e => /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(e);
-document.getElementById("kbWait").addEventListener("submit", async e => {
-  e.preventDefault(); const email = document.getElementById("kbWaitEmail").value.trim(); if (!okEmail(email)) { toast("Enter a valid email"); return; }
-  try { await sendLead({ email, plan: "battle", site: document.getElementById("kbA").value, info: { rival: document.getElementById("kbB").value, keywords: document.getElementById("kbKw").value } }); e.target.innerHTML = '<span class="eyebrow">You\\'re in</span><h3>Your free battle is reserved \u{1F94A}</h3><p class="muted">We\\'ll email ' + esc(email) + ' when it\\'s ready.</p>'; } catch { toast("That didn't go through. Try again."); }
-});
 document.getElementById("agForm").addEventListener("submit", async e => {
   e.preventDefault(); const v = id => document.getElementById(id).value.trim(); if (!okEmail(v("agEmail"))) { toast("Enter a valid email"); return; }
   try { await sendLead({ email: v("agEmail"), plan: "agency", site: v("agSite"), info: { industry: v("agIndustry"), city: v("agCity") } }); e.target.innerHTML = '<span class="eyebrow">You\\'re in</span><h3>We\\'re on it \u{1F94A}</h3><p class="muted">Your first 25 prospects are coming to ' + esc(v("agEmail")) + '.</p>'; } catch { toast("That didn't go through. Try again."); }
@@ -2044,7 +2037,6 @@ $("#kbForm").addEventListener("submit", async e => {
     const r = await fetch("/api/battle", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ a, b, keywords: kw, country: $("#kbCountry").value }) });
     if (r.status !== 503 && !(await gateCheck(r))) return;
     const j = await r.json();
-    if (r.status === 503) { document.getElementById("kbWait").hidden = false; document.getElementById("kbWait").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
     if (!r.ok) throw new Error(j.error);
     $("#kbHa").textContent = j.a; $("#kbHb").textContent = j.b; $("#kbSa").textContent = j.winsA; $("#kbSb").textContent = j.winsB;
     const p = (v, s) => v ? \`<span class="pos \${s}">#\${v}</span>\` : \`<span class="pos none">100+</span>\`;
@@ -2057,7 +2049,7 @@ $("#kbForm").addEventListener("submit", async e => {
 `;
 
 // demo.json
-var demo_default = { a: { host: "crumbandco.ca", url: "https://crumbandco.ca/", title: "Fresh Sourdough Bakery in Vancouver | Crumb & Co", score: 69, scores: { onpage: 63, content: 88, technical: 90, ai: 28, social: 60 }, checks: [{ cat: "onpage", id: "title", label: "Title tag", status: "good", value: "48 chars", fix: "Keep the title between 30 and 60 characters so Google doesn't cut it.", weight: 3 }, { cat: "onpage", id: "desc", label: "Meta description", status: "warn", value: "6 chars", fix: "Write a 70\u2013160 character description that sells the click.", weight: 2 }, { cat: "onpage", id: "h1", label: "One H1 heading", status: "warn", value: "2 found", fix: "Keep only one H1; turn the others into H2s.", weight: 3 }, { cat: "onpage", id: "headings", label: "H2/H3 structure", status: "good", value: "2 H2 \xB7 0 H3", fix: "Break the page into sections with H2 headings.", weight: 1 }, { cat: "onpage", id: "alt", label: "Image alt text", status: "bad", value: "2 of 3 missing", fix: "Describe every image in its alt text.", weight: 1 }, { cat: "onpage", id: "canonical", label: "Canonical URL", status: "warn", value: "Missing", fix: 'Add <link rel="canonical"> so Google knows the main version of the page.', weight: 1 }, { cat: "onpage", id: "internal", label: "Internal links", status: "warn", value: "5", fix: "Link to your key pages from the homepage.", weight: 1 }, { cat: "content", id: "words", label: "Content depth", status: "good", value: "616 words", fix: "Add more useful text \u2014 what you do, who it's for, proof, FAQ.", weight: 2 }, { cat: "content", id: "lang", label: "Language set", status: "warn", value: "Missing", fix: 'Add lang="en" (or your language) to the <html> tag.', weight: 1 }, { cat: "content", id: "external", label: "Outbound links", status: "good", value: "1", fix: "Link to a couple of trusted sources.", weight: 1 }, { cat: "technical", id: "https", label: "HTTPS", status: "good", value: "Secure", fix: "Turn on HTTPS (free with Cloudflare).", weight: 3 }, { cat: "technical", id: "status", label: "Page loads (status)", status: "good", value: "200", fix: "Make sure the homepage returns 200.", weight: 3 }, { cat: "technical", id: "ttfb", label: "Server response", status: "warn", value: "840 ms", fix: "Speed up the server or put the site behind a CDN.", weight: 2 }, { cat: "technical", id: "size", label: "Page weight (HTML)", status: "good", value: "4 KB", fix: "Trim inline scripts and styles from the HTML.", weight: 1 }, { cat: "technical", id: "compress", label: "Compression", status: "good", value: "gzip", fix: "Turn on gzip or Brotli compression.", weight: 1 }, { cat: "technical", id: "redirects", label: "Redirect hops", status: "good", value: "0", fix: "Point straight to the final URL \u2014 fewer hops.", weight: 1 }, { cat: "technical", id: "mobile", label: "Mobile viewport", status: "good", value: "Set", fix: 'Add <meta name="viewport" content="width=device-width, initial-scale=1">.', weight: 2 }, { cat: "technical", id: "indexable", label: "Google can index it", status: "good", value: "Yes", fix: "Remove the noindex tag \u2014 it hides your page from Google.", weight: 3 }, { cat: "technical", id: "sitemap", label: "Sitemap", status: "warn", value: "Not found", fix: "Publish /sitemap.xml and list it in robots.txt.", weight: 1 }, { cat: "technical", id: "robots", label: "robots.txt", status: "good", value: "Found", fix: "Add a robots.txt file.", weight: 1 }, { cat: "technical", id: "doctype", label: "Doctype & charset", status: "good", value: "OK", fix: 'Start with <!doctype html> and <meta charset="utf-8">.', weight: 1 }, { cat: "technical", id: "hsts", label: "HSTS security header", status: "warn", value: "Off", fix: "Turn on HSTS in your host settings.", weight: 1 }, { cat: "ai", id: "aibots", label: "AI crawlers allowed", status: "warn", value: "Blocks GPTBot", fix: "Allow GPTBot, ClaudeBot and PerplexityBot in robots.txt so AI can recommend you.", weight: 3 }, { cat: "ai", id: "llms", label: "llms.txt", status: "warn", value: "Not found", fix: "Add /llms.txt \u2014 a short summary of your site for AI.", weight: 1 }, { cat: "ai", id: "schema", label: "Structured data", status: "bad", value: "None", fix: "Add JSON-LD schema (Organization + WebSite at minimum).", weight: 2 }, { cat: "ai", id: "entity", label: "Who-you-are schema", status: "warn", value: "No", fix: "Add Organization schema with name, logo and links.", weight: 1 }, { cat: "ai", id: "faq", label: "Answers questions", status: "bad", value: "0 question headings", fix: "Add an FAQ section \u2014 AI answers love question-and-answer text.", weight: 2 }, { cat: "social", id: "og", label: "Share preview (Open Graph)", status: "warn", value: "No image", fix: "Add og:title, og:description and a 1200\xD7630 og:image.", weight: 2 }, { cat: "social", id: "ogdesc", label: "Share description", status: "warn", value: "Missing", fix: "Add og:description.", weight: 1 }, { cat: "social", id: "twitter", label: "X/Twitter card", status: "warn", value: "Missing", fix: 'Add <meta name="twitter:card" content="summary_large_image">.', weight: 1 }, { cat: "social", id: "favicon", label: "Favicon", status: "good", value: "Set", fix: "Add a favicon so you look legit in tabs and Google.", weight: 1 }] }, b: { host: "loafandlevain.com", url: "https://loafandlevain.com/", title: "PyPI \xB7 The Python Package Index", score: 86, scores: { onpage: 92, content: 75, technical: 98, ai: 50, social: 100 }, checks: [{ cat: "onpage", id: "title", label: "Title tag", status: "good", value: "31 chars", fix: "Keep the title between 30 and 60 characters so Google doesn't cut it.", weight: 3 }, { cat: "onpage", id: "desc", label: "Meta description", status: "good", value: "96 chars", fix: "Write a 70\u2013160 character description that sells the click.", weight: 2 }, { cat: "onpage", id: "h1", label: "One H1 heading", status: "good", value: "1 found", fix: "Keep only one H1; turn the others into H2s.", weight: 3 }, { cat: "onpage", id: "headings", label: "H2/H3 structure", status: "good", value: "4 H2 \xB7 0 H3", fix: "Break the page into sections with H2 headings.", weight: 1 }, { cat: "onpage", id: "alt", label: "Image alt text", status: "bad", value: "15 of 16 missing", fix: "Describe every image in its alt text.", weight: 1 }, { cat: "onpage", id: "canonical", label: "Canonical URL", status: "good", value: "Set", fix: 'Add <link rel="canonical"> so Google knows the main version of the page.', weight: 1 }, { cat: "onpage", id: "internal", label: "Internal links", status: "good", value: "15", fix: "Link to your key pages from the homepage.", weight: 1 }, { cat: "content", id: "words", label: "Content depth", status: "warn", value: "296 words", fix: "Add more useful text \u2014 what you do, who it's for, proof, FAQ.", weight: 2 }, { cat: "content", id: "lang", label: "Language set", status: "good", value: "en", fix: 'Add lang="en" (or your language) to the <html> tag.', weight: 1 }, { cat: "content", id: "external", label: "Outbound links", status: "good", value: "40", fix: "Link to a couple of trusted sources.", weight: 1 }, { cat: "technical", id: "https", label: "HTTPS", status: "good", value: "Secure", fix: "Turn on HTTPS (free with Cloudflare).", weight: 3 }, { cat: "technical", id: "status", label: "Page loads (status)", status: "good", value: "200", fix: "Make sure the homepage returns 200.", weight: 3 }, { cat: "technical", id: "ttfb", label: "Server response", status: "good", value: "210 ms", fix: "Speed up the server or put the site behind a CDN.", weight: 2 }, { cat: "technical", id: "size", label: "Page weight (HTML)", status: "good", value: "27 KB", fix: "Trim inline scripts and styles from the HTML.", weight: 1 }, { cat: "technical", id: "compress", label: "Compression", status: "warn", value: "Off", fix: "Turn on gzip or Brotli compression.", weight: 1 }, { cat: "technical", id: "redirects", label: "Redirect hops", status: "good", value: "0", fix: "Point straight to the final URL \u2014 fewer hops.", weight: 1 }, { cat: "technical", id: "mobile", label: "Mobile viewport", status: "good", value: "Set", fix: 'Add <meta name="viewport" content="width=device-width, initial-scale=1">.', weight: 2 }, { cat: "technical", id: "indexable", label: "Google can index it", status: "good", value: "Yes", fix: "Remove the noindex tag \u2014 it hides your page from Google.", weight: 3 }, { cat: "technical", id: "sitemap", label: "Sitemap", status: "good", value: "Found", fix: "Publish /sitemap.xml and list it in robots.txt.", weight: 1 }, { cat: "technical", id: "robots", label: "robots.txt", status: "good", value: "Found", fix: "Add a robots.txt file.", weight: 1 }, { cat: "technical", id: "doctype", label: "Doctype & charset", status: "good", value: "OK", fix: 'Start with <!doctype html> and <meta charset="utf-8">.', weight: 1 }, { cat: "technical", id: "hsts", label: "HSTS security header", status: "good", value: "On", fix: "Turn on HSTS in your host settings.", weight: 1 }, { cat: "ai", id: "aibots", label: "AI crawlers allowed", status: "good", value: "All allowed", fix: "Allow GPTBot, ClaudeBot and PerplexityBot in robots.txt so AI can recommend you.", weight: 3 }, { cat: "ai", id: "llms", label: "llms.txt", status: "good", value: "Found", fix: "Add /llms.txt \u2014 a short summary of your site for AI.", weight: 1 }, { cat: "ai", id: "schema", label: "Structured data", status: "bad", value: "None", fix: "Add JSON-LD schema (Organization + WebSite at minimum).", weight: 2 }, { cat: "ai", id: "entity", label: "Who-you-are schema", status: "warn", value: "No", fix: "Add Organization schema with name, logo and links.", weight: 1 }, { cat: "ai", id: "faq", label: "Answers questions", status: "bad", value: "0 question headings", fix: "Add an FAQ section \u2014 AI answers love question-and-answer text.", weight: 2 }, { cat: "social", id: "og", label: "Share preview (Open Graph)", status: "good", value: "Title + image", fix: "Add og:title, og:description and a 1200\xD7630 og:image.", weight: 2 }, { cat: "social", id: "ogdesc", label: "Share description", status: "good", value: "Set", fix: "Add og:description.", weight: 1 }, { cat: "social", id: "twitter", label: "X/Twitter card", status: "good", value: "summary_large_image", fix: 'Add <meta name="twitter:card" content="summary_large_image">.', weight: 1 }, { cat: "social", id: "favicon", label: "Favicon", status: "good", value: "Set", fix: "Add a favicon so you look legit in tabs and Google.", weight: 1 }] }, winner: "b", rows: [{ id: "title", cat: "onpage", label: "Title tag", a: { status: "good", value: "48 chars" }, b: { status: "good", value: "31 chars" }, edge: null }, { id: "desc", cat: "onpage", label: "Meta description", a: { status: "warn", value: "6 chars" }, b: { status: "good", value: "96 chars" }, edge: "b" }, { id: "h1", cat: "onpage", label: "One H1 heading", a: { status: "warn", value: "2 found" }, b: { status: "good", value: "1 found" }, edge: "b" }, { id: "headings", cat: "onpage", label: "H2/H3 structure", a: { status: "good", value: "2 H2 \xB7 0 H3" }, b: { status: "good", value: "4 H2 \xB7 0 H3" }, edge: null }, { id: "alt", cat: "onpage", label: "Image alt text", a: { status: "bad", value: "2 of 3 missing" }, b: { status: "bad", value: "15 of 16 missing" }, edge: null }, { id: "canonical", cat: "onpage", label: "Canonical URL", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "Set" }, edge: "b" }, { id: "internal", cat: "onpage", label: "Internal links", a: { status: "warn", value: "5" }, b: { status: "good", value: "15" }, edge: "b" }, { id: "words", cat: "content", label: "Content depth", a: { status: "good", value: "616 words" }, b: { status: "warn", value: "296 words" }, edge: "a" }, { id: "lang", cat: "content", label: "Language set", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "en" }, edge: "b" }, { id: "external", cat: "content", label: "Outbound links", a: { status: "good", value: "1" }, b: { status: "good", value: "40" }, edge: null }, { id: "https", cat: "technical", label: "HTTPS", a: { status: "good", value: "Secure" }, b: { status: "good", value: "Secure" }, edge: null }, { id: "status", cat: "technical", label: "Page loads (status)", a: { status: "good", value: "200" }, b: { status: "good", value: "200" }, edge: null }, { id: "ttfb", cat: "technical", label: "Server response", a: { status: "warn", value: "840 ms" }, b: { status: "good", value: "210 ms" }, edge: "b" }, { id: "size", cat: "technical", label: "Page weight (HTML)", a: { status: "good", value: "4 KB" }, b: { status: "good", value: "27 KB" }, edge: null }, { id: "compress", cat: "technical", label: "Compression", a: { status: "good", value: "gzip" }, b: { status: "warn", value: "Off" }, edge: "a" }, { id: "redirects", cat: "technical", label: "Redirect hops", a: { status: "good", value: "0" }, b: { status: "good", value: "0" }, edge: null }, { id: "mobile", cat: "technical", label: "Mobile viewport", a: { status: "good", value: "Set" }, b: { status: "good", value: "Set" }, edge: null }, { id: "indexable", cat: "technical", label: "Google can index it", a: { status: "good", value: "Yes" }, b: { status: "good", value: "Yes" }, edge: null }, { id: "sitemap", cat: "technical", label: "Sitemap", a: { status: "warn", value: "Not found" }, b: { status: "good", value: "Found" }, edge: "b" }, { id: "robots", cat: "technical", label: "robots.txt", a: { status: "good", value: "Found" }, b: { status: "good", value: "Found" }, edge: null }, { id: "doctype", cat: "technical", label: "Doctype & charset", a: { status: "good", value: "OK" }, b: { status: "good", value: "OK" }, edge: null }, { id: "hsts", cat: "technical", label: "HSTS security header", a: { status: "warn", value: "Off" }, b: { status: "good", value: "On" }, edge: "b" }, { id: "aibots", cat: "ai", label: "AI crawlers allowed", a: { status: "warn", value: "Blocks GPTBot" }, b: { status: "good", value: "All allowed" }, edge: "b" }, { id: "llms", cat: "ai", label: "llms.txt", a: { status: "warn", value: "Not found" }, b: { status: "good", value: "Found" }, edge: "b" }, { id: "schema", cat: "ai", label: "Structured data", a: { status: "bad", value: "None" }, b: { status: "bad", value: "None" }, edge: null }, { id: "entity", cat: "ai", label: "Who-you-are schema", a: { status: "warn", value: "No" }, b: { status: "warn", value: "No" }, edge: null }, { id: "faq", cat: "ai", label: "Answers questions", a: { status: "bad", value: "0 question headings" }, b: { status: "bad", value: "0 question headings" }, edge: null }, { id: "og", cat: "social", label: "Share preview (Open Graph)", a: { status: "warn", value: "No image" }, b: { status: "good", value: "Title + image" }, edge: "b" }, { id: "ogdesc", cat: "social", label: "Share description", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "Set" }, edge: "b" }, { id: "twitter", cat: "social", label: "X/Twitter card", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "summary_large_image" }, edge: "b" }, { id: "favicon", cat: "social", label: "Favicon", a: { status: "good", value: "Set" }, b: { status: "good", value: "Set" }, edge: null }], winsA: 2, winsB: 13, plan: [{ label: "Structured data", status: "bad", fix: "Add JSON-LD schema (Organization + WebSite at minimum).", gain: 4 }, { label: "Answers questions", status: "bad", fix: "Add an FAQ section \u2014 AI answers love question-and-answer text.", gain: 4 }, { label: "Image alt text", status: "bad", fix: "Describe every image in its alt text.", gain: 2 }, { label: "One H1 heading", status: "warn", fix: "Keep only one H1; turn the others into H2s.", gain: 3 }, { label: "AI crawlers allowed", status: "warn", fix: "Allow GPTBot, ClaudeBot and PerplexityBot in robots.txt so AI can recommend you.", gain: 3 }, { label: "Meta description", status: "warn", fix: "Write a 70\u2013160 character description that sells the click.", gain: 2 }, { label: "Server response", status: "warn", fix: "Speed up the server or put the site behind a CDN.", gain: 2 }, { label: "Share preview (Open Graph)", status: "warn", fix: "Add og:title, og:description and a 1200\xD7630 og:image.", gain: 2 }, { label: "Canonical URL", status: "warn", fix: 'Add <link rel="canonical"> so Google knows the main version of the page.', gain: 1 }, { label: "Internal links", status: "warn", fix: "Link to your key pages from the homepage.", gain: 1 }, { label: "Language set", status: "warn", fix: 'Add lang="en" (or your language) to the <html> tag.', gain: 1 }, { label: "Sitemap", status: "warn", fix: "Publish /sitemap.xml and list it in robots.txt.", gain: 1 }, { label: "HSTS security header", status: "warn", fix: "Turn on HSTS in your host settings.", gain: 1 }, { label: "llms.txt", status: "warn", fix: "Add /llms.txt \u2014 a short summary of your site for AI.", gain: 1 }, { label: "Who-you-are schema", status: "warn", fix: "Add Organization schema with name, logo and links.", gain: 1 }, { label: "Share description", status: "warn", fix: "Add og:description.", gain: 1 }, { label: "X/Twitter card", status: "warn", fix: 'Add <meta name="twitter:card" content="summary_large_image">.', gain: 1 }], markdown: `# SEO duel: crumbandco.ca (69) vs loafandlevain.com (86)
+var demo_default = { a: { host: "crumbandco.ca", url: "https://crumbandco.ca/", title: "Fresh Sourdough Bakery in Vancouver | Crumb & Co", score: 69, scores: { onpage: 63, content: 88, technical: 90, ai: 28, social: 60 }, checks: [{ cat: "onpage", id: "title", label: "Title tag", status: "good", value: "48 chars", fix: "Keep the title between 30 and 60 characters so Google doesn't cut it.", weight: 3 }, { cat: "onpage", id: "desc", label: "Meta description", status: "warn", value: "6 chars", fix: "Write a 70\u2013160 character description that sells the click.", weight: 2 }, { cat: "onpage", id: "h1", label: "One H1 heading", status: "warn", value: "2 found", fix: "Keep only one H1; turn the others into H2s.", weight: 3 }, { cat: "onpage", id: "headings", label: "H2/H3 structure", status: "good", value: "2 H2 \xB7 0 H3", fix: "Break the page into sections with H2 headings.", weight: 1 }, { cat: "onpage", id: "alt", label: "Image alt text", status: "bad", value: "2 of 3 missing", fix: "Describe every image in its alt text.", weight: 1 }, { cat: "onpage", id: "canonical", label: "Canonical URL", status: "warn", value: "Missing", fix: 'Add <link rel="canonical"> so Google knows the main version of the page.', weight: 1 }, { cat: "onpage", id: "internal", label: "Internal links", status: "warn", value: "5", fix: "Link to your key pages from the homepage.", weight: 1 }, { cat: "content", id: "words", label: "Content depth", status: "good", value: "616 words", fix: "Add more useful text \u2014 what you do, who it's for, proof, FAQ.", weight: 2 }, { cat: "content", id: "lang", label: "Language set", status: "warn", value: "Missing", fix: 'Add lang="en" (or your language) to the <html> tag.', weight: 1 }, { cat: "content", id: "external", label: "Outbound links", status: "good", value: "1", fix: "Link to a couple of trusted sources.", weight: 1 }, { cat: "technical", id: "https", label: "HTTPS", status: "good", value: "Secure", fix: "Turn on HTTPS (free with Cloudflare).", weight: 3 }, { cat: "technical", id: "status", label: "Page loads (status)", status: "good", value: "200", fix: "Make sure the homepage returns 200.", weight: 3 }, { cat: "technical", id: "ttfb", label: "Server response", status: "warn", value: "840 ms", fix: "Speed up the server or put the site behind a CDN.", weight: 2 }, { cat: "technical", id: "size", label: "Page weight (HTML)", status: "good", value: "4 KB", fix: "Trim inline scripts and styles from the HTML.", weight: 1 }, { cat: "technical", id: "compress", label: "Compression", status: "good", value: "gzip", fix: "Turn on gzip or Brotli compression.", weight: 1 }, { cat: "technical", id: "redirects", label: "Redirect hops", status: "good", value: "0", fix: "Point straight to the final URL \u2014 fewer hops.", weight: 1 }, { cat: "technical", id: "mobile", label: "Mobile viewport", status: "good", value: "Set", fix: 'Add <meta name="viewport" content="width=device-width, initial-scale=1">.', weight: 2 }, { cat: "technical", id: "indexable", label: "Google can index it", status: "good", value: "Yes", fix: "Remove the noindex tag \u2014 it hides your page from Google.", weight: 3 }, { cat: "technical", id: "sitemap", label: "Sitemap", status: "warn", value: "Not found", fix: "Publish /sitemap.xml and list it in robots.txt.", weight: 1 }, { cat: "technical", id: "robots", label: "robots.txt", status: "good", value: "Found", fix: "Add a robots.txt file.", weight: 1 }, { cat: "technical", id: "doctype", label: "Doctype & charset", status: "good", value: "OK", fix: 'Start with <!doctype html> and <meta charset="utf-8">.', weight: 1 }, { cat: "technical", id: "hsts", label: "HSTS security header", status: "warn", value: "Off", fix: "Turn on HSTS in your host settings.", weight: 1 }, { cat: "ai", id: "aibots", label: "AI crawlers allowed", status: "warn", value: "Blocks GPTBot", fix: "Allow GPTBot, ClaudeBot and PerplexityBot in robots.txt so AI can recommend you.", weight: 3 }, { cat: "ai", id: "llms", label: "llms.txt", status: "warn", value: "Not found", fix: "Add /llms.txt \u2014 a short summary of your site for AI.", weight: 1 }, { cat: "ai", id: "schema", label: "Structured data", status: "bad", value: "None", fix: "Add JSON-LD schema (Organization + WebSite at minimum).", weight: 2 }, { cat: "ai", id: "entity", label: "Who-you-are schema", status: "warn", value: "No", fix: "Add Organization schema with name, logo and links.", weight: 1 }, { cat: "ai", id: "faq", label: "Answers questions", status: "bad", value: "0 question headings", fix: "Add an FAQ section \u2014 AI answers love question-and-answer text.", weight: 2 }, { cat: "social", id: "og", label: "Share preview (Open Graph)", status: "warn", value: "No image", fix: "Add og:title, og:description and a 1200\xD7630 og:image.", weight: 2 }, { cat: "social", id: "ogdesc", label: "Share description", status: "warn", value: "Missing", fix: "Add og:description.", weight: 1 }, { cat: "social", id: "twitter", label: "X/Twitter card", status: "warn", value: "Missing", fix: 'Add <meta name="twitter:card" content="summary_large_image">.', weight: 1 }, { cat: "social", id: "favicon", label: "Favicon", status: "good", value: "Set", fix: "Add a favicon so you look legit in tabs and Google.", weight: 1 }] }, b: { host: "loafandlevain.com", url: "https://loafandlevain.com/", title: "PyPI \xB7 The Python Package Index", score: 86, scores: { onpage: 92, content: 75, technical: 98, ai: 50, social: 100 }, checks: [{ cat: "onpage", id: "title", label: "Title tag", status: "good", value: "31 chars", fix: "Keep the title between 30 and 60 characters so Google doesn't cut it.", weight: 3 }, { cat: "onpage", id: "desc", label: "Meta description", status: "good", value: "96 chars", fix: "Write a 70\u2013160 character description that sells the click.", weight: 2 }, { cat: "onpage", id: "h1", label: "One H1 heading", status: "good", value: "1 found", fix: "Keep only one H1; turn the others into H2s.", weight: 3 }, { cat: "onpage", id: "headings", label: "H2/H3 structure", status: "good", value: "4 H2 \xB7 0 H3", fix: "Break the page into sections with H2 headings.", weight: 1 }, { cat: "onpage", id: "alt", label: "Image alt text", status: "bad", value: "15 of 16 missing", fix: "Describe every image in its alt text.", weight: 1 }, { cat: "onpage", id: "canonical", label: "Canonical URL", status: "good", value: "Set", fix: 'Add <link rel="canonical"> so Google knows the main version of the page.', weight: 1 }, { cat: "onpage", id: "internal", label: "Internal links", status: "good", value: "15", fix: "Link to your key pages from the homepage.", weight: 1 }, { cat: "content", id: "words", label: "Content depth", status: "warn", value: "296 words", fix: "Add more useful text \u2014 what you do, who it's for, proof, FAQ.", weight: 2 }, { cat: "content", id: "lang", label: "Language set", status: "good", value: "en", fix: 'Add lang="en" (or your language) to the <html> tag.', weight: 1 }, { cat: "content", id: "external", label: "Outbound links", status: "good", value: "40", fix: "Link to a couple of trusted sources.", weight: 1 }, { cat: "technical", id: "https", label: "HTTPS", status: "good", value: "Secure", fix: "Turn on HTTPS (free with Cloudflare).", weight: 3 }, { cat: "technical", id: "status", label: "Page loads (status)", status: "good", value: "200", fix: "Make sure the homepage returns 200.", weight: 3 }, { cat: "technical", id: "ttfb", label: "Server response", status: "good", value: "210 ms", fix: "Speed up the server or put the site behind a CDN.", weight: 2 }, { cat: "technical", id: "size", label: "Page weight (HTML)", status: "good", value: "27 KB", fix: "Trim inline scripts and styles from the HTML.", weight: 1 }, { cat: "technical", id: "compress", label: "Compression", status: "warn", value: "Off", fix: "Turn on gzip or Brotli compression.", weight: 1 }, { cat: "technical", id: "redirects", label: "Redirect hops", status: "good", value: "0", fix: "Point straight to the final URL \u2014 fewer hops.", weight: 1 }, { cat: "technical", id: "mobile", label: "Mobile viewport", status: "good", value: "Set", fix: 'Add <meta name="viewport" content="width=device-width, initial-scale=1">.', weight: 2 }, { cat: "technical", id: "indexable", label: "Google can index it", status: "good", value: "Yes", fix: "Remove the noindex tag \u2014 it hides your page from Google.", weight: 3 }, { cat: "technical", id: "sitemap", label: "Sitemap", status: "good", value: "Found", fix: "Publish /sitemap.xml and list it in robots.txt.", weight: 1 }, { cat: "technical", id: "robots", label: "robots.txt", status: "good", value: "Found", fix: "Add a robots.txt file.", weight: 1 }, { cat: "technical", id: "doctype", label: "Doctype & charset", status: "good", value: "OK", fix: 'Start with <!doctype html> and <meta charset="utf-8">.', weight: 1 }, { cat: "technical", id: "hsts", label: "HSTS security header", status: "good", value: "On", fix: "Turn on HSTS in your host settings.", weight: 1 }, { cat: "ai", id: "aibots", label: "AI crawlers allowed", status: "good", value: "All allowed", fix: "Allow GPTBot, ClaudeBot and PerplexityBot in robots.txt so AI can recommend you.", weight: 3 }, { cat: "ai", id: "llms", label: "llms.txt", status: "good", value: "Found", fix: "Add /llms.txt \u2014 a short summary of your site for AI.", weight: 1 }, { cat: "ai", id: "schema", label: "Structured data", status: "bad", value: "None", fix: "Add JSON-LD schema (Organization + WebSite at minimum).", weight: 2 }, { cat: "ai", id: "entity", label: "Who-you-are schema", status: "warn", value: "No", fix: "Add Organization schema with name, logo and links.", weight: 1 }, { cat: "ai", id: "faq", label: "Answers questions", status: "bad", value: "0 question headings", fix: "Add an FAQ section \u2014 AI answers love question-and-answer text.", weight: 2 }, { cat: "social", id: "og", label: "Share preview (Open Graph)", status: "good", value: "Title + image", fix: "Add og:title, og:description and a 1200\xD7630 og:image.", weight: 2 }, { cat: "social", id: "ogdesc", label: "Share description", status: "good", value: "Set", fix: "Add og:description.", weight: 1 }, { cat: "social", id: "twitter", label: "X/Twitter card", status: "good", value: "summary_large_image", fix: 'Add <meta name="twitter:card" content="summary_large_image">.', weight: 1 }, { cat: "social", id: "favicon", label: "Favicon", status: "good", value: "Set", fix: "Add a favicon so you look legit in tabs and Google.", weight: 1 }] }, winner: "b", rows: [{ id: "title", cat: "onpage", label: "Title tag", a: { status: "good", value: "48 chars" }, b: { status: "good", value: "31 chars" }, edge: null }, { id: "desc", cat: "onpage", label: "Meta description", a: { status: "warn", value: "6 chars" }, b: { status: "good", value: "96 chars" }, edge: "b" }, { id: "h1", cat: "onpage", label: "One H1 heading", a: { status: "warn", value: "2 found" }, b: { status: "good", value: "1 found" }, edge: "b" }, { id: "headings", cat: "onpage", label: "H2/H3 structure", a: { status: "good", value: "2 H2 \xB7 0 H3" }, b: { status: "good", value: "4 H2 \xB7 0 H3" }, edge: null }, { id: "alt", cat: "onpage", label: "Image alt text", a: { status: "bad", value: "2 of 3 missing" }, b: { status: "bad", value: "15 of 16 missing" }, edge: null }, { id: "canonical", cat: "onpage", label: "Canonical URL", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "Set" }, edge: "b" }, { id: "internal", cat: "onpage", label: "Internal links", a: { status: "warn", value: "5" }, b: { status: "good", value: "15" }, edge: "b" }, { id: "words", cat: "content", label: "Content depth", a: { status: "good", value: "616 words" }, b: { status: "warn", value: "296 words" }, edge: "a" }, { id: "lang", cat: "content", label: "Language set", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "en" }, edge: "b" }, { id: "external", cat: "content", label: "Outbound links", a: { status: "good", value: "1" }, b: { status: "good", value: "40" }, edge: null }, { id: "https", cat: "technical", label: "HTTPS", a: { status: "good", value: "Secure" }, b: { status: "good", value: "Secure" }, edge: null }, { id: "status", cat: "technical", label: "Page loads (status)", a: { status: "good", value: "200" }, b: { status: "good", value: "200" }, edge: null }, { id: "ttfb", cat: "technical", label: "Server response", a: { status: "warn", value: "840 ms" }, b: { status: "good", value: "210 ms" }, edge: "b" }, { id: "size", cat: "technical", label: "Page weight (HTML)", a: { status: "good", value: "4 KB" }, b: { status: "good", value: "27 KB" }, edge: null }, { id: "compress", cat: "technical", label: "Compression", a: { status: "good", value: "gzip" }, b: { status: "warn", value: "Off" }, edge: "a" }, { id: "redirects", cat: "technical", label: "Redirect hops", a: { status: "good", value: "0" }, b: { status: "good", value: "0" }, edge: null }, { id: "mobile", cat: "technical", label: "Mobile viewport", a: { status: "good", value: "Set" }, b: { status: "good", value: "Set" }, edge: null }, { id: "indexable", cat: "technical", label: "Google can index it", a: { status: "good", value: "Yes" }, b: { status: "good", value: "Yes" }, edge: null }, { id: "sitemap", cat: "technical", label: "Sitemap", a: { status: "warn", value: "Not found" }, b: { status: "good", value: "Found" }, edge: "b" }, { id: "robots", cat: "technical", label: "robots.txt", a: { status: "good", value: "Found" }, b: { status: "good", value: "Found" }, edge: null }, { id: "doctype", cat: "technical", label: "Doctype & charset", a: { status: "good", value: "OK" }, b: { status: "good", value: "OK" }, edge: null }, { id: "hsts", cat: "technical", label: "HSTS security header", a: { status: "warn", value: "Off" }, b: { status: "good", value: "On" }, edge: "b" }, { id: "aibots", cat: "ai", label: "AI crawlers allowed", a: { status: "warn", value: "Blocks GPTBot" }, b: { status: "good", value: "All allowed" }, edge: "b" }, { id: "llms", cat: "ai", label: "llms.txt", a: { status: "warn", value: "Not found" }, b: { status: "good", value: "Found" }, edge: "b" }, { id: "schema", cat: "ai", label: "Structured data", a: { status: "bad", value: "None" }, b: { status: "bad", value: "None" }, edge: null }, { id: "entity", cat: "ai", label: "Who-you-are schema", a: { status: "warn", value: "No" }, b: { status: "warn", value: "No" }, edge: null }, { id: "faq", cat: "ai", label: "Answers questions", a: { status: "bad", value: "0 question headings" }, b: { status: "bad", value: "0 question headings" }, edge: null }, { id: "og", cat: "social", label: "Share preview (Open Graph)", a: { status: "warn", value: "No image" }, b: { status: "good", value: "Title + image" }, edge: "b" }, { id: "ogdesc", cat: "social", label: "Share description", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "Set" }, edge: "b" }, { id: "twitter", cat: "social", label: "X/Twitter card", a: { status: "warn", value: "Missing" }, b: { status: "good", value: "summary_large_image" }, edge: "b" }, { id: "favicon", cat: "social", label: "Favicon", a: { status: "good", value: "Set" }, b: { status: "good", value: "Set" }, edge: null }], winsA: 2, winsB: 13, plan: [{ label: "Structured data", status: "bad", fix: "Add JSON-LD schema (Organization + WebSite at minimum).", gain: 4 }, { label: "Answers questions", status: "bad", fix: "Add an FAQ section \u2014 AI answers love question-and-answer text.", gain: 4 }, { label: "Image alt text", status: "bad", fix: "Describe every image in its alt text.", gain: 2 }, { label: "One H1 heading", status: "warn", fix: "Keep only one H1; turn the others into H2s.", gain: 3 }, { label: "AI crawlers allowed", status: "warn", fix: "Allow GPTBot, ClaudeBot and PerplexityBot in robots.txt so AI can recommend you.", gain: 3 }, { label: "Meta description", status: "warn", fix: "Write a 70\u2013160 character description that sells the click.", gain: 2 }, { label: "Server response", status: "warn", fix: "Speed up the server or put the site behind a CDN.", gain: 2 }, { label: "Share preview (Open Graph)", status: "warn", fix: "Add og:title, og:description and a 1200\xD7630 og:image.", gain: 2 }, { label: "Canonical URL", status: "warn", fix: 'Add <link rel="canonical"> so Google knows the main version of the page.', gain: 1 }, { label: "Internal links", status: "warn", fix: "Link to your key pages from the homepage.", gain: 1 }, { label: "Language set", status: "warn", fix: 'Add lang="en" (or your language) to the <html> tag.', gain: 1 }, { label: "Sitemap", status: "warn", fix: "Publish /sitemap.xml and list it in robots.txt.", gain: 1 }, { label: "HSTS security header", status: "warn", fix: "Turn on HSTS in your host settings.", gain: 1 }, { label: "llms.txt", status: "warn", fix: "Add /llms.txt \u2014 a short summary of your site for AI.", gain: 1 }, { label: "Who-you-are schema", status: "warn", fix: "Add Organization schema with name, logo and links.", gain: 1 }, { label: "Share description", status: "warn", fix: "Add og:description.", gain: 1 }, { label: "X/Twitter card", status: "warn", fix: 'Add <meta name="twitter:card" content="summary_large_image">.', gain: 1 }], markdown: `# SEO fight: crumbandco.ca (69) vs loafandlevain.com (86)
 
 Winner: **loafandlevain.com**
 
@@ -2140,7 +2132,7 @@ var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Sta
   h1: "Cookie policy",
   lede: "Short version: no ad cookies, no trackers.",
   body: `<div class="panel terms">
-<h3>Cookies we set</h3><p><b>rf_key</b>: only if you have a paid plan. It keeps your plan switched on in this browser. It's secure and can't be read by scripts.</p>
+<h3>Cookies we set</h3><p><b>rf_key</b>: set when you sign in. It keeps you signed in and your plan active in this browser. It's secure and can't be read by scripts.</p>
 <h3>Storage in your browser</h3><p>We remember that you've unlocked results and which fights you've voted on, so you don't have to do it twice. This stays on your device.</p>
 <h3>Payments</h3><p>Checkout runs on Stripe. Stripe may set its own cookies to prevent fraud. See Stripe's privacy policy.</p>
 <h3>What we don't use</h3><p>No advertising cookies, no cross-site tracking, no selling your data.</p>
@@ -2263,7 +2255,7 @@ var ALTS = [
     ["Keyword Battle vs one rival", "\u2713 10 keywords", "Large keyword tools"],
     ["Big backlink database", "\u2717 Not our focus", "\u2713"],
     ["Free plan", "\u2713 1 fight a week", "Limited or trial"],
-    ["Starting price", "$12 / month", "Check their pricing page"]
+    ["Starting price", "$19 / month", "Check their pricing page"]
   ];
   return [`/alternatives/${slug}-alternative`, {
     title: `The best ${name} alternative for comparing sites \xB7 SEO Fights`,
@@ -2285,13 +2277,7 @@ var ALTS = [
 };
 
 // src/worker.js
-var SITE = "https://seofight.dailygym.workers.dev", UA = "Mozilla/5.0 (compatible; SEOFightsBot/1.0; +https://seofight.dailygym.workers.dev/llms.txt)", LIMITS = {
-  free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"], rivals: [1, "week"], links: [1, "week"], gen: [1, "week"] },
-  pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"] },
-  agency: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"] },
-  lifetime: { fights: [40, "month"], battles: [0, "month"], strategy: [0, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"] },
-  owner: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"] }
-}, PLAN_NAMES = { free: "Free", pro: "Pro", agency: "Agency", lifetime: "Lifetime", owner: "Owner" }, paid = (m) => !!m && m.plan !== "free", planOf = (m) => m ? LIMITS[m.plan] ? m.plan : "pro" : "free", TOOL_LIMITS = { rivals: 3, keywords: 20, links: 10 }, esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
+var SITE = "https://seofight.dailygym.workers.dev", UA = "Mozilla/5.0 (compatible; SEOFightsBot/1.0; +https://seofight.dailygym.workers.dev/llms.txt)", esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
   s = (s || "").trim(), /^https?:\/\//i.test(s) || (s = "https://" + s);
   let u = new URL(s);
   if (unsafeHost(u.hostname) || u.port) throw 0;
@@ -2306,7 +2292,12 @@ var SITE = "https://seofight.dailygym.workers.dev", UA = "Mozilla/5.0 (compatibl
   if (p === "month") return d.toISOString().slice(0, 7);
   let day = Math.floor(d / 864e5);
   return "w" + Math.floor((day + 3) / 7);
-}, WATERMARK = `
+}, rand = () => [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, "0")).join(""), safeNext = (n) => typeof n == "string" && n.startsWith("/") && !n.startsWith("//") ? n.slice(0, 300) : "/";
+function cookie(req, name) {
+  let m = (req.headers.get("cookie") || "").match(new RegExp(`(?:^|; )${name}=([^;]+)`));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+var WATERMARK = `
 
 ---
 _Made with SEO Fights free \xB7 ${SITE} \xB7 Go Pro for clean reports, AI strategy and Keyword Battles._
@@ -2319,14 +2310,13 @@ async function get(url, ms = 9e3) {
     clearTimeout(t);
   }
 }
-function cookie(req, name) {
-  let m = (req.headers.get("cookie") || "").match(new RegExp(`(?:^|; )${name}=([^;]+)`));
-  return m ? decodeURIComponent(m[1]) : null;
-}
-async function member(req, env) {
-  let key = cookie(req, "rf_key");
-  return !key || !env.DB ? null : env.DB.prepare("SELECT * FROM members WHERE key=?1 AND active=1").bind(key).first();
-}
+var LIMITS = {
+  free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"], rivals: [1, "week"], links: [1, "week"], gen: [1, "week"] },
+  pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"] },
+  agency: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"] },
+  lifetime: { fights: [40, "month"], battles: [0, "month"], strategy: [0, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"] },
+  owner: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"] }
+}, PLAN_NAMES = { free: "Free", pro: "Pro", agency: "Agency", lifetime: "Lifetime", owner: "Owner" }, paid = (m) => !!m && m.plan !== "free", planOf = (m) => m ? LIMITS[m.plan] ? m.plan : "pro" : "free", TOOL_LIMITS = { rivals: 3, keywords: 20 };
 async function canUse(env, who, what, plan) {
   let [max, per] = LIMITS[plan][what.split(":")[0]];
   return max === 0 ? !1 : env.LIMITS ? parseInt(await env.LIMITS.get(`u:${what}:${period(per)}:${who}`) || "0", 10) < max : !0;
@@ -2341,7 +2331,25 @@ async function toolUse(env, req, what) {
   let k = `t:${what}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}:${ipOf(req)}`, n = parseInt(await env.LIMITS.get(k) || "0", 10);
   return n >= TOOL_LIMITS[what] ? !1 : (await env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }), !0);
 }
-var rand = () => [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, "0")).join(""), safeNext = (n) => typeof n == "string" && n.startsWith("/") && !n.startsWith("//") ? n.slice(0, 300) : "/";
+var NEED_ACCOUNT = () => json({ error: "Sign up free to use this.", signup: !0 }, 401), OUT = (plan, what) => json({ error: plan === "free" ? `You've used your free ${what} this week. Go Pro to keep going.` : `You've hit this month's ${what} limit. It resets on the 1st.` }, 429), LADDER = [[25, 49, "STRIPE_LIFETIME_LINK"], [75, 79, "STRIPE_LIFETIME_LINK_2"], [1 / 0, 129, "STRIPE_LIFETIME_LINK_3"]], LIFE_SOLD = 0, LIFE_AT = 0;
+async function refreshLife(env) {
+  if (!(!env.DB || Date.now() - LIFE_AT < 6e4)) {
+    LIFE_AT = Date.now();
+    try {
+      LIFE_SOLD = (await env.DB.prepare("SELECT COUNT(*) AS n FROM members WHERE plan='lifetime'").first()).n || 0;
+    } catch {
+    }
+  }
+}
+function lifeTier(env) {
+  let i = LADDER.findIndex(([cap2]) => LIFE_SOLD < cap2), [cap, price, key] = LADDER[i], left = cap === 1 / 0 ? null : cap - LIFE_SOLD;
+  return { price, left, link: env[key] || env.STRIPE_LIFETIME_LINK || "#pricing", label: left === null ? "Final price" : `${left} of ${cap - (i ? LADDER[i - 1][0] : 0)} left at $${price}, then $${LADDER[i + 1][1]}` };
+}
+async function member(req, env) {
+  let key = cookie(req, "rf_key");
+  return !key || !env.DB ? null : env.DB.prepare("SELECT * FROM members WHERE key=?1 AND active=1").bind(key).first();
+}
+var cookieFor = (key) => `rf_key=${key}; Path=/; Max-Age=34560000; HttpOnly; Secure; SameSite=Lax`;
 async function loginEmail(env, email) {
   let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
   if (old && old.active) return old.key;
@@ -2353,24 +2361,7 @@ async function loginEmail(env, email) {
 var signedIn = (key, next, extra) => {
   let h = new Headers({ location: next });
   return h.append("set-cookie", cookieFor(key)), extra && h.append("set-cookie", extra), new Response(null, { status: 302, headers: h });
-}, NEED_ACCOUNT = () => json({ error: "Sign up free to use this.", signup: !0 }, 401), OUT = (plan, what) => json({ error: plan === "free" ? `You've used your free ${what} this week. Go Pro to keep going.` : `You've hit this month's ${what} limit. It resets on the 1st.` }, 429), FOTN = "", FOTN_AT = 0, HEADLINERS = ["apple.com-vs-samsung.com", "nike.com-vs-adidas.com", "coca-cola.com-vs-pepsi.com", "openai.com-vs-anthropic.com", "uber.com-vs-lyft.com", "netflix.com-vs-disneyplus.com", "amazon.com-vs-walmart.com", "playstation.com-vs-xbox.com", "instagram.com-vs-tiktok.com", "starbucks.com-vs-dunkindonuts.com", "airbnb.com-vs-vrbo.com", "tesla.com-vs-rivian.com", "dominos.com-vs-pizzahut.com", "spotify.com-vs-soundcloud.com", "google.com-vs-bing.com", "doordash.com-vs-ubereats.com", "shein.com-vs-temu.com", "duolingo.com-vs-babbel.com"];
-async function nightData(env) {
-  if (!FOTN) return null;
-  let f = await storedFight(env, FOTN);
-  if (!f) return null;
-  let d = f.d;
-  return { slug: d.slug, winner: d.winner, votes_a: d.votes_a, votes_b: d.votes_b, a: { host: d.a.host, score: d.a.score, scores: d.a.scores }, b: { host: d.b.host, score: d.b.score, scores: d.b.scores }, checks: (d.rows || []).length };
-}
-async function refreshFotn(env) {
-  if (!(!env.DB || Date.now() - FOTN_AT < 6e5)) {
-    FOTN_AT = Date.now();
-    try {
-      let have = new Set((await env.DB.prepare("SELECT slug FROM fights WHERE category IS NOT NULL").all()).results.map((r) => r.slug)), pool = HEADLINERS.filter((x) => have.has(x)), list = pool.length ? pool : [...have].sort();
-      list.length && (FOTN = list[Math.floor(Date.now() / 864e5) % list.length]);
-    } catch {
-    }
-  }
-}
+};
 async function fetchSite(url, env) {
   let t0 = Date.now(), res = await get(url), html2 = (await res.text()).slice(0, 2e6), ms = Date.now() - t0, finalUrl = res.url || url, origin = new URL(finalUrl).origin, [robots, sitemap, llms, speed] = await Promise.all([
     get(origin + "/robots.txt", 5e3).then((r) => r.ok ? r.text() : null).catch(() => null),
@@ -2409,6 +2400,87 @@ async function storedFight(env, slug) {
   let row = env.DB && await env.DB.prepare("SELECT data, updated_at, COALESCE(votes_a,0) AS votes_a, COALESCE(votes_b,0) AS votes_b, category FROM fights WHERE slug=?1").bind(slug).first();
   return row ? { d: { ...JSON.parse(row.data), votes_a: row.votes_a, votes_b: row.votes_b, category: row.category }, age: Date.now() - row.updated_at } : null;
 }
+var FOTN = "", FOTN_AT = 0, HEADLINERS = ["apple.com-vs-samsung.com", "nike.com-vs-adidas.com", "coca-cola.com-vs-pepsi.com", "openai.com-vs-anthropic.com", "uber.com-vs-lyft.com", "netflix.com-vs-disneyplus.com", "amazon.com-vs-walmart.com", "playstation.com-vs-xbox.com", "instagram.com-vs-tiktok.com", "starbucks.com-vs-dunkindonuts.com", "airbnb.com-vs-vrbo.com", "tesla.com-vs-rivian.com", "dominos.com-vs-pizzahut.com", "spotify.com-vs-soundcloud.com", "google.com-vs-bing.com", "doordash.com-vs-ubereats.com", "shein.com-vs-temu.com", "duolingo.com-vs-babbel.com"];
+async function nightData(env) {
+  if (!FOTN) return null;
+  let f = await storedFight(env, FOTN);
+  if (!f) return null;
+  let d = f.d;
+  return { slug: d.slug, winner: d.winner, votes_a: d.votes_a, votes_b: d.votes_b, a: { host: d.a.host, score: d.a.score, scores: d.a.scores }, b: { host: d.b.host, score: d.b.score, scores: d.b.scores }, checks: (d.rows || []).length };
+}
+async function refreshFotn(env) {
+  if (!(!env.DB || Date.now() - FOTN_AT < 6e5)) {
+    FOTN_AT = Date.now();
+    try {
+      let have = new Set((await env.DB.prepare("SELECT slug FROM fights WHERE category IS NOT NULL").all()).results.map((r) => r.slug)), pool = HEADLINERS.filter((x) => have.has(x)), list = pool.length ? pool : [...have].sort();
+      list.length && (FOTN = list[Math.floor(Date.now() / 864e5) % list.length]);
+    } catch {
+    }
+  }
+}
+async function aiStrategy(env, d) {
+  let messages = [
+    { role: "system", content: "You are a blunt, practical SEO coach. Write in plain, simple English for a small business owner. No jargon without a short explanation. Use short headings and bullet points. Never invent numbers that are not in the report." },
+    { role: "user", content: `Here is an SEO comparison of my site (${d.a.host}) against my competitor (${d.b.host}).
+
+${toMarkdown(d)}
+
+Write my game plan to beat them: 1) why they're ahead (or why I'm ahead), 2) the 5 moves to make this week in order, 3) 5 pages or topics I should write to win their searches, 4) one thing to do so ChatGPT and Perplexity can read and quote my site. Keep it under 400 words.` }
+  ];
+  if (env.OPENROUTER_KEY) {
+    let r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: { authorization: `Bearer ${env.OPENROUTER_KEY}`, "content-type": "application/json", "HTTP-Referer": SITE, "X-Title": "SEO Fights" },
+      body: JSON.stringify({ model: env.AI_MODEL || "anthropic/claude-sonnet-4.5", messages })
+    });
+    if (!r.ok) throw new Error("ai");
+    return (await r.json()).choices?.[0]?.message?.content || "";
+  }
+  return (await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages, max_tokens: 900 }))?.response || "";
+}
+async function aiRivals(env, siteHost, pageHtml, kws) {
+  let meta = (re) => (pageHtml.match(re) || [])[1] || "", title = meta(/<title[^>]*>([^<]{0,200})/i), desc = meta(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{0,300})/i), text = pageHtml.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 1500), out = await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { max_tokens: 200, messages: [
+    { role: "system", content: 'You name real competitor websites. Reply with only a JSON array of 8 bare domains like ["example.com"]. No big platforms (google, amazon, wikipedia, youtube, facebook, reddit) unless the site itself is one of those.' },
+    { role: "user", content: `Website: ${siteHost}
+Title: ${title}
+Description: ${desc}
+Keywords: ${kws.join(", ")}
+Page text: ${text}
+
+List 8 real websites that compete with ${siteHost} for the same customers and Google searches.` }
+  ] }), resp = out && out.response, list = [];
+  if (Array.isArray(resp)) list = resp;
+  else if (resp && typeof resp == "object") list = Object.values(resp).flat();
+  else {
+    let txt = String(resp || "");
+    try {
+      list = JSON.parse(txt.match(/\[[\s\S]*?\]/)[0]);
+    } catch {
+      list = txt.match(/[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}/gi) || [];
+    }
+  }
+  list = list.map((x) => x && typeof x == "object" ? x.domain || x.url || x.host || "" : x);
+  let clean = [...new Set(list.map((h) => String(h).toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0]).filter((h) => /^[a-z0-9.-]+\.[a-z]{2,}$/.test(h) && h !== siteHost && !unsafeHost(h)))].slice(0, 8), ok = (await Promise.all(clean.map(async (h) => {
+    let ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 5e3);
+    try {
+      return (await fetch("https://" + h, { method: "HEAD", redirect: "follow", signal: ctl.signal, headers: { "user-agent": UA } })).status < 500 ? { host: h } : null;
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(t);
+    }
+  }))).filter(Boolean);
+  return (ok.length ? ok : clean.map((h) => ({ host: h }))).slice(0, 5);
+}
+function badgeSvg(d) {
+  let w = d.winner ? d[d.winner] : null, l = d.winner ? d[d.winner === "a" ? "b" : "a"] : null, top = w ? `${w.host} WON` : "DEAD EVEN", sub = w ? `vs ${l.host} \xB7 ${w.score}\u2013${l.score}` : `${d.a.host} vs ${d.b.host}`, e = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="72" viewBox="0 0 280 72" role="img" aria-label="${e(top + " " + sub)}">
+<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#e0263a"/><stop offset="1" stop-color="#2457f5"/></linearGradient></defs>
+<rect width="280" height="72" rx="14" fill="#0b0d13"/><rect x="1" y="1" width="278" height="70" rx="13" fill="none" stroke="url(#g)" stroke-width="2"/>
+<text x="18" y="20" fill="#f2c14e" font-family="Arial Narrow,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">\u2605 SEO FIGHTS CHAMPION</text>
+<text x="18" y="44" fill="#fff" font-family="Arial,sans-serif" font-size="17" font-weight="800">${e(top.toUpperCase().slice(0, 26))}</text>
+<text x="18" y="61" fill="#9aa2b4" font-family="Arial,sans-serif" font-size="11">${e(sub.slice(0, 40))}</text></svg>`;
+}
 function head(o) {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 ${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="canonical" href="${SITE}${o.path || "/"}"><meta property="og:title" content="${esc(o.title)}"><meta property="og:description" content="${esc(o.desc)}"><meta property="og:url" content="${SITE}${o.path || "/"}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
@@ -2417,20 +2489,7 @@ ${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="ca
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 `;
 }
-var html = (body, o) => new Response(body, { status: o.status || 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": o.cache || "public, max-age=300" } }), LADDER = [[25, 49, "STRIPE_LIFETIME_LINK"], [75, 79, "STRIPE_LIFETIME_LINK_2"], [1 / 0, 129, "STRIPE_LIFETIME_LINK_3"]], LIFE_SOLD = 0, LIFE_AT = 0;
-async function refreshLife(env) {
-  if (!(!env.DB || Date.now() - LIFE_AT < 6e4)) {
-    LIFE_AT = Date.now();
-    try {
-      LIFE_SOLD = (await env.DB.prepare("SELECT COUNT(*) AS n FROM members WHERE plan='lifetime'").first()).n || 0;
-    } catch {
-    }
-  }
-}
-function lifeTier(env) {
-  let i = LADDER.findIndex(([cap2]) => LIFE_SOLD < cap2), [cap, price, key] = LADDER[i], left = cap === 1 / 0 ? null : cap - LIFE_SOLD;
-  return { price, left, link: env[key] || env.STRIPE_LIFETIME_LINK || "#pricing", label: left === null ? "Final price" : `${left} of ${cap - (i ? LADDER[i - 1][0] : 0)} left at $${price}, then $${LADDER[i + 1][1]}` };
-}
+var html = (body, o) => new Response(body, { status: o.status || 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": o.cache || "public, max-age=300" } });
 function page(env, o) {
   let d = o.data || demo_default, fill = {
     __TITLE__: esc(o.title),
@@ -2457,9 +2516,9 @@ function page(env, o) {
   return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFEN|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE|FOTN|NIGHT)__/g, (m) => fill[m]), o);
 }
 var HOME = {
-  title: "SEO Fights \xB7 Compare website SEO side by side",
+  title: "SEO Fights \xB7 Whose SEO wins? Compare any two websites",
   desc: "Compare your website's SEO against a competitor in seconds. 31 live checks across Google and AI readiness, a clear winner, and the exact fixes to win.",
-  h1: 'Who wins<br>the <span class="r">SEO</span> <span class="b">fight?</span>',
+  h1: 'Whose <span class="r">SEO</span><br><span class="b">wins?</span>',
   lede: "31 live checks. 5 rounds. One winner. Google and AI search.",
   mode: "Example fight"
 };
@@ -2581,59 +2640,46 @@ function toolPage(env, path, url) {
   }, ld = { "@context": "https://schema.org", "@type": "WebApplication", name: t.title.split(" \xB7 ")[0], url: SITE + path, applicationCategory: "BusinessApplication", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } };
   return html(head({ ...t, path, ld }) + tools_default.replace(/__(TITLE|DESC|H1|LEDE|CRUMBS|SHOW|ABOUT|KBA|KBB)__/g, (m) => fill[m]), {});
 }
-async function aiStrategy(env, d) {
-  let messages = [
-    { role: "system", content: "You are a blunt, practical SEO coach. Write in plain, simple English for a small business owner. No jargon without a short explanation. Use short headings and bullet points. Never invent numbers that are not in the report." },
-    { role: "user", content: `Here is an SEO comparison of my site (${d.a.host}) against my competitor (${d.b.host}).
-
-${toMarkdown(d)}
-
-Write my game plan to beat them: 1) why they're ahead (or why I'm ahead), 2) the 5 moves to make this week in order, 3) 5 pages or topics I should write to win their searches, 4) one thing to do so ChatGPT and Perplexity can read and quote my site. Keep it under 400 words.` }
-  ];
-  if (env.OPENROUTER_KEY) {
-    let r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: { authorization: `Bearer ${env.OPENROUTER_KEY}`, "content-type": "application/json", "HTTP-Referer": SITE, "X-Title": "SEO Fights" },
-      body: JSON.stringify({ model: env.AI_MODEL || "anthropic/claude-sonnet-4.5", messages })
-    });
-    if (!r.ok) throw new Error("ai");
-    return (await r.json()).choices?.[0]?.message?.content || "";
-  }
-  return (await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages, max_tokens: 900 }))?.response || "";
+function infoPage(env, o) {
+  let fill = { __TITLE__: esc(o.title), __DESC__: esc(o.desc || o.title), __H1__: o.h1, __LEDE__: o.lede || "", __CRUMBS__: "", __SHOW__: "", __ABOUT__: o.body, __KBA__: "", __KBB__: "" };
+  return html(head({ ...o, desc: o.desc || o.title }) + tools_default.replace(/__(TITLE|DESC|H1|LEDE|CRUMBS|SHOW|ABOUT|KBA|KBB)__/g, (k) => fill[k]), { status: o.status, cache: o.cache || "public, max-age=300" });
 }
-async function aiRivals(env, siteHost, pageHtml, kws) {
-  let meta = (re) => (pageHtml.match(re) || [])[1] || "", title = meta(/<title[^>]*>([^<]{0,200})/i), desc = meta(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{0,300})/i), text = pageHtml.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 1500), out = await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { max_tokens: 200, messages: [
-    { role: "system", content: 'You name real competitor websites. Reply with only a JSON array of 8 bare domains like ["example.com"]. No big platforms (google, amazon, wikipedia, youtube, facebook, reddit) unless the site itself is one of those.' },
-    { role: "user", content: `Website: ${siteHost}
-Title: ${title}
-Description: ${desc}
-Keywords: ${kws.join(", ")}
-Page text: ${text}
-
-List 8 real websites that compete with ${siteHost} for the same customers and Google searches.` }
-  ] }), resp = out && out.response, list = [];
-  if (Array.isArray(resp)) list = resp;
-  else if (resp && typeof resp == "object") list = Object.values(resp).flat();
-  else {
-    let txt = String(resp || "");
-    try {
-      list = JSON.parse(txt.match(/\[[\s\S]*?\]/)[0]);
-    } catch {
-      list = txt.match(/[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}/gi) || [];
-    }
-  }
-  list = list.map((x) => x && typeof x == "object" ? x.domain || x.url || x.host || "" : x);
-  let clean = [...new Set(list.map((h) => String(h).toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0]).filter((h) => /^[a-z0-9.-]+\.[a-z]{2,}$/.test(h) && h !== siteHost && !unsafeHost(h)))].slice(0, 8), ok = (await Promise.all(clean.map(async (h) => {
-    let ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 5e3);
-    try {
-      return (await fetch("https://" + h, { method: "HEAD", redirect: "follow", signal: ctl.signal, headers: { "user-agent": UA } })).status < 500 ? { host: h } : null;
-    } catch {
-      return null;
-    } finally {
-      clearTimeout(t);
-    }
-  }))).filter(Boolean);
-  return (ok.length ? ok : clean.map((h) => ({ host: h }))).slice(0, 5);
+var WELCOME_HTML = `<div class="panel" id="wbox"><h3>One second\u2026</h3><p class="muted">Confirming your payment with Stripe.</p></div>
+<script>(async()=>{const sid=new URLSearchParams(location.search).get("session_id");const box=document.getElementById("wbox");if(!sid){box.innerHTML='<h3>No payment found</h3><p class="muted">If you just paid, check your email for your access link.</p><p><a class="btn" href="/account">Your account</a></p>';return;}
+for(let i=0;i<20;i++){try{const r=await fetch("/api/welcome?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.ready){box.innerHTML='<h3>'+j.plan+' is on \u{1F94A}</h3><p class="muted">Signed in as '+j.email.replace(/[<>&]/g,"")+'.</p><p><a class="btn fight" href="/">Start fighting</a> <a class="btn ghost" href="/account">Your account</a></p>';return;}}catch(e){}await new Promise(r=>setTimeout(r,1500));}
+box.innerHTML='<h3>Payment received</h3><p class="muted">It is taking a moment to set up. Check your email for your access link, or refresh this page.</p>';})();</script>`, RESTORE_HTML = `<form class="panel waitbox" id="restore" novalidate><h3>Get your access link</h3><p class="muted">Enter the email you paid with. If you have an active plan, we'll email you a link that signs you in on this browser.</p><div class="wrow"><input id="rEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn" type="submit">Email me a link</button></div><p class="muted" id="rMsg"></p></form>
+<p style="margin-top:16px"><a class="btn ghost" href="/#pricing">See plans</a></p>
+<script>document.getElementById("restore").addEventListener("submit",async e=>{e.preventDefault();const email=document.getElementById("rEmail").value.trim();const m=document.getElementById("rMsg");try{const r=await fetch("/api/restore",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email})});const j=await r.json();m.textContent=r.ok?"If that email has a plan, your link is on its way.":(j.error||"Try again.");}catch{m.textContent="Try again.";}});</script>`, TERMS_HTML = `<div class="panel terms">
+<h3>1. What you get</h3><p>SEO Fights compares public websites and gives you scores, checks and suggestions. Results come from public pages at the time of the check. We don't promise rankings, traffic or sales.</p>
+<h3>2. Plans and billing</h3><p>Pro and Agency are monthly subscriptions that renew automatically until you cancel. Lifetime is a single payment for the life of the product. Prices are shown before you pay. Payments are handled by Stripe.</p>
+<h3>3. All payments are final</h3><p><b>We do not offer refunds</b>, including for partial months, unused fights, downgrades or plans you didn't use, except where the law requires it. Please use the free plan before you buy.</p>
+<h3>4. Cancelling</h3><p>Cancel any time from your account. You keep access until the end of the period you already paid for. Nothing is charged after that.</p>
+<h3>5. Chargebacks</h3><p>If a payment is disputed or reversed, access to the paid plan ends right away.</p>
+<h3>6. Fair use</h3><p>Plans include the limits shown on the pricing page. Don't use SEO Fights to attack, overload or scrape sites, or to resell results in bulk. We can suspend accounts that abuse the service.</p>
+<h3>7. Changes</h3><p>We may change features, limits or prices. Price changes for existing subscriptions apply from your next billing period, and we'll tell you first.</p>
+<h3>8. Liability</h3><p>SEO Fights is provided "as is". Our total liability is limited to what you paid us in the last 3 months.</p></div>`, PRIVACY_HTML = `<div class="panel terms">
+<h3>What we collect</h3><p>Your email when you sign up or unlock a result, the websites you enter, your picks on fights, and your IP address to enforce free limits. Payment details go to Stripe, not to us.</p>
+<h3>Why</h3><p>To run fights, unlock results, enforce plan limits, send the emails you asked for, and improve SEO Fights.</p>
+<h3>What we don't do</h3><p>We don't sell your data.</p>
+<h3>Deleting your data</h3><p>Ask us and we'll delete your email and history.</p></div>`;
+async function sendEmail(env, to, subject, body) {
+  return env.RESEND_KEY ? (await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { authorization: `Bearer ${env.RESEND_KEY}`, "content-type": "application/json" },
+    body: JSON.stringify({ from: env.FROM_EMAIL || "SEO Fights <fights@seofights.com>", to, subject, html: body })
+  })).ok : !1;
+}
+function planFromSession(o) {
+  let meta = o.metadata && o.metadata.plan || "";
+  if (["pro", "agency", "lifetime"].includes(meta)) return meta;
+  let amt = o.amount_total || 0;
+  return o.mode !== "subscription" ? "lifetime" : amt >= 5e3 ? "agency" : "pro";
+}
+async function verifyStripe(req, secret) {
+  let sig = req.headers.get("stripe-signature") || "", body = await req.text(), t = (sig.match(/t=(\d+)/) || [])[1], v1 = [...sig.matchAll(/v1=([a-f0-9]+)/g)].map((m) => m[1]);
+  if (!t || !v1.length || Math.abs(Date.now() / 1e3 - Number(t)) > 600) return null;
+  let key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, !1, ["sign"]), mac = [...new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${t}.${body}`)))].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return v1.includes(mac) ? JSON.parse(body) : null;
 }
 var RIVALS = [
   ["apple.com", "samsung.com", "Tech"],
@@ -2759,57 +2805,6 @@ async function autoFights(env, n) {
       await env.DB.prepare("INSERT OR REPLACE INTO blocked (slug, reason, at) VALUES (?1, ?2, ?3)").bind(slugOf(a, b), e instanceof Blocked ? "blocked" : "error", Date.now()).run();
     }
 }
-function planFromSession(o) {
-  let meta = o.metadata && o.metadata.plan || "";
-  if (["pro", "agency", "lifetime"].includes(meta)) return meta;
-  let amt = o.amount_total || 0;
-  return o.mode !== "subscription" ? "lifetime" : amt >= 5e3 ? "agency" : "pro";
-}
-var cookieFor = (key) => `rf_key=${key}; Path=/; Max-Age=34560000; HttpOnly; Secure; SameSite=Lax`;
-function infoPage(env, o) {
-  let fill = { __TITLE__: esc(o.title), __DESC__: esc(o.desc || o.title), __H1__: o.h1, __LEDE__: o.lede || "", __CRUMBS__: "", __SHOW__: "", __ABOUT__: o.body, __KBA__: "", __KBB__: "" };
-  return html(head({ ...o, desc: o.desc || o.title }) + tools_default.replace(/__(TITLE|DESC|H1|LEDE|CRUMBS|SHOW|ABOUT|KBA|KBB)__/g, (k) => fill[k]), { status: o.status, cache: o.cache || "public, max-age=300" });
-}
-var WELCOME_HTML = `<div class="panel" id="wbox"><h3>One second\u2026</h3><p class="muted">Confirming your payment with Stripe.</p></div>
-<script>(async()=>{const sid=new URLSearchParams(location.search).get("session_id");const box=document.getElementById("wbox");if(!sid){box.innerHTML='<h3>No payment found</h3><p class="muted">If you just paid, check your email for your access link.</p><p><a class="btn" href="/account">Your account</a></p>';return;}
-for(let i=0;i<20;i++){try{const r=await fetch("/api/welcome?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.ready){box.innerHTML='<h3>'+j.plan+' is on \u{1F94A}</h3><p class="muted">Signed in as '+j.email.replace(/[<>&]/g,"")+'.</p><p><a class="btn fight" href="/">Start fighting</a> <a class="btn ghost" href="/account">Your account</a></p>';return;}}catch(e){}await new Promise(r=>setTimeout(r,1500));}
-box.innerHTML='<h3>Payment received</h3><p class="muted">It is taking a moment to switch on. Check your email for your access link, or refresh this page.</p>';})();</script>`, RESTORE_HTML = `<form class="panel waitbox" id="restore" novalidate><h3>Get your access link</h3><p class="muted">Enter the email you paid with. If you have an active plan, we'll email you a link that switches it on in this browser.</p><div class="wrow"><input id="rEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn" type="submit">Email me a link</button></div><p class="muted" id="rMsg"></p></form>
-<p style="margin-top:16px"><a class="btn ghost" href="/#pricing">See plans</a></p>
-<script>document.getElementById("restore").addEventListener("submit",async e=>{e.preventDefault();const email=document.getElementById("rEmail").value.trim();const m=document.getElementById("rMsg");try{const r=await fetch("/api/restore",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email})});const j=await r.json();m.textContent=r.ok?"If that email has a plan, your link is on its way.":(j.error||"Try again.");}catch{m.textContent="Try again.";}});</script>`, TERMS_HTML = `<div class="panel terms">
-<h3>1. What you get</h3><p>SEO Fights compares public websites and gives you scores, checks and suggestions. Results come from public pages at the time of the check. We don't promise rankings, traffic or sales.</p>
-<h3>2. Plans and billing</h3><p>Pro and Agency are monthly subscriptions that renew automatically until you cancel. Lifetime is a single payment for the life of the product. Prices are shown before you pay. Payments are handled by Stripe.</p>
-<h3>3. All payments are final</h3><p><b>We do not offer refunds</b>, including for partial months, unused fights, downgrades or plans you didn't use, except where the law requires it. Please use the free plan before you buy.</p>
-<h3>4. Cancelling</h3><p>Cancel any time from your account. You keep access until the end of the period you already paid for. Nothing is charged after that.</p>
-<h3>5. Chargebacks</h3><p>If a payment is disputed or reversed, access to the paid plan ends right away.</p>
-<h3>6. Fair use</h3><p>Plans include the limits shown on the pricing page. Don't use SEO Fights to attack, overload or scrape sites, or to resell results in bulk. We can suspend accounts that abuse the service.</p>
-<h3>7. Changes</h3><p>We may change features, limits or prices. Price changes for existing subscriptions apply from your next billing period, and we'll tell you first.</p>
-<h3>8. Liability</h3><p>SEO Fights is provided "as is". Our total liability is limited to what you paid us in the last 3 months.</p></div>`, PRIVACY_HTML = `<div class="panel terms">
-<h3>What we collect</h3><p>Your email when you sign up or unlock a result, the websites you enter, your picks on fights, and your IP address to enforce free limits. Payment details go to Stripe, not to us.</p>
-<h3>Why</h3><p>To run fights, unlock results, enforce plan limits, send the emails you asked for, and improve SEO Fights.</p>
-<h3>What we don't do</h3><p>We don't sell your data.</p>
-<h3>Deleting your data</h3><p>Ask us and we'll delete your email and history.</p></div>`;
-function badgeSvg(d) {
-  let w = d.winner ? d[d.winner] : null, l = d.winner ? d[d.winner === "a" ? "b" : "a"] : null, top = w ? `${w.host} WON` : "DEAD EVEN", sub = w ? `vs ${l.host} \xB7 ${w.score}\u2013${l.score}` : `${d.a.host} vs ${d.b.host}`, e = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="72" viewBox="0 0 280 72" role="img" aria-label="${e(top + " " + sub)}">
-<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#e0263a"/><stop offset="1" stop-color="#2457f5"/></linearGradient></defs>
-<rect width="280" height="72" rx="14" fill="#0b0d13"/><rect x="1" y="1" width="278" height="70" rx="13" fill="none" stroke="url(#g)" stroke-width="2"/>
-<text x="18" y="20" fill="#f2c14e" font-family="Arial Narrow,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">\u2605 SEO FIGHTS CHAMPION</text>
-<text x="18" y="44" fill="#fff" font-family="Arial,sans-serif" font-size="17" font-weight="800">${e(top.toUpperCase().slice(0, 26))}</text>
-<text x="18" y="61" fill="#9aa2b4" font-family="Arial,sans-serif" font-size="11">${e(sub.slice(0, 40))}</text></svg>`;
-}
-async function verifyStripe(req, secret) {
-  let sig = req.headers.get("stripe-signature") || "", body = await req.text(), t = (sig.match(/t=(\d+)/) || [])[1], v1 = [...sig.matchAll(/v1=([a-f0-9]+)/g)].map((m) => m[1]);
-  if (!t || !v1.length || Math.abs(Date.now() / 1e3 - Number(t)) > 600) return null;
-  let key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, !1, ["sign"]), mac = [...new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${t}.${body}`)))].map((b) => b.toString(16).padStart(2, "0")).join("");
-  return v1.includes(mac) ? JSON.parse(body) : null;
-}
-async function sendEmail(env, to, subject, body) {
-  return env.RESEND_KEY ? (await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { authorization: `Bearer ${env.RESEND_KEY}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: env.FROM_EMAIL || "SEO Fights <fights@seofights.com>", to, subject, html: body })
-  })).ok : !1;
-}
 async function weekly(env) {
   if (!env.DB) return;
   let watches = (await env.DB.prepare("SELECT w.* FROM watches w JOIN members m ON m.email = w.email AND m.active = 1 WHERE w.active = 1 LIMIT 500").all()).results;
@@ -2873,10 +2868,31 @@ var worker_default = {
         return e instanceof Blocked && env.DB && ctx.waitUntil(env.DB.prepare("INSERT OR REPLACE INTO blocked (slug, reason, at) VALUES (?1, 'blocked', ?2)").bind(slug, Date.now()).run()), json({ error: e instanceof Blocked ? e.message : "Couldn't reach one of the sites. Check the address and try again." }, e instanceof Blocked ? 422 : 502);
       }
     }
+    if (p === "/api/fight") {
+      FOTN || (FOTN_AT = 0), await refreshFotn(env);
+      let slug = String(u.searchParams.get("slug") || "").toLowerCase(), m = await member(req, env);
+      if (!m && slug !== FOTN) return NEED_ACCOUNT();
+      let f = await storedFight(env, slug);
+      return f ? json(withReport(f.d, paid(m)), 200, { "cache-control": "no-store" }) : json({ error: "Fight not found." }, 404);
+    }
+    if (p === "/api/vote" && req.method === "POST") {
+      let body;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "Bad request" }, 400);
+      }
+      let slug = String(body.slug || "").toLowerCase(), side = body.side === "a" ? "a" : body.side === "b" ? "b" : null;
+      if (!slug || !side || !env.DB) return json({ error: "Bad request" }, 400);
+      let k = `v:${slug}:${ipOf(req)}`;
+      env.LIMITS && await env.LIMITS.get(k) || (await env.DB.prepare(`UPDATE fights SET votes_${side} = COALESCE(votes_${side}, 0) + 1 WHERE slug = ?1`).bind(slug).run(), env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, side, { expirationTtl: 60 * 86400 })));
+      let row = await env.DB.prepare("SELECT COALESCE(votes_a,0) AS votes_a, COALESCE(votes_b,0) AS votes_b FROM fights WHERE slug=?1").bind(slug).first();
+      return json(row || { votes_a: 0, votes_b: 0 });
+    }
     if (p === "/api/rivals") {
-      if (!env.SERPER_KEY && !env.AI) return json({ error: "Rival finder isn't switched on yet." }, 503);
       let m = await member(req, env);
       if (!m) return NEED_ACCOUNT();
+      if (!env.SERPER_KEY && !env.AI) return json({ error: "Rival finder isn't available right now. Try again soon." }, 503);
       if (!await canUse(env, m.key, "rivals", planOf(m))) return OUT(planOf(m), "rival finder");
       ctx.waitUntil(spend(env, m.key, "rivals", planOf(m)));
       try {
@@ -2901,7 +2917,9 @@ var worker_default = {
       }
     }
     if (p === "/api/battle" && req.method === "POST") {
-      if (!env.SERPER_KEY) return json({ error: "Keyword Battle isn't switched on yet." }, 503);
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      if (!env.SERPER_KEY) return json({ error: "Keyword Battle isn't available right now. Try again soon." }, 503);
       let body;
       try {
         body = await req.json();
@@ -2916,17 +2934,15 @@ var worker_default = {
       }
       let kws = [...new Set((body.keywords || []).map((k) => String(k).trim().toLowerCase()).filter(Boolean))].slice(0, 10);
       if (!kws.length) return json({ error: "Add at least one keyword, or tap Suggest keywords." }, 400);
-      let m = await member(req, env);
-      if (!m) return NEED_ACCOUNT();
       let gl = paid(m) ? String(body.country || "us").slice(0, 2) : "us", who = m.key, plan = planOf(m);
       if (!await canUse(env, who, "battles", plan))
         return json({ error: paid(m) ? LIMITS[plan].battles[0] ? `You've used your ${LIMITS[plan].battles[0]} Keyword Battles this month.` : "Keyword Battle is part of Pro and Agency." : "You've used your free Keyword Battle this week. Go Pro for 4 a month with all 10 keywords." }, 429);
       try {
-        let res = await battle(env, a, b, kws, gl);
+        let res = await battle(env, a, b, paid(m) ? kws : kws.slice(0, 1), gl);
         return ctx.waitUntil(spend(env, who, "battles", plan)), paid(m) && env.DB && ctx.waitUntil(env.DB.prepare(
           `INSERT INTO battles (member_key, email, a, b, gl, keywords, last, created_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8)
            ON CONFLICT(member_key, a, b) DO UPDATE SET gl=?5, keywords=?6, last=?7`
-        ).bind(m.key, m.email, a, b, gl, JSON.stringify(kws), JSON.stringify(res.rows), Date.now()).run()), paid(m) || (res.rows = res.rows.map((r, i) => i === 0 ? r : { locked: !0 }), res.winsA = res.rows[0].edge === "a" ? 1 : 0, res.winsB = res.rows[0].edge === "b" ? 1 : 0), json(res);
+        ).bind(m.key, m.email, a, b, gl, JSON.stringify(kws), JSON.stringify(res.rows), Date.now()).run()), paid(m) || (res.rows = kws.map((k, i) => i === 0 ? res.rows[0] : { locked: !0 }), res.winsA = res.rows[0].edge === "a" ? 1 : 0, res.winsB = res.rows[0].edge === "b" ? 1 : 0), json(res);
       } catch {
         return json({ error: "Google search didn't answer. Try again in a minute." }, 502);
       }
@@ -2945,7 +2961,7 @@ var worker_default = {
     if (p === "/api/strategy" && req.method === "POST") {
       let m = await member(req, env);
       if (!paid(m)) return json({ error: "AI strategy is a Pro feature." }, 402);
-      if (!env.OPENROUTER_KEY && !env.AI) return json({ error: "AI strategy isn't switched on yet." }, 503);
+      if (!env.OPENROUTER_KEY && !env.AI) return json({ error: "AI strategy isn't available right now. Try again soon." }, 503);
       let body;
       try {
         body = await req.json();
@@ -2988,12 +3004,35 @@ var worker_default = {
          ON CONFLICT(email, a, b) DO UPDATE SET active=1`
       ).bind(m.email, a, b, f?.a_score ?? 0, f?.b_score ?? 0, crypto.randomUUID(), Date.now()).run(), json({ ok: !0, email: m.email });
     }
-    if (p === "/api/fight") {
-      FOTN || (FOTN_AT = 0), await refreshFotn(env);
-      let slug = String(u.searchParams.get("slug") || "").toLowerCase(), m = await member(req, env);
-      if (!m && slug !== FOTN) return NEED_ACCOUNT();
-      let f = await storedFight(env, slug);
-      return f ? json(withReport(f.d, paid(m)), 200, { "cache-control": "no-store" }) : json({ error: "Fight not found." }, 404);
+    if (p === "/api/unwatch")
+      return env.DB && await env.DB.prepare("UPDATE watches SET active=0 WHERE id=?1 AND token=?2").bind(u.searchParams.get("id"), u.searchParams.get("t")).run(), new Response("You won't get these emails anymore.", { headers: { "content-type": "text/plain; charset=utf-8" } });
+    if (p === "/api/use" && req.method === "POST") {
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      let body;
+      try {
+        body = await req.json();
+      } catch {
+        body = {};
+      }
+      let tool = ["robots", "schema", "llms"].includes(body.tool) ? body.tool : "robots";
+      return await canUse(env, m.key, "gen:" + tool, planOf(m)) ? (await spend(env, m.key, "gen:" + tool, planOf(m)), json({ ok: !0 })) : OUT(planOf(m), "generator use");
+    }
+    if (p === "/api/lead" && req.method === "POST") {
+      let body;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "Bad request" }, 400);
+      }
+      let email = String(body.email || "").trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 200) return json({ error: "Enter a valid email." }, 400);
+      if (!env.DB) return json({ error: "Not set up" }, 503);
+      let k = `lead:${ipOf(req)}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`, n = env.LIMITS ? parseInt(await env.LIMITS.get(k) || "0", 10) : 0;
+      if (n > 20) return json({ error: "Too many sign-ups today." }, 429);
+      env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
+      let info = JSON.stringify({ site: String(body.site || "").slice(0, 200), fight: String(body.fight || "").slice(0, 200), ...typeof body.info == "object" ? body.info : {} }).slice(0, 2e3);
+      return await env.DB.prepare("INSERT INTO leads (email, plan, info, created_at) VALUES (?1, ?2, ?3, ?4)").bind(email, String(body.plan || "pro").slice(0, 30), info, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New ${body.plan || "pro"} sign-up: ${email}`, `<pre>${esc(info)}</pre>`)), json({ ok: !0 });
     }
     if (p === "/api/me") {
       let m = await member(req, env), auth = { google: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET), link: !!env.RESEND_KEY };
@@ -3023,107 +3062,8 @@ var worker_default = {
       }
       if (old && old.plan !== "free" && old.active) return json({ error: "This email has a paid plan. Get your access link on the Account page." }, 409);
       let key = old && old.plan === "free" ? old.key : null;
-      return key || (key = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, "0")).join(""), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, `<p>${esc(email)}</p>`))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
+      return key || (key = rand(), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, `<p>${esc(email)}</p>`))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
     }
-    if (p === "/api/use" && req.method === "POST") {
-      let m = await member(req, env);
-      if (!m) return NEED_ACCOUNT();
-      let body;
-      try {
-        body = await req.json();
-      } catch {
-        body = {};
-      }
-      let tool = ["robots", "schema", "llms"].includes(body.tool) ? body.tool : "robots";
-      return await canUse(env, m.key, "gen:" + tool, planOf(m)) ? (await spend(env, m.key, "gen:" + tool, planOf(m)), json({ ok: !0 })) : OUT(planOf(m), "generator use");
-    }
-    if (p.startsWith("/go/")) {
-      let to = { pro: env.STRIPE_PRO_LINK, agency: env.STRIPE_AGENCY_LINK, lifetime: lifeTier(env).link }[p.slice(4)], m = await member(req, env), dest = to && !to.startsWith("#") ? to + (m ? (to.includes("?") ? "&" : "?") + "prefilled_email=" + encodeURIComponent(m.email) : "") : "/#pricing";
-      return new Response(null, { status: 302, headers: { location: dest } });
-    }
-    if (p === "/api/vote" && req.method === "POST") {
-      let body;
-      try {
-        body = await req.json();
-      } catch {
-        return json({ error: "Bad request" }, 400);
-      }
-      let slug = String(body.slug || "").toLowerCase(), side = body.side === "a" ? "a" : body.side === "b" ? "b" : null;
-      if (!slug || !side || !env.DB) return json({ error: "Bad request" }, 400);
-      let k = `v:${slug}:${ipOf(req)}`;
-      env.LIMITS && await env.LIMITS.get(k) || (await env.DB.prepare(`UPDATE fights SET votes_${side} = COALESCE(votes_${side}, 0) + 1 WHERE slug = ?1`).bind(slug).run(), env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, side, { expirationTtl: 60 * 86400 })));
-      let row = await env.DB.prepare("SELECT COALESCE(votes_a,0) AS votes_a, COALESCE(votes_b,0) AS votes_b FROM fights WHERE slug=?1").bind(slug).first();
-      return json(row || { votes_a: 0, votes_b: 0 });
-    }
-    if (p === "/api/lead" && req.method === "POST") {
-      let body;
-      try {
-        body = await req.json();
-      } catch {
-        return json({ error: "Bad request" }, 400);
-      }
-      let email = String(body.email || "").trim().toLowerCase();
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 200) return json({ error: "Enter a valid email." }, 400);
-      if (!env.DB) return json({ error: "Not set up" }, 503);
-      let k = `lead:${ipOf(req)}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`, n = env.LIMITS ? parseInt(await env.LIMITS.get(k) || "0", 10) : 0;
-      if (n > 20) return json({ error: "Too many sign-ups today." }, 429);
-      env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
-      let info = JSON.stringify({ site: String(body.site || "").slice(0, 200), fight: String(body.fight || "").slice(0, 200), ...typeof body.info == "object" ? body.info : {} }).slice(0, 2e3);
-      return await env.DB.prepare("INSERT INTO leads (email, plan, info, created_at) VALUES (?1, ?2, ?3, ?4)").bind(email, String(body.plan || "pro").slice(0, 30), info, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New ${body.plan || "pro"} sign-up: ${email}`, `<pre>${esc(info)}</pre>`)), json({ ok: !0 });
-    }
-    if (p.startsWith("/badge/") && p.endsWith(".svg")) {
-      let old = await storedFight(env, decodeURIComponent(p.slice(7, -4)).toLowerCase());
-      return old ? new Response(badgeSvg(old.d), { headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=3600" } }) : new Response("Not found", { status: 404 });
-    }
-    if (p === "/kas.jpg") {
-      let cache = caches.default, hit = await cache.match(req);
-      if (hit) return hit;
-      let r = await fetch("https://unavatar.io/x/kas_irani?fallback=false", { headers: { "user-agent": UA } });
-      if (!r.ok) return new Response(null, { status: 404 });
-      let out = new Response(r.body, { headers: { "content-type": r.headers.get("content-type") || "image/jpeg", "cache-control": "public, max-age=86400" } });
-      return ctx.waitUntil(cache.put(req, out.clone())), out;
-    }
-    if (p === "/og.png") {
-      let bin = Uint8Array.from(atob(og_b64_default), (c) => c.charCodeAt(0));
-      return new Response(bin, { headers: { "content-type": "image/png", "cache-control": "public, max-age=86400" } });
-    }
-    if (p === "/api/unwatch")
-      return env.DB && await env.DB.prepare("UPDATE watches SET active=0 WHERE id=?1 AND token=?2").bind(u.searchParams.get("id"), u.searchParams.get("t")).run(), new Response("You won't get these emails anymore.", { headers: { "content-type": "text/plain; charset=utf-8" } });
-    if (p === "/api/stripe" && req.method === "POST") {
-      if (!env.STRIPE_WEBHOOK_SECRET || !env.DB) return json({ error: "not set up" }, 503);
-      let ev = await verifyStripe(req, env.STRIPE_WEBHOOK_SECRET);
-      if (!ev) return json({ error: "bad signature" }, 400);
-      let o = ev.data.object;
-      if (ev.type === "checkout.session.completed" && (o.payment_status === "paid" || o.payment_status === "no_payment_required")) {
-        let email = (o.customer_details?.email || o.customer_email || "").toLowerCase();
-        if (!email) return json({ received: !0 });
-        let plan = planFromSession(o);
-        await env.DB.prepare(`INSERT INTO members (key, email, plan, customer, subscription, session_id, active, created_at) VALUES (?1,?2,?3,?4,?5,?6,1,?7)
-          ON CONFLICT(email) DO UPDATE SET plan=?3, customer=?4, subscription=COALESCE(?5, subscription), session_id=?6, active=1`).bind(crypto.randomUUID().replace(/-/g, ""), email, plan, o.customer || "", o.subscription || null, o.id, Date.now()).run();
-        let row = await env.DB.prepare("SELECT key FROM members WHERE email=?1").bind(email).first();
-        ctx.waitUntil(sendEmail(
-          env,
-          email,
-          `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`,
-          `<p>Welcome to the main card.</p><p><a href="${SITE}/activate?key=${row.key}">Switch on ${PLAN_NAMES[plan]} on another device</a> (keep this email).</p><p>Manage or cancel any time from <a href="${SITE}/account">your account</a>. All payments are final.</p>`
-        )), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `\u{1F4B0} New ${PLAN_NAMES[plan]}: ${email}`, `<p>${email} bought ${PLAN_NAMES[plan]} (${(o.amount_total || 0) / 100} ${String(o.currency || "").toUpperCase()}).</p>`));
-      }
-      if (ev.type === "customer.subscription.updated") {
-        let on = ["active", "trialing", "past_due"].includes(o.status) ? 1 : 0;
-        await env.DB.prepare("UPDATE members SET active=?1 WHERE (subscription=?2 OR customer=?3) AND plan IN ('pro','agency')").bind(on, o.id, o.customer).run();
-      }
-      return ev.type === "customer.subscription.deleted" && await env.DB.prepare("UPDATE members SET active=0 WHERE (subscription=?1 OR customer=?2) AND plan IN ('pro','agency')").bind(o.id, o.customer).run(), (ev.type === "charge.dispute.created" || ev.type === "charge.refunded") && await env.DB.prepare("UPDATE members SET active=0 WHERE customer=?1 AND plan != 'owner'").bind(o.customer || "").run(), json({ received: !0 });
-    }
-    if (p === "/welcome") return infoPage(env, { path: p, noindex: !0, title: "Welcome to SEO Fights", h1: `You're <span class="r">in</span> \u{1F94A}`, lede: "Switching on your plan\u2026", body: WELCOME_HTML });
-    if (p === "/api/welcome") {
-      let sid = u.searchParams.get("session_id") || "", m = sid && env.DB && await env.DB.prepare("SELECT key, email, plan FROM members WHERE session_id=?1 AND active=1").bind(sid).first();
-      return m ? json({ ready: !0, plan: PLAN_NAMES[m.plan] || "Pro", email: m.email }, 200, { "set-cookie": cookieFor(m.key) }) : json({ ready: !1 });
-    }
-    if (p === "/activate") {
-      let key = u.searchParams.get("key") || "", m = env.DB && await env.DB.prepare("SELECT key FROM members WHERE key=?1 AND active=1").bind(key).first();
-      return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fights", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
-    }
-    if (p === "/signout") return new Response(null, { status: 302, headers: { location: "/", "set-cookie": "rf_key=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax" } });
     if (p === "/api/restore" && req.method === "POST") {
       let body;
       try {
@@ -3135,7 +3075,7 @@ var worker_default = {
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "Enter a valid email." }, 400);
       if (!await toolUse(env, req, "rivals")) return json({ error: "Too many tries today." }, 429);
       let m = env.DB && await env.DB.prepare("SELECT key, plan FROM members WHERE email=?1 AND active=1").bind(email).first();
-      return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fights access link", `<p><a href="${SITE}/activate?key=${m.key}">Tap to switch on ${PLAN_NAMES[m.plan] || "Pro"} on this device</a></p>`)), json({ ok: !0 });
+      return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fights access link", `<p><a href="${SITE}/activate?key=${m.key}">Tap to use ${PLAN_NAMES[m.plan] || "Pro"} on this device</a></p>`)), json({ ok: !0 });
     }
     if (p === "/auth/email") {
       let t = u.searchParams.get("t") || "", raw = env.LIMITS && t ? await env.LIMITS.get(`login:${t}`) : null;
@@ -3163,7 +3103,12 @@ var worker_default = {
         return fail();
       }
     }
+    if (p === "/signout") return new Response(null, { status: 302, headers: { location: "/", "set-cookie": "rf_key=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax" } });
     if (p === "/login" || p === "/signup") return new Response(null, { status: 302, headers: { location: "/account" } });
+    if (p === "/activate") {
+      let key = u.searchParams.get("key") || "", m = env.DB && await env.DB.prepare("SELECT key FROM members WHERE key=?1 AND active=1").bind(key).first();
+      return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fights", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
+    }
     if (p === "/account") {
       let m = await member(req, env);
       if (!m) return infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fights", h1: 'Your <span class="b">account</span>', lede: "Already paid? Get your access link by email.", body: RESTORE_HTML });
@@ -3183,6 +3128,56 @@ var worker_default = {
 <div class="panel" style="margin-top:16px"><h3>${plan === "free" ? "Upgrade" : "Billing"}</h3>${plan === "free" ? `<p class="muted">Free: 1 fight and 1 try of each tool a week. Pro: 40 fights a month, every tool, AI strategy and Keyword Battles.</p><p><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/go/lifetime">Lifetime \xB7 $${lifeTier(env).price} once</a></p>` : plan === "lifetime" || plan === "owner" ? `<p class="muted">${plan === "owner" ? "Owner access." : "Lifetime: paid once, nothing to cancel."}</p>` : portal ? `<p class="muted">Change card, see invoices or cancel. If you cancel, you keep access until the end of the period you paid for. All payments are final.</p><p><a class="btn" href="${esc(portal)}" target="_blank" rel="noopener">Manage billing or cancel</a></p>` : '<p class="muted">Billing management is being set up.</p>'}</div>
 <p style="margin-top:16px"><a class="btn ghost" href="/">Start a fight</a> <a class="btn ghost" href="/signout">Sign out</a></p>`
       });
+    }
+    if (p.startsWith("/go/")) {
+      let to = { pro: env.STRIPE_PRO_LINK, agency: env.STRIPE_AGENCY_LINK, lifetime: lifeTier(env).link }[p.slice(4)], m = await member(req, env), dest = to && !to.startsWith("#") ? to + (m ? (to.includes("?") ? "&" : "?") + "prefilled_email=" + encodeURIComponent(m.email) : "") : "/#pricing";
+      return new Response(null, { status: 302, headers: { location: dest } });
+    }
+    if (p === "/api/stripe" && req.method === "POST") {
+      if (!env.STRIPE_WEBHOOK_SECRET || !env.DB) return json({ error: "not set up" }, 503);
+      let ev = await verifyStripe(req, env.STRIPE_WEBHOOK_SECRET);
+      if (!ev) return json({ error: "bad signature" }, 400);
+      let o = ev.data.object;
+      if (ev.type === "checkout.session.completed" && (o.payment_status === "paid" || o.payment_status === "no_payment_required")) {
+        let email = (o.customer_details?.email || o.customer_email || "").toLowerCase();
+        if (!email) return json({ received: !0 });
+        let plan = planFromSession(o);
+        await env.DB.prepare(`INSERT INTO members (key, email, plan, customer, subscription, session_id, active, created_at) VALUES (?1,?2,?3,?4,?5,?6,1,?7)
+          ON CONFLICT(email) DO UPDATE SET plan=?3, customer=?4, subscription=COALESCE(?5, subscription), session_id=?6, active=1`).bind(crypto.randomUUID().replace(/-/g, ""), email, plan, o.customer || "", o.subscription || null, o.id, Date.now()).run();
+        let row = await env.DB.prepare("SELECT key FROM members WHERE email=?1").bind(email).first();
+        ctx.waitUntil(sendEmail(
+          env,
+          email,
+          `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`,
+          `<p>Welcome to the main card.</p><p><a href="${SITE}/activate?key=${row.key}">Use ${PLAN_NAMES[plan]} on another device</a> (keep this email).</p><p>Manage or cancel any time from <a href="${SITE}/account">your account</a>. All payments are final.</p>`
+        )), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `\u{1F4B0} New ${PLAN_NAMES[plan]}: ${email}`, `<p>${email} bought ${PLAN_NAMES[plan]} (${(o.amount_total || 0) / 100} ${String(o.currency || "").toUpperCase()}).</p>`));
+      }
+      if (ev.type === "customer.subscription.updated") {
+        let on = ["active", "trialing", "past_due"].includes(o.status) ? 1 : 0;
+        await env.DB.prepare("UPDATE members SET active=?1 WHERE (subscription=?2 OR customer=?3) AND plan IN ('pro','agency')").bind(on, o.id, o.customer).run();
+      }
+      return ev.type === "customer.subscription.deleted" && await env.DB.prepare("UPDATE members SET active=0 WHERE (subscription=?1 OR customer=?2) AND plan IN ('pro','agency')").bind(o.id, o.customer).run(), (ev.type === "charge.dispute.created" || ev.type === "charge.refunded") && await env.DB.prepare("UPDATE members SET active=0 WHERE customer=?1 AND plan != 'owner'").bind(o.customer || "").run(), json({ received: !0 });
+    }
+    if (p === "/welcome") return infoPage(env, { path: p, noindex: !0, title: "Welcome to SEO Fights", h1: `You're <span class="r">in</span> \u{1F94A}`, lede: "Setting up your plan\u2026", body: WELCOME_HTML });
+    if (p === "/api/welcome") {
+      let sid = u.searchParams.get("session_id") || "", m = sid && env.DB && await env.DB.prepare("SELECT key, email, plan FROM members WHERE session_id=?1 AND active=1").bind(sid).first();
+      return m ? json({ ready: !0, plan: PLAN_NAMES[m.plan] || "Pro", email: m.email }, 200, { "set-cookie": cookieFor(m.key) }) : json({ ready: !1 });
+    }
+    if (p.startsWith("/badge/") && p.endsWith(".svg")) {
+      let old = await storedFight(env, decodeURIComponent(p.slice(7, -4)).toLowerCase());
+      return old ? new Response(badgeSvg(old.d), { headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=3600" } }) : new Response("Not found", { status: 404 });
+    }
+    if (p === "/kas.jpg") {
+      let cache = caches.default, hit = await cache.match(req);
+      if (hit) return hit;
+      let r = await fetch("https://unavatar.io/x/kas_irani?fallback=false", { headers: { "user-agent": UA } });
+      if (!r.ok) return new Response(null, { status: 404 });
+      let out = new Response(r.body, { headers: { "content-type": r.headers.get("content-type") || "image/jpeg", "cache-control": "public, max-age=86400" } });
+      return ctx.waitUntil(cache.put(req, out.clone())), out;
+    }
+    if (p === "/og.png") {
+      let bin = Uint8Array.from(atob(og_b64_default), (c) => c.charCodeAt(0));
+      return new Response(bin, { headers: { "content-type": "image/png", "cache-control": "public, max-age=86400" } });
     }
     let CONTENT = { "/about": ABOUT, "/our-position": ABOUT, "/cookie-policy": COOKIES, "/contact": CONTACT, "/blog": BLOG_INDEX, "/tools-like": TOOLS_LIKE, "/alternatives": TOOLS_LIKE, ...ALT_PAGES };
     if (CONTENT[p]) return infoPage(env, { ...CONTENT[p], path: p === "/our-position" ? "/about" : p === "/alternatives" ? "/tools-like" : p });
