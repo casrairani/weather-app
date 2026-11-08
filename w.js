@@ -535,7 +535,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 /* ---- views ---- */
 html[data-view=home] #fight, html[data-view=home] .seo-sum { display: none }
-html[data-view=fight] #maincard, html[data-view=fight] #night, html[data-view=fight] #tonight, html[data-view=fight] #testYours { display: none }
+html[data-view=fight] #maincard, html[data-view=fight] #night, html[data-view=fight] #testYours { display: none }
 html[data-view=fight]:not([data-revealed]) #sealed, html[data-view=fight]:not([data-revealed]) .seo-sum { display: none }
 /* ---- main card posters ---- */
 .cat-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px }
@@ -593,6 +593,12 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.hero h1 .rot { position: relative; display: block; height: 1.05em; overflow: hidden }
+.hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
+.hero h1 .rot-in.enter { transform: translateY(100%); opacity: 0 } .hero h1 .rot-in.leave { transform: translateY(-100%); opacity: 0 }
+.hero h1 .rot-in small { font-size: .42em; color: var(--muted); vertical-align: middle; margin: 0 .1em }
+.test-wrap { padding-block: 0 24px } #test { padding-top: 0 } #night { padding-bottom: 0 }
+
 .tonight { display: inline-grid; justify-items: center; gap: 6px; margin: 22px auto 4px; padding: 16px 26px; border-radius: 24px; background: #0b0d13; color: #fff; text-decoration: none; box-shadow: 0 20px 60px rgba(11,13,19,.25); outline: 2px solid #f2c14e; outline-offset: -2px }
 .tonight .tn-tag { font: 700 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #f2c14e }
 .tonight .tn-m { font: 800 clamp(30px, 6vw, 52px)/1 var(--f-display); text-transform: uppercase; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; justify-content: center }
@@ -657,19 +663,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
   <div class="wrap hero">
     <span class="live"><b></b>Live SEO fights \xB7 Google + AI</span>
     <h1 class="display">__H1__</h1>
-    <a class="tonight" id="tonight" href="#night" hidden><span class="tn-tag">\u{1F319} Rivalry of the Night</span><span class="tn-m"><b class="r" id="tnA"></b><i>vs</i><b class="b" id="tnB"></b></span><span class="tn-go">See who wins \u2193</span></a>
     <p class="lede">__LEDE__</p>
-    <p class="test-yours" id="testYours">\u26A1 Now test yours. Your site vs your rival.</p>
-    <form class="ring" id="duelForm" novalidate>
-      <div class="corner red"><label for="a">Red corner \xB7 You</label><input id="a" name="a" inputmode="url" autocomplete="off" placeholder="yoursite.com" value="__A__"></div>
-      <div class="vs" aria-hidden="true">VS</div>
-      <div class="corner blue"><label for="b">Blue corner \xB7 Rival</label><input id="b" name="b" inputmode="url" autocomplete="off" placeholder="rival.com" value="__B__"></div>
-      <button class="btn fight" id="fightBtn" type="submit">Fight</button>
-    </form>
-    <p class="rivals-q">Don't know your rival? <button type="button" class="linkbtn" id="rivalBtn">Find SEO rivals for me</button></p>
-    <div class="rival-list" id="rivalList" hidden></div>
-    <div class="err" id="err" hidden></div>
-    <div class="proof"><span>31 ranking signals</span><span>Real page data, not estimates</span><span>Google + AI-ready checks</span></div>
   </div>
 
   <section id="night" hidden><div class="wrap">
@@ -683,6 +677,20 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
       <div class="nc-rounds" id="ncRounds"></div>
       <div class="nc-cta"><a class="btn fight" id="ncMine" href="#top">Can your site beat them?</a><a class="btn ghost" id="ncFull" href="#">See all 31 checks</a></div>
     </div>
+  </div></section>
+
+  <section id="test"><div class="wrap hero test-wrap">
+    <p class="test-yours" id="testYours">\u26A1 Now test yours. Your site vs your rival.</p>
+    <form class="ring" id="duelForm" novalidate>
+      <div class="corner red"><label for="a">Red corner \xB7 You</label><input id="a" name="a" inputmode="url" autocomplete="off" placeholder="yoursite.com" value="__A__"></div>
+      <div class="vs" aria-hidden="true">VS</div>
+      <div class="corner blue"><label for="b">Blue corner \xB7 Rival</label><input id="b" name="b" inputmode="url" autocomplete="off" placeholder="rival.com" value="__B__"></div>
+      <button class="btn fight" id="fightBtn" type="submit">Fight</button>
+    </form>
+    <p class="rivals-q">Don't know your rival? <button type="button" class="linkbtn" id="rivalBtn">Find SEO rivals for me</button></p>
+    <div class="rival-list" id="rivalList" hidden></div>
+    <div class="err" id="err" hidden></div>
+    <div class="proof"><span>31 ranking signals</span><span>Real page data, not estimates</span><span>Google + AI-ready checks</span></div>
   </div></section>
 
   <section id="maincard"><div class="wrap">
@@ -1116,7 +1124,6 @@ function renderCards(cat) {
 function renderNight() {
   if (!NIGHT || VIEW !== "home" || location.pathname !== "/") return;
   const A = brandName(NIGHT.a.host), B = brandName(NIGHT.b.host), W = NIGHT.winner;
-  $("#tnA").textContent = A; $("#tnB").textContent = B; $("#tonight").hidden = false;
   $("#ncA").textContent = A; $("#ncB").textContent = B;
   $("#ncSA").textContent = NIGHT.a.score; $("#ncSB").textContent = NIGHT.b.score;
   $("#ncBA").textContent = W === "a" ? "\u2605 Winner" : ""; $("#ncBB").textContent = W === "b" ? "\u2605 Winner" : "";
@@ -1126,11 +1133,36 @@ function renderNight() {
     return \`<div class="nr"><span class="v \${x >= y ? "w" : ""}">\${x}</span><div class="bar a"><i style="width:\${x}%"></i></div><span class="nm">\${name}</span><div class="bar b"><i style="width:\${y}%"></i></div><span class="v \${y >= x ? "w" : ""}">\${y}</span></div>\`; }).join("");
   const champ = W ? NIGHT[W].host : NIGHT.b.host;
   $("#ncMine").textContent = \`Can your site beat \${brandName(champ)}?\`;
-  $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = ""; $("#top").scrollIntoView({ behavior: "smooth" }); setTimeout(() => $("#a").focus(), 500); });
+  $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = ""; $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); });
   $("#ncFull").href = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
   $("#night").hidden = false;
 }
 renderNight();
+function headerRivals() {
+  if (VIEW !== "home" || location.pathname !== "/") return;
+  const h1 = document.querySelector(".hero h1"); if (!h1) return;
+  const pairs = [], seen = new Set();
+  const add = (a, b) => { const k = a + b; if (!seen.has(k)) { seen.add(k); pairs.push([brandName(a), brandName(b)]); } };
+  if (NIGHT) add(NIGHT.a.host, NIGHT.b.host);
+  ["apple.com-vs-samsung.com", "nike.com-vs-adidas.com", "coca-cola.com-vs-pepsi.com", "openai.com-vs-anthropic.com", "uber.com-vs-lyft.com", "netflix.com-vs-disneyplus.com", "playstation.com-vs-xbox.com", "instagram.com-vs-tiktok.com"].forEach(sl => { const c = CARDS.find(x => x.slug === sl); if (c) add(c.a, c.b); });
+  CARDS.filter(c => c.category).slice(0, 8).forEach(c => add(c.a, c.b));
+  if (!pairs.length) return;
+  const items = [\`the <span class="r">SEO</span> <span class="b">fight?</span>\`, ...pairs.slice(0, 10).map(([a, b]) => \`<span class="r">\${esc(a)}</span> <small>vs</small> <span class="b">\${esc(b)}?</span>\`)];
+  h1.innerHTML = \`Who wins<br><span class="rot" aria-live="polite"><span class="rot-in">\${items[0]}</span></span>\`;
+  const rot = h1.querySelector(".rot"), still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fit = el => { el.style.fontSize = ""; let f = 1; while (el.scrollWidth > rot.clientWidth + 2 && f > .45) { f -= .05; el.style.fontSize = f + "em"; } };
+  fit(rot.firstChild);
+  let i = 0;
+  setInterval(() => {
+    i = (i + 1) % items.length;
+    const old = rot.firstChild, nx = document.createElement("span");
+    nx.className = "rot-in enter"; nx.innerHTML = items[i]; rot.appendChild(nx); fit(nx);
+    if (still) { old.remove(); nx.classList.remove("enter"); return; }
+    requestAnimationFrame(() => { old.classList.add("leave"); nx.classList.remove("enter"); });
+    setTimeout(() => old.remove(), 600);
+  }, i === 0 ? 2600 : 2200);
+}
+headerRivals();
 // Every other result needs an account: tapping a poster opens sign-in first.
 document.addEventListener("click", async e => {
   const a = e.target.closest("a.poster"); if (!a || a.classList.contains("night")) return;
@@ -1528,7 +1560,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 /* ---- views ---- */
 html[data-view=home] #fight, html[data-view=home] .seo-sum { display: none }
-html[data-view=fight] #maincard, html[data-view=fight] #night, html[data-view=fight] #tonight, html[data-view=fight] #testYours { display: none }
+html[data-view=fight] #maincard, html[data-view=fight] #night, html[data-view=fight] #testYours { display: none }
 html[data-view=fight]:not([data-revealed]) #sealed, html[data-view=fight]:not([data-revealed]) .seo-sum { display: none }
 /* ---- main card posters ---- */
 .cat-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px }
@@ -1586,6 +1618,12 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.hero h1 .rot { position: relative; display: block; height: 1.05em; overflow: hidden }
+.hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
+.hero h1 .rot-in.enter { transform: translateY(100%); opacity: 0 } .hero h1 .rot-in.leave { transform: translateY(-100%); opacity: 0 }
+.hero h1 .rot-in small { font-size: .42em; color: var(--muted); vertical-align: middle; margin: 0 .1em }
+.test-wrap { padding-block: 0 24px } #test { padding-top: 0 } #night { padding-bottom: 0 }
+
 .tonight { display: inline-grid; justify-items: center; gap: 6px; margin: 22px auto 4px; padding: 16px 26px; border-radius: 24px; background: #0b0d13; color: #fff; text-decoration: none; box-shadow: 0 20px 60px rgba(11,13,19,.25); outline: 2px solid #f2c14e; outline-offset: -2px }
 .tonight .tn-tag { font: 700 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #f2c14e }
 .tonight .tn-m { font: 800 clamp(30px, 6vw, 52px)/1 var(--f-display); text-transform: uppercase; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; justify-content: center }
