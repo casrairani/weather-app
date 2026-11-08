@@ -916,6 +916,13 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
 /* AI strategy text */
 .ai-out { white-space: normal } .ai-out h4 { font: 800 20px/1.1 var(--f-display); text-transform: uppercase; margin: 18px 0 6px } .ai-out h4:first-child { margin-top: 0 }
 .ai-out p { margin: 0 0 10px; line-height: 1.6 } .ai-out ul, .ai-out ol { margin: 0 0 12px; padding-left: 22px; display: grid; gap: 6px } .ai-out code { font: 500 14px var(--f-mono) }
+
+/* site icons */
+.ico { display: inline-block; width: 1em; height: 1em; border-radius: 22%; object-fit: contain; background: #fff; padding: .08em; vertical-align: -0.12em; margin-right: .35em; flex: none }
+.fighter .host { display: flex; align-items: center; gap: 10px } .fighter.b .host { justify-content: flex-end } .fighter .host .ico { width: 30px; height: 30px; margin: 0; box-shadow: 0 0 0 1px var(--line) }
+.bc-name { display: flex; flex-direction: column; align-items: center; gap: 8px } .bc-name .ico { width: 36px; height: 36px; margin: 0; padding: 3px }
+.pg-s { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px } .pg-s .ico { width: 28px; height: 28px; margin: 0; padding: 3px }
+.mh .ico { width: 18px; height: 18px } .pr-top b .ico { width: 20px; height: 20px }
 </style>
 
 <header class="top"><div class="wrap">
@@ -1322,6 +1329,7 @@ function personalizeUpsell(pick) {
 }
 const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
 const site = /claude|localhost/.test(location.host) ? "seofights.com" : location.host.replace(/^www\\./, "");
+const ico = (h, c = "") => h ? \`<img class="ico \${c}" src="/icon/\${encodeURIComponent(String(h).replace(/^www\\./, ""))}" alt="" width="64" height="64" loading="lazy" decoding="async" onerror="this.remove()">\` : "";
 const pretty = h => h.replace(/\\.(com|co|io|org|net|app)$/i, "");
 
 function countUp(el, to) {
@@ -1333,7 +1341,7 @@ function countUp(el, to) {
 
 function render(d, live, keepLabel) {
   if (!keepLabel) $("#modeTag").textContent = live ? "Live result" : "Example fight";
-  $("#hostA").textContent = d.a.host; $("#hostB").textContent = d.b.host;
+  $("#hostA").innerHTML = ico(d.a.host) + \`<span>\${esc(d.a.host)}</span>\`; $("#hostB").innerHTML = ico(d.b.host) + \`<span>\${esc(d.b.host)}</span>\`;
   $("#thA").textContent = d.a.host; $("#thB").textContent = d.b.host;
   countUp($("#scoreA"), d.a.score); countUp($("#scoreB"), d.b.score);
   const belt = '<span class="belt">\u2605 Winner</span>';
@@ -1522,7 +1530,7 @@ function posterHTML(c) {
   const fit = t => { const n = Math.max(...String(t).split(/\\s+/).map(w => w.length)); return n <= 5 ? 30 : n <= 6 ? 26 : n <= 8 ? 21 : n <= 10 ? 18 : 15; };
   return \`<article class="pg\${picked ? " picked" : ""}\${night ? " night" : ""}" data-slug="\${esc(c.slug)}">
     <div class="pg-top"><span class="pg-cat">\${night ? "\u{1F319} Tonight" : esc(c.category || "Featured")}</span><span class="pg-q">Who wins?</span></div>
-    <div class="pg-sides"><button type="button" class="pg-s a\${p === "a" ? " mine" : ""}" data-side="a" aria-label="Pick \${esc(A)}" style="--fs:\${fit(A)}px"\${picked ? " disabled" : ""}>\${esc(A)}</button><span class="pg-vs">VS</span><button type="button" class="pg-s b\${p === "b" ? " mine" : ""}" data-side="b" aria-label="Pick \${esc(B)}" style="--fs:\${fit(B)}px"\${picked ? " disabled" : ""}>\${esc(B)}</button></div>
+    <div class="pg-sides"><button type="button" class="pg-s a\${p === "a" ? " mine" : ""}" data-side="a" aria-label="Pick \${esc(A)}" style="--fs:\${fit(A)}px"\${picked ? " disabled" : ""}>\${ico(c.a)}<span>\${esc(A)}</span></button><span class="pg-vs">VS</span><button type="button" class="pg-s b\${p === "b" ? " mine" : ""}" data-side="b" aria-label="Pick \${esc(B)}" style="--fs:\${fit(B)}px"\${picked ? " disabled" : ""}>\${ico(c.b)}<span>\${esc(B)}</span></button></div>
     <div class="pg-res">\${picked ? splitHTML(c, p) : \`<span class="pg-hint"><b>\u{1F446} Pick a side</b>\${tot ? " \xB7 " + tot.toLocaleString() + (tot === 1 ? " pick" : " picks") + " so far" : ""}</span>\`}</div>
   </article>\`;
 }
@@ -1558,7 +1566,7 @@ const WHY = { onpage: "Google reads this first to understand the page.", content
 function renderNight() {
   if (!NIGHT || VIEW !== "home" || location.pathname !== "/") return;
   const A = brandName(NIGHT.a.host), B = brandName(NIGHT.b.host), W = NIGHT.winner, name = { a: A, b: B };
-  $("#ncA").textContent = A; $("#ncB").textContent = B;
+  $("#ncA").innerHTML = ico(NIGHT.a.host, "lg") + esc(A); $("#ncB").innerHTML = ico(NIGHT.b.host, "lg") + esc(B);
   $("#ncSA").textContent = NIGHT.a.score; $("#ncSB").textContent = NIGHT.b.score;
   $("#ncBA").textContent = W === "a" ? "\u2605 Winner" : ""; $("#ncBB").textContent = W === "b" ? "\u2605 Winner" : "";
   $("#ncSideA").classList.toggle("won", W === "a"); $("#ncSideB").classList.toggle("won", W === "b");
@@ -1644,7 +1652,7 @@ function setMode(m, save) {
   $("#testYours").textContent = hunt ? "Find clients losing on Google" : "Now put your site in the ring";
   if (save) store.set("ringMode", m);
 }
-const prospectCard = (x, id) => \`<div class="prospect"><div class="pr-top"><b>\${esc(x.host)}</b><span class="pr-score"><i class="r">\${x.score}</i> vs <i class="b">\${x.rivalScore}</i></span></div>
+const prospectCard = (x, id) => \`<div class="prospect"><div class="pr-top"><b>\${ico(x.host)}\${esc(x.host)}</b><span class="pr-score"><i class="r">\${x.score}</i> vs <i class="b">\${x.rivalScore}</i></span></div>
   <p class="sub" style="margin:0">Google rank #\${esc(x.rank)}. Losing by \${esc(x.gap)} points to \${esc(x.rival)}. Top gaps: \${(x.fixes || []).map(esc).join(", ") || "polish"}.</p>
   <pre class="out pitch" id="\${id}">\${esc(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
   <div class="pr-act"><button class="btn sm" type="button" data-pitch="\${id}">Copy pitch</button><a class="btn ghost sm" href="\${esc(x.fight)}" target="_blank" rel="noopener">Open the fight</a></div></div>\`;
@@ -1673,8 +1681,8 @@ function yourCorner(list) {
   $("#csList").innerHTML = list.map(f => {
     const wa = f.winner === "a", wb = f.winner === "b", who = wa ? f.a : wb ? f.b : null;
     return \`<div class="mini"><a class="mini-link" href="/fight/\${encodeURIComponent(f.slug)}" aria-label="\${esc(f.a)} vs \${esc(f.b)}">
-      <span class="mini-row"><span class="mh a\${wa ? " w" : ""}">\${esc(pretty(f.a))}</span><span class="ms a">\${f.a_score ?? "\u2013"}</span></span><span class="mvs">VS</span>
-      <span class="mini-row"><span class="mh b\${wb ? " w" : ""}">\${esc(pretty(f.b))}</span><span class="ms b">\${f.b_score ?? "\u2013"}</span></span></a>
+      <span class="mini-row"><span class="mh a\${wa ? " w" : ""}">\${ico(f.a)}\${esc(pretty(f.a))}</span><span class="ms a">\${f.a_score ?? "\u2013"}</span></span><span class="mvs">VS</span>
+      <span class="mini-row"><span class="mh b\${wb ? " w" : ""}">\${ico(f.b)}\${esc(pretty(f.b))}</span><span class="ms b">\${f.b_score ?? "\u2013"}</span></span></a>
       <div class="mini-foot"><span>\${shortDate(f.at)} \xB7 \${who ? esc(pretty(who)) + " won" : "Tie"}</span><button class="btn sm rematch" type="button" data-a="\${esc(f.a)}" data-b="\${esc(f.b)}">Rematch</button></div></div>\`;
   }).join("");
   $("#csList").querySelectorAll(".rematch").forEach(b => b.addEventListener("click", () => {
@@ -2483,6 +2491,13 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
 /* AI strategy text */
 .ai-out { white-space: normal } .ai-out h4 { font: 800 20px/1.1 var(--f-display); text-transform: uppercase; margin: 18px 0 6px } .ai-out h4:first-child { margin-top: 0 }
 .ai-out p { margin: 0 0 10px; line-height: 1.6 } .ai-out ul, .ai-out ol { margin: 0 0 12px; padding-left: 22px; display: grid; gap: 6px } .ai-out code { font: 500 14px var(--f-mono) }
+
+/* site icons */
+.ico { display: inline-block; width: 1em; height: 1em; border-radius: 22%; object-fit: contain; background: #fff; padding: .08em; vertical-align: -0.12em; margin-right: .35em; flex: none }
+.fighter .host { display: flex; align-items: center; gap: 10px } .fighter.b .host { justify-content: flex-end } .fighter .host .ico { width: 30px; height: 30px; margin: 0; box-shadow: 0 0 0 1px var(--line) }
+.bc-name { display: flex; flex-direction: column; align-items: center; gap: 8px } .bc-name .ico { width: 36px; height: 36px; margin: 0; padding: 3px }
+.pg-s { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px } .pg-s .ico { width: 28px; height: 28px; margin: 0; padding: 3px }
+.mh .ico { width: 18px; height: 18px } .pr-top b .ico { width: 20px; height: 20px }
 
 #agOut[hidden] { display: none !important }
 [data-tool] { display: none }
@@ -4774,6 +4789,20 @@ var worker_default = {
       if (!r.ok) return new Response(null, { status: 404 });
       let out = new Response(r.body, { headers: { "content-type": r.headers.get("content-type") || "image/jpeg", "cache-control": "public, max-age=86400" } });
       return ctx.waitUntil(cache.put(req, out.clone())), out;
+    }
+    if (p.startsWith("/icon/")) {
+      let host2 = decodeURIComponent(p.slice(6)).toLowerCase().replace(/^www\./, ""), letter = (host2[0] || "?").toUpperCase().replace(/[^A-Z0-9]/, "?"), tile = () => new Response(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#172654"/><text x="32" y="43" font-family="Arial,sans-serif" font-size="32" font-weight="700" fill="#fff" text-anchor="middle">${letter}</text></svg>`, { headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=86400" } });
+      if (!/^[a-z0-9.-]{3,100}$/.test(host2) || unsafeHost(host2)) return tile();
+      let cache = caches.default, key = new Request(`${SITE}/icon/${host2}`), hit = await cache.match(key);
+      if (hit) return hit;
+      try {
+        let r = await fetch(`https://www.google.com/s2/favicons?domain=${encodeURIComponent(host2)}&sz=64`, { cf: { cacheTtl: 604800 } }), type = r.headers.get("content-type") || "";
+        if (!r.ok || !type.startsWith("image/")) return tile();
+        let out = new Response(r.body, { headers: { "content-type": type, "cache-control": "public, max-age=604800" } });
+        return ctx.waitUntil(cache.put(key, out.clone())), out;
+      } catch {
+        return tile();
+      }
     }
     if (p === "/favicon.svg" || p === "/favicon.ico") return new Response(FAVICON_SVG, { headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=604800" } });
     if (p === "/apple-touch-icon.png" || p === "/apple-touch-icon-precomposed.png") return new Response(Uint8Array.from(atob(touch_b64_default), (c) => c.charCodeAt(0)), { headers: { "content-type": "image/png", "cache-control": "public, max-age=604800" } });
