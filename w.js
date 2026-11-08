@@ -842,7 +842,7 @@ html[data-me] .gen-lock { display: none }
 .bc-belt { min-height: 22px; justify-self: center; font: 700 13px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: 5px 9px; border-radius: 999px; margin-top: 6px }
 .bc-belt:empty { background: none; padding: 0 }
 .bc-mid { display: grid; gap: 8px; justify-items: center; padding-bottom: 30px } .bc-vs { font: 800 22px var(--f-display); color: rgba(255,255,255,.4) }
-.bc-tally { font: 700 13px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); white-space: nowrap }
+.bc-tally { font: 700 13px/1.35 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--gold); text-align: center; max-width: 150px }
 .bc-verdict { grid-column: 1 / -1; margin: 8px 0 0; font-size: 16px; color: rgba(255,255,255,.85) }
 .bc-rounds { display: grid; gap: 14px }
 .tg { display: grid; gap: 6px }
@@ -1339,7 +1339,8 @@ function render(d, live, keepLabel) {
   const belt = '<span class="belt">\u2605 Winner</span>';
   $("#beltA").innerHTML = d.winner === "a" ? belt : ""; $("#beltB").innerHTML = d.winner === "b" ? belt : "";
   const roundsA = CATS.filter(([k]) => d.a.scores[k] > d.b.scores[k]).length, roundsB = CATS.filter(([k]) => d.b.scores[k] > d.a.scores[k]).length;
-  $("#center").innerHTML = \`\${roundsA}\u2013\${roundsB}<small>rounds won</small>\`;
+  { const t = 5 - roundsA - roundsB, lead = roundsA > roundsB ? "a" : roundsB > roundsA ? "b" : null, nm = h => esc(brandName(h));
+    $("#center").innerHTML = lead ? \`\${Math.max(roundsA, roundsB)} of 5<small>rounds to \${nm(d[lead].host)}\${t ? \` \xB7 \${t} tied\` : ""}</small>\` : \`\${roundsA} each<small>rounds split\${t ? \` \xB7 \${t} tied\` : ""}</small>\`; }
   $("#rounds").innerHTML = CATS.map(([k, r, n]) => {
     const a = d.a.scores[k] ?? 0, b = d.b.scores[k] ?? 0;
     return \`<div class="round"><div class="val a \${a > b ? "won" : ""}"><div class="bar a"><i style="width:\${a}%"></i></div>\${a}</div><div class="name"><small>\${r}</small>\${n}</div><div class="val b \${b > a ? "won" : ""}"><div class="bar b"><i style="width:\${b}%"></i></div>\${b}</div></div>\`;
@@ -1571,7 +1572,7 @@ function renderNight() {
     const took = x > y ? "a" : y > x ? "b" : "";
     return \`<div class="tg"><div class="tg-l"><span class="tg-v a\${took === "a" ? " w" : ""}">\${x}</span><span class="tg-n">\${rn}</span><span class="tg-v b\${took === "b" ? " w" : ""}">\${y}</span></div><div class="tg-bar" role="img" aria-label="\${rn}: \${A} \${x}, \${B} \${y}"><i class="a" style="width:\${share}%"></i><i class="b"></i><b class="tg-mid"></b></div></div>\`;
   }).join("");
-  $("#ncTally").textContent = \`\${ra}\u2013\${rb} rounds\`;
+  { const t = 5 - ra - rb; $("#ncTally").textContent = ra === rb ? \`Rounds split \${ra}\u2013\${rb}\` : \`\${ra > rb ? A : B} took \${Math.max(ra, rb)} of 5 rounds\${t ? \` \xB7 \${t} tied\` : ""}\`; }
   const gap = Math.abs(NIGHT.a.score - NIGHT.b.score);
   $("#ncVerdict").textContent = W ? \`\${name[W]} wins by \${gap}. The biggest swing was the \${swing} round.\` : \`Dead even at \${NIGHT.a.score}.\`;
   const rows = NIGHT.rows || [], lv = { good: 2, warn: 1, bad: 0 };
@@ -2408,7 +2409,7 @@ html[data-me] .gen-lock { display: none }
 .bc-belt { min-height: 22px; justify-self: center; font: 700 13px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: 5px 9px; border-radius: 999px; margin-top: 6px }
 .bc-belt:empty { background: none; padding: 0 }
 .bc-mid { display: grid; gap: 8px; justify-items: center; padding-bottom: 30px } .bc-vs { font: 800 22px var(--f-display); color: rgba(255,255,255,.4) }
-.bc-tally { font: 700 13px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); white-space: nowrap }
+.bc-tally { font: 700 13px/1.35 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--gold); text-align: center; max-width: 150px }
 .bc-verdict { grid-column: 1 / -1; margin: 8px 0 0; font-size: 16px; color: rgba(255,255,255,.85) }
 .bc-rounds { display: grid; gap: 14px }
 .tg { display: grid; gap: 6px }
