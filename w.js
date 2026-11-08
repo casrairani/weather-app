@@ -726,7 +726,7 @@ footer a { color: inherit }
   </div></section>
 
   <section id="pricing"><div class="wrap">
-    <div class="sec-head"><h2 class="display">Pick your weight class</h2><span class="tag">14-day money-back</span></div>
+    <div class="sec-head"><h2 class="display">Pick your weight class</h2><span class="tag">Founding prices</span></div>
     <div class="prices">
       <div class="price"><h3>Free</h3><div class="amt">$0<small>forever</small></div>
         <ul><li>1 fight per week</li><li>Tap-to-reveal fight pages</li><li>TikTok videos and cards</li><li>1 of 10 keywords in Keyword Battle</li><li>All free SEO tools</li></ul>
@@ -1727,15 +1727,15 @@ var og_b64_default = "iVBORw0KGgoAAAANSUhEUgAABLAAAAJ2CAIAAADAIuwLAAEAAElEQVR42u
 var SITE = "https://seofight.app", UA = "Mozilla/5.0 (compatible; SEOFightBot/1.0; +https://seofight.app/llms.txt)", LIMITS = {
   free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"] },
   pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"] }
-}, TOOL_LIMITS = { rivals: 3, keywords: 20, links: 10 }, esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), norm = (s) => {
+}, TOOL_LIMITS = { rivals: 3, keywords: 20, links: 10 }, esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
   s = (s || "").trim(), /^https?:\/\//i.test(s) || (s = "https://" + s);
   let u = new URL(s);
-  if (!u.hostname.includes(".")) throw 0;
+  if (unsafeHost(u.hostname) || u.port) throw 0;
   return u.origin + "/";
 }, normPage = (s) => {
   s = (s || "").trim(), /^https?:\/\//i.test(s) || (s = "https://" + s);
   let u = new URL(s);
-  if (!u.hostname.includes(".")) throw 0;
+  if (unsafeHost(u.hostname) || u.port) throw 0;
   return u.href;
 }, hostOf = (u) => new URL(u).hostname.replace(/^www\./, "").toLowerCase(), slugOf = (a, b) => `${a}-vs-${b}`, json = (d, s = 200, h = {}) => Response.json(d, { status: s, headers: h }), ipOf = (req) => req.headers.get("cf-connecting-ip") || "anon", period = (p) => {
   let d = /* @__PURE__ */ new Date();
@@ -1817,7 +1817,7 @@ async function storedFight(env, slug) {
 }
 function head(o) {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="canonical" href="${SITE}${o.path || "/"}"><meta property="og:title" content="${esc(o.title)}"><meta property="og:description" content="${esc(o.desc)}"><meta property="og:url" content="${SITE}${o.path || "/"}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
+${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="canonical" href="${SITE}${o.path || "/"}"><meta property="og:title" content="${esc(o.title)}"><meta property="og:description" content="${esc(o.desc)}"><meta property="og:url" content="${SITE}${o.path || "/"}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 30 16 16 30 2 16Z' fill='%23e0263a'/%3E%3Cpath d='M16 2 30 16 16 30Z' fill='%232457f5'/%3E%3C/svg%3E">
 <script type="application/ld+json">${JSON.stringify(o.ld || { "@context": "https://schema.org", "@graph": [{ "@type": "WebSite", name: "SEO Fight", url: SITE }, { "@type": "SoftwareApplication", name: "SEO Fight", applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }] }).replace(/</g, "\\u003c")}</script>
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
@@ -1866,6 +1866,7 @@ Checked ${new Date(d.at || Date.now()).toISOString().slice(0, 10)}.</p></section
     summary,
     desc: `${d.a.host} vs ${d.b.host}: who wins the SEO fight? 31 live checks on Google and AI readiness. Pick your champion and see every round.`,
     h1: `<span class="r">${esc(d.a.host)}</span><br>vs <span class="b">${esc(d.b.host)}</span>`,
+    noindex: !(d.category || (d.votes_a || 0) + (d.votes_b || 0) >= 5),
     view: "fight",
     lede: "31 checks. 5 rounds. One winner. Pick your champion below, then see who really wins.",
     ld: { "@context": "https://schema.org", "@type": "Article", headline: title, dateModified: new Date(d.at || Date.now()).toISOString(), publisher: { "@type": "Organization", name: "SEO Fight", url: SITE } }
@@ -2372,7 +2373,7 @@ var worker_default = {
     if (p === "/fights") return boardPage(env);
     if (TOOL_PAGES[p]) return toolPage(env, p, u);
     if (p === "/sitemap.xml") {
-      let rows = env.DB ? (await env.DB.prepare("SELECT slug, updated_at FROM fights ORDER BY views DESC LIMIT 45000").all()).results : [], urls = ["/", "/fights", ...Object.keys(TOOL_PAGES)].map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(rows.map((r) => `<url><loc>${SITE}/fight/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`));
+      let rows = env.DB ? (await env.DB.prepare("SELECT slug, updated_at FROM fights WHERE category IS NOT NULL OR COALESCE(votes_a,0) + COALESCE(votes_b,0) >= 5 ORDER BY views DESC LIMIT 45000").all()).results : [], urls = ["/", "/fights", ...Object.keys(TOOL_PAGES)].map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(rows.map((r) => `<url><loc>${SITE}/fight/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`));
       return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join("")}</urlset>`, { headers: { "content-type": "application/xml" } });
     }
     return p === "/robots.txt" ? new Response(`User-agent: *
