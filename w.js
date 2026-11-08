@@ -609,7 +609,7 @@ footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap:
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
 footer .fcols b { color: var(--ink); font-size: 14px }
 footer .fcols a { text-decoration: none } footer .fcols a:hover { color: var(--ink) }
-footer .fbrand span { font-size: 13px } footer .xlink { font-weight: 700; color: var(--ink) !important }
+footer .fbrand span { font-size: 13px } footer .xlink { font-weight: 700; color: var(--ink) !important; display: inline-flex; align-items: center; gap: 8px } footer .xlink img { width: 28px; height: 28px; border-radius: 50% }
 footer .fcopy { margin-top: 24px; font-size: 13px }
 @media (max-width: 760px) { footer .fcols { grid-template-columns: 1fr 1fr } footer .fbrand { grid-column: 1 / -1 } }
 .cards-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px }
@@ -617,7 +617,7 @@ a.panel.post { text-decoration: none; color: inherit; display: grid; gap: 6px; t
 a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 .post-body ul, .post-body ol { padding-left: 20px } .post-body li { margin: 6px 0 }
 .about .founder { display: flex; gap: 14px; align-items: center; margin-bottom: 8px } .about .founder > div { display: grid }
-.about .ava { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font: 800 26px var(--f-display); color: #fff; background: linear-gradient(135deg, var(--red, #e0263a), var(--blue, #2457f5)) }
+.about .ava { width: 72px; height: 72px; object-fit: cover; box-shadow: 0 0 0 3px #fff, 0 0 0 5px #f2c14e; border-radius: 50%; display: grid; place-items: center; font: 800 26px var(--f-display); color: #fff; background: linear-gradient(135deg, var(--red, #e0263a), var(--blue, #2457f5)) }
 .contact .field { display: grid; gap: 6px } .contact textarea, .contact select { font: inherit; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink) }
 .price .left { color: var(--red, #e0263a); font-weight: 700 }
 
@@ -788,7 +788,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 </main>
 
 <footer><div class="wrap fcols">
-<div class="fbrand"><b>SEO Fight</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener">\u{1D54F} Built in public by @kas_irani</a></div>
+<div class="fbrand"><b>SEO Fight</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="" width="28" height="28" loading="lazy" onerror="this.remove()">\u{1D54F} Built in public by @kas_irani</a></div>
 <div><b>Product</b><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
 <div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
 <div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
@@ -1532,7 +1532,7 @@ footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap:
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
 footer .fcols b { color: var(--ink); font-size: 14px }
 footer .fcols a { text-decoration: none } footer .fcols a:hover { color: var(--ink) }
-footer .fbrand span { font-size: 13px } footer .xlink { font-weight: 700; color: var(--ink) !important }
+footer .fbrand span { font-size: 13px } footer .xlink { font-weight: 700; color: var(--ink) !important; display: inline-flex; align-items: center; gap: 8px } footer .xlink img { width: 28px; height: 28px; border-radius: 50% }
 footer .fcopy { margin-top: 24px; font-size: 13px }
 @media (max-width: 760px) { footer .fcols { grid-template-columns: 1fr 1fr } footer .fbrand { grid-column: 1 / -1 } }
 .cards-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px }
@@ -1540,7 +1540,7 @@ a.panel.post { text-decoration: none; color: inherit; display: grid; gap: 6px; t
 a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 .post-body ul, .post-body ol { padding-left: 20px } .post-body li { margin: 6px 0 }
 .about .founder { display: flex; gap: 14px; align-items: center; margin-bottom: 8px } .about .founder > div { display: grid }
-.about .ava { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font: 800 26px var(--f-display); color: #fff; background: linear-gradient(135deg, var(--red, #e0263a), var(--blue, #2457f5)) }
+.about .ava { width: 72px; height: 72px; object-fit: cover; box-shadow: 0 0 0 3px #fff, 0 0 0 5px #f2c14e; border-radius: 50%; display: grid; place-items: center; font: 800 26px var(--f-display); color: #fff; background: linear-gradient(135deg, var(--red, #e0263a), var(--blue, #2457f5)) }
 .contact .field { display: grid; gap: 6px } .contact textarea, .contact select { font: inherit; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink) }
 .price .left { color: var(--red, #e0263a); font-weight: 700 }
 
@@ -1713,7 +1713,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
 </main>
 
 <footer><div class="wrap fcols">
-<div class="fbrand"><b>SEO Fight</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener">\u{1D54F} Built in public by @kas_irani</a></div>
+<div class="fbrand"><b>SEO Fight</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="" width="28" height="28" loading="lazy" onerror="this.remove()">\u{1D54F} Built in public by @kas_irani</a></div>
 <div><b>Product</b><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
 <div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
 <div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
@@ -1993,7 +1993,7 @@ var X_HANDLE = "kas_irani", X_URL = `https://x.com/${X_HANDLE}`, cta = (t = "Sta
   h1: `Hey, I'm <span class="r">Kas</span>`,
   lede: "I build SEO Fight in public, one post at a time on X.",
   body: `<div class="panel terms about">
-<div class="founder"><div class="ava" aria-hidden="true">K</div><div><b>Kas</b><span class="muted">Founder, SEO Fight</span><a href="${X_URL}" target="_blank" rel="noopener">@${X_HANDLE} on X</a></div></div>
+<div class="founder"><a href="${X_URL}" target="_blank" rel="noopener" class="ava-link"><img class="ava" src="/kas.jpg" alt="Kas, founder of SEO Fight" width="72" height="72" onerror="this.outerHTML='<div class=ava>K</div>'"></a><div><b>Kas</b><span class="muted">Founder, SEO Fight</span><a href="${X_URL}" target="_blank" rel="noopener">@${X_HANDLE} on X</a></div></div>
 <h3>Why this exists</h3><p>SEO tools hand you hundreds of numbers and no answer. A score of 72 means nothing on its own. It only matters if your competitor has 81. So SEO Fight does one thing: puts your site in the ring with a rival, runs 31 live checks, names a winner and tells the loser exactly what to fix.</p>
 <h3>What I believe</h3><p><b>Context beats metrics.</b> Every check is shown side by side, so you see the gap, not just a grade.</p><p><b>Plain words.</b> If a fix needs a tutorial, I rewrite it until it doesn't.</p><p><b>Do the next thing.</b> Every fight ends with a ranked fix list and the points each fix is worth.</p><p><b>AI search counts now.</b> ChatGPT, Claude and Perplexity send real traffic, so every fight checks if AI can read and quote your site.</p>
 <h3>Built in public</h3><p>I share the numbers, the fights, the wins and the mistakes on X. Follow along, send me a fight you want to see, or tell me what's broken.</p>
@@ -2905,6 +2905,14 @@ var worker_default = {
     if (p.startsWith("/badge/") && p.endsWith(".svg")) {
       let old = await storedFight(env, decodeURIComponent(p.slice(7, -4)).toLowerCase());
       return old ? new Response(badgeSvg(old.d), { headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=3600" } }) : new Response("Not found", { status: 404 });
+    }
+    if (p === "/kas.jpg") {
+      let cache = caches.default, hit = await cache.match(req);
+      if (hit) return hit;
+      let r = await fetch("https://unavatar.io/x/kas_irani?fallback=false", { headers: { "user-agent": UA } });
+      if (!r.ok) return new Response(null, { status: 404 });
+      let out = new Response(r.body, { headers: { "content-type": r.headers.get("content-type") || "image/jpeg", "cache-control": "public, max-age=86400" } });
+      return ctx.waitUntil(cache.put(req, out.clone())), out;
     }
     if (p === "/og.png") {
       let bin = Uint8Array.from(atob(og_b64_default), (c) => c.charCodeAt(0));
