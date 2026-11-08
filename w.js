@@ -792,6 +792,104 @@ html[data-me] .gen-lock { display: none }
 .gen-lock .lockcard { position: static; transform: none; width: min(340px, 100%); padding: 18px; box-shadow: 4px 4px 0 var(--ink); gap: 10px }
 .gen-lock .lockcard h3 { font-size: 30px }
 .gen-lock .lockcard .btn.fight { font-size: 19px; padding: 12px }
+
+/* ===== big rivalries: guess-the-winner posters ===== */
+#maincard .cat-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding: 4px 4px 6px; scroll-snap-type: x proximity }
+#maincard .cat-chips::-webkit-scrollbar { display: none }
+#maincard .chip { flex: none; scroll-snap-align: start; min-height: 40px }
+#maincard .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px }
+@media (max-width: 1040px) { #maincard .cards { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (max-width: 640px) {
+  #maincard .cards { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; margin-inline: -16px; padding: 4px 16px 14px; scrollbar-width: none }
+  #maincard .cards::-webkit-scrollbar { display: none }
+  #maincard .pg { flex: 0 0 78%; scroll-snap-align: center }
+  html.fights-page #maincard .cards { display: grid; grid-template-columns: 1fr; margin-inline: 0; padding: 0 }
+}
+.pg { position: relative; display: grid; gap: 14px; align-content: space-between; min-height: 212px; padding: 16px; border-radius: 20px; color: #fff; border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
+  background: radial-gradient(90% 70% at 0% 100%, rgba(225,35,46,.28), transparent 60%), radial-gradient(90% 70% at 100% 0%, rgba(29,78,216,.34), transparent 60%), var(--arena) }
+.pg.night { outline: 3px solid var(--gold); outline-offset: -5px }
+.pg-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase }
+.pg-cat { color: rgba(255,255,255,.6) } .pg-q { color: var(--gold) }
+.pg-sides { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: stretch; gap: 8px }
+.pg-s { position: relative; min-width: 0; min-height: 76px; padding: 10px 6px; border-radius: 14px; cursor: pointer; font: 900 var(--fs, 26px)/.95 var(--f-display); text-transform: uppercase; overflow-wrap: normal; word-break: normal; hyphens: none; color: #fff; transition: transform .12s ease, background .15s ease, opacity .15s ease }
+.pg-s.a { background: rgba(225,35,46,.16); border: 2px solid #ff4d5e; color: #ff6b79 }
+.pg-s.b { background: rgba(29,78,216,.2); border: 2px solid #5b84ff; color: #8aa6ff }
+.pg-s:not(:disabled):hover { transform: translateY(-2px) } .pg-s:not(:disabled):active { transform: scale(.97) }
+.pg-s.a.mine { background: #E1232E; border-color: #fff; color: #fff } .pg-s.b.mine { background: #1D4ED8; border-color: #fff; color: #fff }
+.pg-s.mine::after { content: "\u2713"; position: absolute; top: -9px; right: -9px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: var(--ink); font: 800 13px/1 var(--f-body); border: 2px solid var(--ink) }
+.pg.picked .pg-s:not(.mine) { opacity: .4 } .pg-s:disabled { cursor: default }
+.pg-s:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px }
+.pg-vs { align-self: center; font: 900 18px/1 var(--f-display); color: rgba(255,255,255,.45) }
+.pg-res { display: grid; gap: 8px; min-height: 54px; align-content: end }
+.pg-hint { font-size: 13px; color: rgba(255,255,255,.62) }
+.pg-split { display: flex; height: 8px; border-radius: 99px; overflow: hidden; background: rgba(255,255,255,.1) }
+.pg-split i { display: block; height: 100% } .pg-split .a { background: #ff4d5e } .pg-split .b { background: #5b84ff }
+.pg.just .pg-split i { animation: grow .6s ease-out both } @keyframes grow { from { width: 0 } }
+.pg-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: rgba(255,255,255,.7) }
+.pg-row .ra { color: #ff6b79 } .pg-row .rb { color: #8aa6ff }
+.pg-go { justify-self: start; color: var(--gold); font: 700 14px/1.2 var(--f-body); text-decoration: none; padding: 6px 0 } .pg-go:hover { text-decoration: underline }
+#maincard .more { margin-top: 18px }
+
+/* ===== Rivalry of the Night: fight broadcast ===== */
+.night-card.bc { gap: 20px; padding: clamp(18px, 3vw, 28px) }
+.bc-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font: 700 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase }
+.bc-main { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(18px, 3vw, 36px); align-items: center }
+.bc-board { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 10px; text-align: center }
+.bc-side { display: grid; gap: 2px; transition: opacity .2s } .bc-side.lost { opacity: .55 }
+.bc-name { font: 800 clamp(24px, 3.2vw, 36px)/1 var(--f-display); text-transform: uppercase; overflow-wrap: anywhere }
+.bc-score { font: 800 clamp(64px, 8.5vw, 108px)/.9 var(--f-display) }
+.bc-side.a .bc-name, .bc-side.a .bc-score { color: #ff4d5e } .bc-side.b .bc-name, .bc-side.b .bc-score { color: #6b8fff }
+.bc-belt { min-height: 22px; justify-self: center; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: 5px 9px; border-radius: 999px; margin-top: 6px }
+.bc-belt:empty { background: none; padding: 0 }
+.bc-mid { display: grid; gap: 8px; justify-items: center; padding-bottom: 30px } .bc-vs { font: 800 22px var(--f-display); color: rgba(255,255,255,.4) }
+.bc-tally { font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); white-space: nowrap }
+.bc-verdict { grid-column: 1 / -1; margin: 8px 0 0; font-size: 15px; color: rgba(255,255,255,.85) }
+.bc-rounds { display: grid; gap: 14px }
+.tg { display: grid; gap: 6px }
+.tg-l { display: grid; grid-template-columns: 40px 1fr 40px; align-items: baseline }
+.tg-n { text-align: center; font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.7) }
+.tg-v { font: 800 20px/1 var(--f-display); opacity: .55 } .tg-v.a { color: #ff6b79 } .tg-v.b { color: #8aa6ff; text-align: right } .tg-v.w { opacity: 1 }
+.tg-bar { position: relative; display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: #5b84ff }
+.tg-bar .a { display: block; height: 100%; background: #ff4d5e } .tg-bar .b { flex: 1 }
+.tg-mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; margin-left: -1px; background: #fff; opacity: .85 }
+.bc-h { display: block; margin-bottom: 10px; font: 700 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--gold) }
+.ko-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px }
+.ko { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: 14px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12) }
+.ko-r { font: 600 10px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5) }
+.ko-l { font: 700 16px/1.2 var(--f-body) }
+.ko-v { display: flex; align-items: center; gap: 0; font: 500 13px/1.3 var(--f-mono); color: rgba(255,255,255,.6); min-width: 0 } .ko-v.w { color: #fff; font-weight: 700 }
+.ko-v em { font: 600 12px var(--f-body); font-style: normal; width: 76px; flex: none; color: rgba(255,255,255,.5); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.ko-v .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; background: #f2c14e } .ko-v .dot.good { background: #22c55e } .ko-v .dot.bad { background: #ef4444 }
+.ko p { margin: 4px 0 0; font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.65) }
+.bc-checks { display: grid; gap: 0; border-radius: 14px; background: rgba(255,255,255,.04); padding: 4px 14px 8px }
+.nacc-head { display: grid; grid-template-columns: 1fr 150px 150px; gap: 10px; padding: 10px 0 4px; font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase } .nacc-head .ra { color: #ff6b79 } .nacc-head .rb { color: #8aa6ff }
+.nacc { background: none; box-shadow: none; border-radius: 0; padding: 0; margin: 0; border-top: 1px solid rgba(255,255,255,.1) } .nacc + .nacc { margin-top: 0 } .nacc:first-of-type { border-top: 0 } .nacc summary::after { content: none } .nacc[open] summary::after { content: none } .nacc-b { padding-bottom: 8px }
+.nacc summary { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 46px; cursor: pointer; list-style: none }
+.nacc summary::-webkit-details-marker { display: none }
+.nacc summary::before { content: "\u25B8"; color: var(--gold); margin-right: 8px; transition: transform .15s } .nacc[open] summary::before { transform: rotate(90deg) }
+.nacc-n { flex: 1; font: 800 18px/1 var(--f-display); text-transform: uppercase }
+.nacc-t { font: 600 12px/1 var(--f-mono) } .nacc-t .ra { color: #ff6b79 } .nacc-t .rb { color: #8aa6ff }
+.nacc-b .ncc-row { grid-template-columns: 1fr 150px 150px }
+.bc-foot { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: center }
+.bc-all { min-height: 44px; padding: 0 18px; border-radius: 14px; border: 2px solid rgba(255,255,255,.35); background: transparent; color: #fff; font: 700 15px var(--f-body); cursor: pointer } .bc-all:hover { border-color: #fff }
+.bc-full { color: rgba(255,255,255,.75); font-size: 14px }
+@media (max-width: 860px) { .bc-main { grid-template-columns: 1fr } .ko-list { grid-template-columns: 1fr } }
+@media (max-width: 640px) { .nacc-head, .nacc-b .ncc-row { grid-template-columns: 1fr 88px 88px; gap: 6px } .nacc-b .ncc-row { font-size: 12px } .bc-mid { padding-bottom: 26px } }
+@media (prefers-reduced-motion: reduce) { .pg-s, .pg.just .pg-split i, .nacc summary::before { transition: none; animation: none } }
+
+/* ===== footer ===== */
+footer.site-foot { padding-block: 44px 40px }
+footer.site-foot .ft-grid { display: grid; grid-template-columns: 1.6fr repeat(4, minmax(0, 1fr)); gap: 28px }
+.ft-brand { display: grid; gap: 10px; align-content: start } .ft-brand .logo { justify-self: start; color: var(--ink); text-decoration: none }
+.ft-tag { margin: 0; font-size: 14px }
+.ft-cards { display: flex; flex-wrap: wrap; gap: 12px; align-items: center } .ft-cards .xlink { margin-top: 0 !important; text-decoration: none }
+.ft-cards .tmrr { display: inline-flex; line-height: 0 } .ft-cards .tmrr img { width: 150px; height: auto }
+.ft-col { display: grid; gap: 0; align-content: start } .ft-col b { color: var(--ink); font-size: 14px; margin-bottom: 6px }
+.ft-col a { display: flex; align-items: center; min-height: 34px; text-decoration: none } .ft-col a:hover { color: var(--ink) }
+footer.site-foot .ft-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px }
+.ft-legal { display: inline-flex; gap: 8px; align-items: center } .ft-legal i { font-style: normal; opacity: .5 } .ft-legal a { text-decoration: none } .ft-legal a:hover { color: var(--ink) }
+footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 12px; opacity: .8 }
+@media (max-width: 860px) { footer.site-foot .ft-grid { grid-template-columns: 1fr 1fr; gap: 22px 18px } .ft-brand { grid-column: 1 / -1 } }
 </style>
 
 <header class="top"><div class="wrap">
@@ -836,28 +934,28 @@ html[data-me] .gen-lock { display: none }
   </div></section>
 
   <section id="night" hidden><div class="wrap">
-    <div class="night-card">
-      <div class="nc-head"><span class="nc-tag">\u{1F319} Rivalry of the Night \xB7 free</span><span class="nc-votes" id="ncVotes"></span></div>
-      <div class="nc-tape">
-        <div class="nc-f a"><span class="nc-host" id="ncA"></span><span class="nc-score" id="ncSA"></span><span class="nc-belt" id="ncBA"></span></div>
-        <div class="nc-vs">VS</div>
-        <div class="nc-f b"><span class="nc-host" id="ncB"></span><span class="nc-score" id="ncSB"></span><span class="nc-belt" id="ncBB"></span></div>
+    <div class="night-card bc" aria-labelledby="ncTitle">
+      <div class="bc-top"><span class="nc-tag" id="ncTitle">\u{1F319} Rivalry of the Night \xB7 free</span><span class="nc-votes" id="ncVotes"></span></div>
+      <div class="bc-main">
+        <div class="bc-board">
+          <div class="bc-side a" id="ncSideA"><span class="bc-name" id="ncA"></span><span class="bc-score" id="ncSA"></span><span class="bc-belt" id="ncBA"></span></div>
+          <div class="bc-mid"><span class="bc-vs">VS</span><span class="bc-tally" id="ncTally"></span></div>
+          <div class="bc-side b" id="ncSideB"><span class="bc-name" id="ncB"></span><span class="bc-score" id="ncSB"></span><span class="bc-belt" id="ncBB"></span></div>
+          <p class="bc-verdict" id="ncVerdict"></p>
+        </div>
+        <div class="bc-rounds" id="ncRounds"></div>
       </div>
-      <div class="nc-rounds" id="ncRounds"></div>
-      <div class="nc-checks open" id="ncChecks">
-        <div class="ncc-head"><span id="ncLockT">All 31 checks</span><span class="ncc-hh" id="ncHA"></span><span class="ncc-hh" id="ncHB"></span></div>
-        <div class="ncc-grid" id="ncGrid"></div>
-      </div>
-      <div class="nc-cta"><a class="btn fight" id="ncMine" href="#top">Can your site beat them?</a><a class="btn ghost" id="ncFull" href="#">Full fight + fix list</a></div>
-      <p class="nc-note">\u{1F513} Tonight's rivalry is free. Every other fight needs a free account.</p>
+      <div class="bc-ko"><span class="bc-h">Knockout punches</span><div class="ko-list" id="ncKO"></div></div>
+      <div class="bc-checks" id="ncChecks" hidden></div>
+      <div class="bc-foot"><a class="btn fight" id="ncMine" href="#test">Can your site beat them?</a><button type="button" class="bc-all" id="ncAll" aria-expanded="false">Open all 31 checks</button><a class="bc-full" id="ncFull" href="#">Full fight page \u2192</a></div>
     </div>
   </div></section>
 
   <section id="maincard"><div class="wrap">
-    <div class="sec-head"><h2 class="display" id="mcTitle">More rivalries</h2><span class="tag">Tap a fight for every round</span></div>
+    <div class="sec-head"><h2 class="display" id="mcTitle">Big rivalries</h2><span class="tag">Pick a winner, then see if you called it</span></div>
     <div class="cat-chips" id="catChips"></div>
     <div class="cards" id="cards"></div>
-    <p class="more" id="mcMore"><a class="btn ghost" href="/fights">See every fight</a></p>
+    <p class="more" id="mcMore"><a class="btn ghost" id="mcMoreBtn" href="/fights">See every fight</a></p>
   </div></section>
 
   <section id="fight"><div class="wrap" id="results">
@@ -907,7 +1005,9 @@ html[data-me] .gen-lock { display: none }
           <div class="center-stat" id="center"></div>
           <div class="fighter b"><div class="corner-name">Blue corner</div><div class="host" id="hostB"></div><div class="score" id="scoreB">0</div><div id="beltB"></div></div>
         </div>
+        <p class="tape-verdict" id="tapeVerdict"></p>
         <div class="rounds" id="rounds"></div>
+        <div class="tape-ko" id="tapeKO" hidden><span class="bc-h">Knockout punches</span><div class="ko-list" id="koList"></div></div>
         <div class="actions">
           <button class="btn" id="videoBtn" type="button">Make TikTok video</button>
           <button class="btn ghost" id="cardBtn" type="button">Fight card image</button>
@@ -1001,13 +1101,24 @@ html[data-me] .gen-lock { display: none }
   </div></section>
 </main>
 
-<footer><div class="wrap fcols">
-<div class="fbrand"><b>SEO Fights</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="44" height="44" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a><a class="tmrr" href="https://trustmrr.com/startup/seo-fights" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px"><img src="https://trustmrr.com/api/embed/seo-fights?format=svg&amp;theme=light" alt="TrustMRR verified revenue badge" width="180" height="74" loading="lazy" style="display:block;width:180px;height:auto"></a></div>
-<div><b>Product</b><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/#faq">FAQ</a></div>
-<div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
-<div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
-<div><b>Company</b><a href="/about">About</a><a href="/blog">Blog</a><a href="/contact">Contact</a><a href="/account" data-acct>Account</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/cookie-policy">Cookies</a></div>
-</div><div class="wrap fcopy"><span>\xA9 2026 SEO Fights</span><a href="/remove">Remove my site</a></div><p class="wrap fdisc">SEO Fights is not affiliated with any brand shown. Brand names belong to their owners. Scores are automated estimates, not ranking guarantees.</p></footer>
+<footer class="site-foot"><div class="wrap ft-grid">
+<div class="ft-brand">
+  <a class="logo" href="/" aria-label="SEO Fights home"><span>SEO</span><svg class="gloves" viewBox="4 0 64 40" aria-hidden="true"><g transform="rotate(-14 24 22)"><use href="#glv" width="40" height="40" fill="#E1232E"/></g><g transform="rotate(14 48 22)"><use href="#glv" x="-72" width="40" height="40" fill="#1D4ED8" transform="scale(-1,1)"/></g></svg><span>Fights</span></a>
+  <p class="ft-tag">Put your site in the ring.</p>
+  <div class="ft-cards">
+    <a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a>
+    <a class="tmrr" href="https://trustmrr.com/startup/seo-fights" target="_blank" rel="noopener"><img src="https://trustmrr.com/api/embed/seo-fights?format=svg&amp;theme=light" alt="TrustMRR verified revenue badge" width="180" height="74" loading="lazy"></a>
+  </div>
+</div>
+<nav class="ft-col" aria-label="Product"><b>Product</b><a href="/#test">Start a fight</a><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/blog">Blog</a></nav>
+<nav class="ft-col" aria-label="Free tools"><b>Free tools</b><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a><a href="/tools">All tools</a></nav>
+<nav class="ft-col" aria-label="Compare"><b>Compare</b><a href="/alternatives/ahrefs-alternative">Ahrefs alternative</a><a href="/alternatives/semrush-alternative">Semrush alternative</a><a href="/alternatives/moz-alternative">Moz alternative</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest alternative</a><a href="/tools-like">More \u2192</a></nav>
+<nav class="ft-col" aria-label="Company"><b>Company</b><a href="/about">About</a><a href="/contact">Contact</a><a href="/remove">Remove my site</a><a href="/account" data-acct>Sign in</a></nav>
+</div>
+<div class="wrap ft-bar"><span>\xA9 2026 SEO Fights \xB7 Vancouver, BC</span><span class="ft-legal"><a href="/terms">Terms</a><i aria-hidden="true">\xB7</i><a href="/privacy">Privacy</a><i aria-hidden="true">\xB7</i><a href="/cookie-policy">Cookies</a></span></div>
+<p class="wrap ft-disc">Not affiliated with any brand shown. Brand names belong to their owners. Scores are automated estimates, not ranking guarantees.</p>
+</footer>
+
 
 <div class="modal" id="modal" hidden>
   <div class="box">
@@ -1074,7 +1185,7 @@ html[data-me] .gen-lock { display: none }
       }
     });
     // Footer: a clear Sign out next to Account.
-    document.querySelectorAll("footer a[data-acct]").forEach(a => { if (!a.nextElementSibling || !a.nextElementSibling.matches("[data-out]")) a.insertAdjacentHTML("afterend", '<a href="/logout" data-out>Sign out</a>'); });
+    document.querySelectorAll("footer a[data-acct]").forEach(a => { a.textContent = "Account"; if (!a.nextElementSibling || !a.nextElementSibling.matches("[data-out]")) a.insertAdjacentHTML("afterend", '<a href="/logout" data-out>Sign out</a>'); });
   };
   window.dashBtn = meHeader; window.meReady.then(meHeader);
   let next = null, nextUrl = null;
@@ -1340,42 +1451,85 @@ $("#rivalBtn").addEventListener("click", async () => {
 });
 
 /* ---------- main card ---------- */
-function renderCards(cat) {
-  const list = CARDS.filter(c => (!cat || c.category === cat) && !(NIGHT && location.pathname === "/" && c.slug === NIGHT.slug)).sort((x, y) => (y.slug === FOTN) - (x.slug === FOTN));
-  $("#cards").innerHTML = list.map(c => {
-    const picks = (c.votes_a || 0) + (c.votes_b || 0);
-    const night = c.slug === FOTN;
-    return \`<a class="poster\${night ? " night" : ""}" href="/fight/\${encodeURIComponent(c.slug)}">
-      <span class="pc-cat">\${night ? "\u{1F319} Rivalry of the Night" : esc(c.category || "Featured")}</span>
-      <span class="pc-a">\${esc(pretty(c.a))}</span>
-      <span class="pc-vs">\${c.a_score != null ? \`<i class="ra">\${c.a_score}</i> VS <i class="rb">\${c.b_score}</i>\` : "VS"}</span>
-      <span class="pc-b">\${esc(pretty(c.b))}</span>
-      <span class="pc-foot"><b>\${c.winner === "a" || c.winner === "b" ? "\u2605 " + esc(brandName(c[c.winner])) + " wins" : c.a_score != null ? "Dead even" : "Tap to see"}</b><span>\${picks ? picks.toLocaleString() + (picks === 1 ? " pick" : " picks") : "Be the first to pick"}</span></span>
-    </a>\`;
-  }).join("") || \`<p class="sub">No fights here yet.</p>\`;
+const ALL_FIGHTS = location.pathname === "/fights"; if (ALL_FIGHTS) document.documentElement.classList.add("fights-page");
+function splitHTML(c, p) {
+  const va = c.votes_a || 0, vb = c.votes_b || 0, t = va + vb || 1, sa = Math.round((va / t) * 100), sb = 100 - sa;
+  return \`<div class="pg-split" role="img" aria-label="\${sa}% picked \${esc(brandName(c.a))}, \${sb}% picked \${esc(brandName(c.b))}"><i class="a" style="width:\${sa}%"></i><i class="b" style="width:\${sb}%"></i></div>
+    <div class="pg-row"><span><b class="ra">\${sa}%</b> \xB7 <b class="rb">\${sb}%</b></span><span>You picked \${esc(brandName(c[p]))}</span></div>
+    <a class="pg-go" href="/fight/\${encodeURIComponent(c.slug)}">See who really won \u2192</a>\`;
 }
+function posterHTML(c) {
+  const p = store.get("pick:" + c.slug), picked = p === "a" || p === "b", tot = (c.votes_a || 0) + (c.votes_b || 0);
+  const A = brandName(c.a), B = brandName(c.b), night = c.slug === FOTN;
+  const fit = t => { const n = Math.max(...String(t).split(/\\s+/).map(w => w.length)); return n <= 5 ? 30 : n <= 6 ? 26 : n <= 8 ? 21 : n <= 10 ? 18 : 15; };
+  return \`<article class="pg\${picked ? " picked" : ""}\${night ? " night" : ""}" data-slug="\${esc(c.slug)}">
+    <div class="pg-top"><span class="pg-cat">\${night ? "\u{1F319} Tonight" : esc(c.category || "Featured")}</span><span class="pg-q">Who wins?</span></div>
+    <div class="pg-sides"><button type="button" class="pg-s a\${p === "a" ? " mine" : ""}" data-side="a" aria-label="Pick \${esc(A)}" style="--fs:\${fit(A)}px"\${picked ? " disabled" : ""}>\${esc(A)}</button><span class="pg-vs">VS</span><button type="button" class="pg-s b\${p === "b" ? " mine" : ""}" data-side="b" aria-label="Pick \${esc(B)}" style="--fs:\${fit(B)}px"\${picked ? " disabled" : ""}>\${esc(B)}</button></div>
+    <div class="pg-res">\${picked ? splitHTML(c, p) : \`<span class="pg-hint">\${tot ? tot.toLocaleString() + (tot === 1 ? " pick" : " picks") + " so far \xB7 " : ""}Tap your winner</span>\`}</div>
+  </article>\`;
+}
+function renderCards(cat) {
+  const list = CARDS.filter(c => (!cat || c.category === cat) && !(NIGHT && location.pathname === "/" && c.slug === NIGHT.slug));
+  const show = ALL_FIGHTS ? list : list.slice(0, 8);
+  $("#cards").innerHTML = show.map(posterHTML).join("") || \`<p class="sub">No fights here yet.</p>\`;
+  const mb = $("#mcMoreBtn"); if (mb) mb.textContent = \`See all \${CARDS.length} fights \u2192\`;
+}
+$("#cards").addEventListener("click", async e => {
+  const go = e.target.closest(".pg-go");
+  if (go) {
+    await meReady;
+    if (!ME) { e.preventDefault(); withAccount(() => { location.href = go.getAttribute("href"); }, "Sign up free to see if you called it", "Free account, no card. See who really won every big rivalry, plus 1 fight of your own every week.", go.getAttribute("href")); }
+    return;
+  }
+  const s = e.target.closest(".pg-s"); if (!s) return;
+  const card = s.closest(".pg"), slug = card.dataset.slug, side = s.dataset.side, c = CARDS.find(x => x.slug === slug);
+  if (!c || card.classList.contains("picked")) return;
+  store.set("pick:" + slug, side);
+  c["votes_" + side] = (c["votes_" + side] || 0) + 1;
+  card.classList.add("picked", "just"); s.classList.add("mine"); card.querySelectorAll(".pg-s").forEach(x => { x.disabled = true; });
+  card.querySelector(".pg-res").innerHTML = splitHTML(c, side);
+  try {
+    const r = await fetch("/api/vote", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ slug, side }) });
+    if (r.ok) { const v = await r.json(); if (v.votes_a + v.votes_b >= 1) { c.votes_a = v.votes_a; c.votes_b = v.votes_b; card.querySelector(".pg-res").innerHTML = splitHTML(c, side); } }
+  } catch {}
+});
+const WHY_L = { "Title tag": "The clickable headline people see on Google.", "Meta description": "The text Google shows under your link.", "One H1 heading": "Tells Google the main topic of the page.", "H2/H3 structure": "Helps Google and AI skim the page.", "Image alt text": "Lets images show up in search.", "Canonical URL": "Stops Google splitting your rank across copies.", "Internal links": "Spreads ranking power to your other pages.", "Content depth": "More useful text means more searches you can win.", "Language set": "Helps Google show the page to the right country.", "HTTPS": "Google and browsers distrust sites without it.", "Server response": "A slow server delays everything after it.", "Real load speed (LCP)": "Slow pages lose rankings and visitors.", "Mobile viewport": "Most searches are on phones.", "Google can index it": "If Google can't index it, it can't rank.", "Sitemap": "Shows Google every page you want found.", "robots.txt": "Tells crawlers where they can go.", "AI crawlers allowed": "Decides if ChatGPT and Perplexity can read you.", "llms.txt": "A short guide that helps AI tools quote you.", "Structured data": "Gives Google and AI clean facts about the page.", "Who-you-are schema": "Helps AI know who the business is.", "Answers questions": "Question-style content gets quoted in AI answers.", "Share preview (Open Graph)": "Controls how the link looks when shared.", "Share description": "The text people see when the link is shared.", "X/Twitter card": "Makes the link stand out on X.", "Favicon": "The little icon next to your name in Google." };
+const WHY = { onpage: "Google reads this first to understand the page.", content: "More useful text means more searches you can show up for.", technical: "Slow or broken pages lose rankings.", ai: "Decides if ChatGPT and Perplexity can read and quote the site.", social: "Controls how the link looks when people share it." };
 function renderNight() {
   if (!NIGHT || VIEW !== "home" || location.pathname !== "/") return;
-  const A = brandName(NIGHT.a.host), B = brandName(NIGHT.b.host), W = NIGHT.winner;
+  const A = brandName(NIGHT.a.host), B = brandName(NIGHT.b.host), W = NIGHT.winner, name = { a: A, b: B };
   $("#ncA").textContent = A; $("#ncB").textContent = B;
   $("#ncSA").textContent = NIGHT.a.score; $("#ncSB").textContent = NIGHT.b.score;
   $("#ncBA").textContent = W === "a" ? "\u2605 Winner" : ""; $("#ncBB").textContent = W === "b" ? "\u2605 Winner" : "";
-  document.querySelector(".nc-f.a").classList.toggle("won", W === "a"); document.querySelector(".nc-f.b").classList.toggle("won", W === "b");
+  $("#ncSideA").classList.toggle("won", W === "a"); $("#ncSideB").classList.toggle("won", W === "b");
+  $("#ncSideA").classList.toggle("lost", W === "b"); $("#ncSideB").classList.toggle("lost", W === "a");
   const votes = (NIGHT.votes_a || 0) + (NIGHT.votes_b || 0); $("#ncVotes").textContent = votes ? votes.toLocaleString() + (votes === 1 ? " fan picked" : " fans picked") : "";
-  $("#ncRounds").innerHTML = CATS.map(([k, , name]) => { const x = NIGHT.a.scores[k], y = NIGHT.b.scores[k];
-    return \`<div class="nr"><span class="v \${x >= y ? "w" : ""}">\${x}</span><div class="bar a"><i style="width:\${x}%"></i></div><span class="nm">\${name}</span><div class="bar b"><i style="width:\${y}%"></i></div><span class="v \${y >= x ? "w" : ""}">\${y}</span></div>\`; }).join("");
+  let ra = 0, rb = 0, swing = null, sw = -1;
+  $("#ncRounds").innerHTML = CATS.map(([k, , rn]) => {
+    const x = NIGHT.a.scores[k] || 0, y = NIGHT.b.scores[k] || 0, share = x + y ? Math.round((x / (x + y)) * 100) : 50;
+    if (x > y) ra++; else if (y > x) rb++;
+    if (Math.abs(x - y) > sw) { sw = Math.abs(x - y); swing = rn; }
+    const took = x > y ? "a" : y > x ? "b" : "";
+    return \`<div class="tg"><div class="tg-l"><span class="tg-v a\${took === "a" ? " w" : ""}">\${x}</span><span class="tg-n">\${rn}</span><span class="tg-v b\${took === "b" ? " w" : ""}">\${y}</span></div><div class="tg-bar" role="img" aria-label="\${rn}: \${A} \${x}, \${B} \${y}"><i class="a" style="width:\${share}%"></i><i class="b"></i><b class="tg-mid"></b></div></div>\`;
+  }).join("");
+  $("#ncTally").textContent = \`\${ra}\u2013\${rb} rounds\`;
+  const gap = Math.abs(NIGHT.a.score - NIGHT.b.score);
+  $("#ncVerdict").textContent = W ? \`\${name[W]} wins by \${gap}. The biggest swing was the \${swing} round.\` : \`Dead even at \${NIGHT.a.score}.\`;
+  const rows = NIGHT.rows || [], lv = { good: 2, warn: 1, bad: 0 };
+  const ko = rows.map(r => ({ r, d: Math.abs((lv[r[3]] ?? 1) - (lv[r[5]] ?? 1)) })).filter(o => o.d > 0 && o.r[6]).sort((p, q) => q.d - p.d).slice(0, 3);
+  $("#ncKO").innerHTML = ko.map(({ r: [cat, label, av, as, bv, bs, edge] }) => \`<div class="ko"><span class="ko-r">\${esc((CATS.find(c => c[0] === cat) || [, , cat])[2])}</span><b class="ko-l">\${esc(label)}</b>
+    <span class="ko-v \${edge === "a" ? "w" : ""}"><i class="dot \${as}"></i><em>\${esc(A)}</em>\${esc(av)}</span><span class="ko-v \${edge === "b" ? "w" : ""}"><i class="dot \${bs}"></i><em>\${esc(B)}</em>\${esc(bv)}</span>
+    <p>\${esc(WHY_L[label] || WHY[cat] || "")}</p></div>\`).join("");
+  document.querySelector(".bc-ko").hidden = !ko.length;
+  const groups = CATS.map(([k, , rn]) => { const rs = rows.filter(r => r[0] === k); const ta = rs.filter(r => r[6] === "a").length, tb = rs.filter(r => r[6] === "b").length;
+    return rs.length ? \`<details class="nacc"><summary><span class="nacc-n">\${rn}</span><span class="nacc-t"><b class="ra">\${esc(A)} \${ta}</b> \xB7 <b class="rb">\${esc(B)} \${tb}</b></span></summary><div class="nacc-b">\${rs.map(([, label, av, as, bv, bs, edge]) => \`<div class="ncc-row"><span class="ncc-l">\${esc(label)}</span><span class="ncc-v \${edge === "a" ? "w" : ""}"><i class="dot \${as}"></i>\${esc(av)}</span><span class="ncc-v \${edge === "b" ? "w" : ""}"><i class="dot \${bs}"></i>\${esc(bv)}</span></div>\`).join("")}</div></details>\` : ""; }).join("");
+  $("#ncChecks").innerHTML = \`<div class="nacc-head"><span></span><span class="ra">\${esc(A)}</span><span class="rb">\${esc(B)}</span></div>\` + groups;
+  $("#ncAll").textContent = \`Open all \${rows.length || 31} checks\`;
+  $("#ncAll").addEventListener("click", () => { const open = $("#ncChecks").hidden; $("#ncChecks").hidden = !open; $("#ncAll").setAttribute("aria-expanded", String(open)); $("#ncAll").textContent = open ? "Hide the checks" : \`Open all \${rows.length || 31} checks\`; });
   const champ = W ? NIGHT[W].host : NIGHT.b.host;
   $("#ncMine").textContent = \`Can your site beat \${brandName(champ)}?\`;
   $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = (window.ME && (ME.site || store.get("mysite"))) || ""; $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); });
-  const full = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
-  $("#ncFull").href = full;
-  const rows = NIGHT.rows || []; $("#ncLockT").textContent = \`All \${rows.length || 31} checks\`;
-  $("#ncHA").textContent = A; $("#ncHB").textContent = B;
-  let last = "";
-  $("#ncGrid").innerHTML = rows.map(([cat, label, av, as, bv, bs, edge]) => {
-    const head = cat !== last ? \`<div class="ncc-cat">\${esc((CATS.find(c => c[0] === cat) || [, , cat])[2])}</div>\` : ""; last = cat;
-    return head + \`<div class="ncc-row"><span class="ncc-l">\${esc(label)}</span><span class="ncc-v \${edge === "a" ? "w" : ""}"><i class="dot \${as}"></i>\${esc(av)}</span><span class="ncc-v \${edge === "b" ? "w" : ""}"><i class="dot \${bs}"></i>\${esc(bv)}</span></div>\`;
-  }).join("");
+  $("#ncFull").href = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
   $("#night").hidden = false;
 }
 renderNight();
@@ -1415,7 +1569,7 @@ if (VIEW === "home") {
     renderCards(b.dataset.c);
   });
   renderCards("");
-  if (location.pathname === "/fights") { $("#mcTitle").textContent = "Every fight"; $("#mcMore").hidden = true; }
+  if (ALL_FIGHTS) { $("#mcTitle").textContent = "Every fight"; $("#mcMore").hidden = true; }
 }
 
 /* ---------- signed-in homepage: ringside bar, your corner, hunt clients mode ---------- */
@@ -2146,6 +2300,104 @@ html[data-me] .gen-lock { display: none }
 .gen-lock .lockcard h3 { font-size: 30px }
 .gen-lock .lockcard .btn.fight { font-size: 19px; padding: 12px }
 
+/* ===== big rivalries: guess-the-winner posters ===== */
+#maincard .cat-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding: 4px 4px 6px; scroll-snap-type: x proximity }
+#maincard .cat-chips::-webkit-scrollbar { display: none }
+#maincard .chip { flex: none; scroll-snap-align: start; min-height: 40px }
+#maincard .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px }
+@media (max-width: 1040px) { #maincard .cards { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (max-width: 640px) {
+  #maincard .cards { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; margin-inline: -16px; padding: 4px 16px 14px; scrollbar-width: none }
+  #maincard .cards::-webkit-scrollbar { display: none }
+  #maincard .pg { flex: 0 0 78%; scroll-snap-align: center }
+  html.fights-page #maincard .cards { display: grid; grid-template-columns: 1fr; margin-inline: 0; padding: 0 }
+}
+.pg { position: relative; display: grid; gap: 14px; align-content: space-between; min-height: 212px; padding: 16px; border-radius: 20px; color: #fff; border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
+  background: radial-gradient(90% 70% at 0% 100%, rgba(225,35,46,.28), transparent 60%), radial-gradient(90% 70% at 100% 0%, rgba(29,78,216,.34), transparent 60%), var(--arena) }
+.pg.night { outline: 3px solid var(--gold); outline-offset: -5px }
+.pg-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase }
+.pg-cat { color: rgba(255,255,255,.6) } .pg-q { color: var(--gold) }
+.pg-sides { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: stretch; gap: 8px }
+.pg-s { position: relative; min-width: 0; min-height: 76px; padding: 10px 6px; border-radius: 14px; cursor: pointer; font: 900 var(--fs, 26px)/.95 var(--f-display); text-transform: uppercase; overflow-wrap: normal; word-break: normal; hyphens: none; color: #fff; transition: transform .12s ease, background .15s ease, opacity .15s ease }
+.pg-s.a { background: rgba(225,35,46,.16); border: 2px solid #ff4d5e; color: #ff6b79 }
+.pg-s.b { background: rgba(29,78,216,.2); border: 2px solid #5b84ff; color: #8aa6ff }
+.pg-s:not(:disabled):hover { transform: translateY(-2px) } .pg-s:not(:disabled):active { transform: scale(.97) }
+.pg-s.a.mine { background: #E1232E; border-color: #fff; color: #fff } .pg-s.b.mine { background: #1D4ED8; border-color: #fff; color: #fff }
+.pg-s.mine::after { content: "\u2713"; position: absolute; top: -9px; right: -9px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: var(--ink); font: 800 13px/1 var(--f-body); border: 2px solid var(--ink) }
+.pg.picked .pg-s:not(.mine) { opacity: .4 } .pg-s:disabled { cursor: default }
+.pg-s:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px }
+.pg-vs { align-self: center; font: 900 18px/1 var(--f-display); color: rgba(255,255,255,.45) }
+.pg-res { display: grid; gap: 8px; min-height: 54px; align-content: end }
+.pg-hint { font-size: 13px; color: rgba(255,255,255,.62) }
+.pg-split { display: flex; height: 8px; border-radius: 99px; overflow: hidden; background: rgba(255,255,255,.1) }
+.pg-split i { display: block; height: 100% } .pg-split .a { background: #ff4d5e } .pg-split .b { background: #5b84ff }
+.pg.just .pg-split i { animation: grow .6s ease-out both } @keyframes grow { from { width: 0 } }
+.pg-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: rgba(255,255,255,.7) }
+.pg-row .ra { color: #ff6b79 } .pg-row .rb { color: #8aa6ff }
+.pg-go { justify-self: start; color: var(--gold); font: 700 14px/1.2 var(--f-body); text-decoration: none; padding: 6px 0 } .pg-go:hover { text-decoration: underline }
+#maincard .more { margin-top: 18px }
+
+/* ===== Rivalry of the Night: fight broadcast ===== */
+.night-card.bc { gap: 20px; padding: clamp(18px, 3vw, 28px) }
+.bc-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font: 700 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase }
+.bc-main { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(18px, 3vw, 36px); align-items: center }
+.bc-board { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 10px; text-align: center }
+.bc-side { display: grid; gap: 2px; transition: opacity .2s } .bc-side.lost { opacity: .55 }
+.bc-name { font: 800 clamp(24px, 3.2vw, 36px)/1 var(--f-display); text-transform: uppercase; overflow-wrap: anywhere }
+.bc-score { font: 800 clamp(64px, 8.5vw, 108px)/.9 var(--f-display) }
+.bc-side.a .bc-name, .bc-side.a .bc-score { color: #ff4d5e } .bc-side.b .bc-name, .bc-side.b .bc-score { color: #6b8fff }
+.bc-belt { min-height: 22px; justify-self: center; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: 5px 9px; border-radius: 999px; margin-top: 6px }
+.bc-belt:empty { background: none; padding: 0 }
+.bc-mid { display: grid; gap: 8px; justify-items: center; padding-bottom: 30px } .bc-vs { font: 800 22px var(--f-display); color: rgba(255,255,255,.4) }
+.bc-tally { font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); white-space: nowrap }
+.bc-verdict { grid-column: 1 / -1; margin: 8px 0 0; font-size: 15px; color: rgba(255,255,255,.85) }
+.bc-rounds { display: grid; gap: 14px }
+.tg { display: grid; gap: 6px }
+.tg-l { display: grid; grid-template-columns: 40px 1fr 40px; align-items: baseline }
+.tg-n { text-align: center; font: 600 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.7) }
+.tg-v { font: 800 20px/1 var(--f-display); opacity: .55 } .tg-v.a { color: #ff6b79 } .tg-v.b { color: #8aa6ff; text-align: right } .tg-v.w { opacity: 1 }
+.tg-bar { position: relative; display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: #5b84ff }
+.tg-bar .a { display: block; height: 100%; background: #ff4d5e } .tg-bar .b { flex: 1 }
+.tg-mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; margin-left: -1px; background: #fff; opacity: .85 }
+.bc-h { display: block; margin-bottom: 10px; font: 700 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--gold) }
+.ko-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px }
+.ko { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: 14px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12) }
+.ko-r { font: 600 10px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5) }
+.ko-l { font: 700 16px/1.2 var(--f-body) }
+.ko-v { display: flex; align-items: center; gap: 0; font: 500 13px/1.3 var(--f-mono); color: rgba(255,255,255,.6); min-width: 0 } .ko-v.w { color: #fff; font-weight: 700 }
+.ko-v em { font: 600 12px var(--f-body); font-style: normal; width: 76px; flex: none; color: rgba(255,255,255,.5); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.ko-v .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; background: #f2c14e } .ko-v .dot.good { background: #22c55e } .ko-v .dot.bad { background: #ef4444 }
+.ko p { margin: 4px 0 0; font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.65) }
+.bc-checks { display: grid; gap: 0; border-radius: 14px; background: rgba(255,255,255,.04); padding: 4px 14px 8px }
+.nacc-head { display: grid; grid-template-columns: 1fr 150px 150px; gap: 10px; padding: 10px 0 4px; font: 700 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase } .nacc-head .ra { color: #ff6b79 } .nacc-head .rb { color: #8aa6ff }
+.nacc { background: none; box-shadow: none; border-radius: 0; padding: 0; margin: 0; border-top: 1px solid rgba(255,255,255,.1) } .nacc + .nacc { margin-top: 0 } .nacc:first-of-type { border-top: 0 } .nacc summary::after { content: none } .nacc[open] summary::after { content: none } .nacc-b { padding-bottom: 8px }
+.nacc summary { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 46px; cursor: pointer; list-style: none }
+.nacc summary::-webkit-details-marker { display: none }
+.nacc summary::before { content: "\u25B8"; color: var(--gold); margin-right: 8px; transition: transform .15s } .nacc[open] summary::before { transform: rotate(90deg) }
+.nacc-n { flex: 1; font: 800 18px/1 var(--f-display); text-transform: uppercase }
+.nacc-t { font: 600 12px/1 var(--f-mono) } .nacc-t .ra { color: #ff6b79 } .nacc-t .rb { color: #8aa6ff }
+.nacc-b .ncc-row { grid-template-columns: 1fr 150px 150px }
+.bc-foot { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: center }
+.bc-all { min-height: 44px; padding: 0 18px; border-radius: 14px; border: 2px solid rgba(255,255,255,.35); background: transparent; color: #fff; font: 700 15px var(--f-body); cursor: pointer } .bc-all:hover { border-color: #fff }
+.bc-full { color: rgba(255,255,255,.75); font-size: 14px }
+@media (max-width: 860px) { .bc-main { grid-template-columns: 1fr } .ko-list { grid-template-columns: 1fr } }
+@media (max-width: 640px) { .nacc-head, .nacc-b .ncc-row { grid-template-columns: 1fr 88px 88px; gap: 6px } .nacc-b .ncc-row { font-size: 12px } .bc-mid { padding-bottom: 26px } }
+@media (prefers-reduced-motion: reduce) { .pg-s, .pg.just .pg-split i, .nacc summary::before { transition: none; animation: none } }
+
+/* ===== footer ===== */
+footer.site-foot { padding-block: 44px 40px }
+footer.site-foot .ft-grid { display: grid; grid-template-columns: 1.6fr repeat(4, minmax(0, 1fr)); gap: 28px }
+.ft-brand { display: grid; gap: 10px; align-content: start } .ft-brand .logo { justify-self: start; color: var(--ink); text-decoration: none }
+.ft-tag { margin: 0; font-size: 14px }
+.ft-cards { display: flex; flex-wrap: wrap; gap: 12px; align-items: center } .ft-cards .xlink { margin-top: 0 !important; text-decoration: none }
+.ft-cards .tmrr { display: inline-flex; line-height: 0 } .ft-cards .tmrr img { width: 150px; height: auto }
+.ft-col { display: grid; gap: 0; align-content: start } .ft-col b { color: var(--ink); font-size: 14px; margin-bottom: 6px }
+.ft-col a { display: flex; align-items: center; min-height: 34px; text-decoration: none } .ft-col a:hover { color: var(--ink) }
+footer.site-foot .ft-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px }
+.ft-legal { display: inline-flex; gap: 8px; align-items: center } .ft-legal i { font-style: normal; opacity: .5 } .ft-legal a { text-decoration: none } .ft-legal a:hover { color: var(--ink) }
+footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 12px; opacity: .8 }
+@media (max-width: 860px) { footer.site-foot .ft-grid { grid-template-columns: 1fr 1fr; gap: 22px 18px } .ft-brand { grid-column: 1 / -1 } }
+
 #agOut[hidden] { display: none !important }
 [data-tool] { display: none }
 .tools-hero { padding-block: 56px 8px }
@@ -2309,13 +2561,24 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
   <section class="seo-sum">__ABOUT__</section>
 </main>
 
-<footer><div class="wrap fcols">
-<div class="fbrand"><b>SEO Fights</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="44" height="44" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a><a class="tmrr" href="https://trustmrr.com/startup/seo-fights" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px"><img src="https://trustmrr.com/api/embed/seo-fights?format=svg&amp;theme=light" alt="TrustMRR verified revenue badge" width="180" height="74" loading="lazy" style="display:block;width:180px;height:auto"></a></div>
-<div><b>Product</b><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/#faq">FAQ</a></div>
-<div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
-<div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
-<div><b>Company</b><a href="/about">About</a><a href="/blog">Blog</a><a href="/contact">Contact</a><a href="/account" data-acct>Account</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/cookie-policy">Cookies</a></div>
-</div><div class="wrap fcopy"><span>\xA9 2026 SEO Fights</span><a href="/remove">Remove my site</a></div><p class="wrap fdisc">SEO Fights is not affiliated with any brand shown. Brand names belong to their owners. Scores are automated estimates, not ranking guarantees.</p></footer>
+<footer class="site-foot"><div class="wrap ft-grid">
+<div class="ft-brand">
+  <a class="logo" href="/" aria-label="SEO Fights home"><span>SEO</span><svg class="gloves" viewBox="4 0 64 40" aria-hidden="true"><g transform="rotate(-14 24 22)"><use href="#glv" width="40" height="40" fill="#E1232E"/></g><g transform="rotate(14 48 22)"><use href="#glv" x="-72" width="40" height="40" fill="#1D4ED8" transform="scale(-1,1)"/></g></svg><span>Fights</span></a>
+  <p class="ft-tag">Put your site in the ring.</p>
+  <div class="ft-cards">
+    <a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a>
+    <a class="tmrr" href="https://trustmrr.com/startup/seo-fights" target="_blank" rel="noopener"><img src="https://trustmrr.com/api/embed/seo-fights?format=svg&amp;theme=light" alt="TrustMRR verified revenue badge" width="180" height="74" loading="lazy"></a>
+  </div>
+</div>
+<nav class="ft-col" aria-label="Product"><b>Product</b><a href="/#test">Start a fight</a><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/blog">Blog</a></nav>
+<nav class="ft-col" aria-label="Free tools"><b>Free tools</b><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a><a href="/tools">All tools</a></nav>
+<nav class="ft-col" aria-label="Compare"><b>Compare</b><a href="/alternatives/ahrefs-alternative">Ahrefs alternative</a><a href="/alternatives/semrush-alternative">Semrush alternative</a><a href="/alternatives/moz-alternative">Moz alternative</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest alternative</a><a href="/tools-like">More \u2192</a></nav>
+<nav class="ft-col" aria-label="Company"><b>Company</b><a href="/about">About</a><a href="/contact">Contact</a><a href="/remove">Remove my site</a><a href="/account" data-acct>Sign in</a></nav>
+</div>
+<div class="wrap ft-bar"><span>\xA9 2026 SEO Fights \xB7 Vancouver, BC</span><span class="ft-legal"><a href="/terms">Terms</a><i aria-hidden="true">\xB7</i><a href="/privacy">Privacy</a><i aria-hidden="true">\xB7</i><a href="/cookie-policy">Cookies</a></span></div>
+<p class="wrap ft-disc">Not affiliated with any brand shown. Brand names belong to their owners. Scores are automated estimates, not ranking guarantees.</p>
+</footer>
+
 <div class="toast" id="toast" hidden></div>
 
 <div class="modal" id="suModal" hidden role="dialog" aria-modal="true" aria-labelledby="suTitle">
@@ -2362,7 +2625,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
       }
     });
     // Footer: a clear Sign out next to Account.
-    document.querySelectorAll("footer a[data-acct]").forEach(a => { if (!a.nextElementSibling || !a.nextElementSibling.matches("[data-out]")) a.insertAdjacentHTML("afterend", '<a href="/logout" data-out>Sign out</a>'); });
+    document.querySelectorAll("footer a[data-acct]").forEach(a => { a.textContent = "Account"; if (!a.nextElementSibling || !a.nextElementSibling.matches("[data-out]")) a.insertAdjacentHTML("afterend", '<a href="/logout" data-out>Sign out</a>'); });
   };
   window.dashBtn = meHeader; window.meReady.then(meHeader);
   let next = null, nextUrl = null;
@@ -3364,7 +3627,7 @@ Checked ${new Date(d.at || Date.now()).toISOString().slice(0, 10)}.</p></section
   });
 }
 async function cardsList(env, limit) {
-  return env.DB ? (await tables(env), (await env.DB.prepare(`SELECT slug, a, b, category, votes_a, votes_b, a_score, b_score, winner FROM fights WHERE ${NOT_HIDDEN} ORDER BY (category IS NOT NULL) DESC, views + votes_a + votes_b DESC, updated_at DESC LIMIT ?1`).bind(limit).all()).results) : [];
+  return env.DB ? (await tables(env), (await env.DB.prepare(`SELECT slug, a, b, category, votes_a, votes_b FROM fights WHERE ${NOT_HIDDEN} ORDER BY (category IS NOT NULL) DESC, views + votes_a + votes_b DESC, updated_at DESC LIMIT ?1`).bind(limit).all()).results) : [];
 }
 async function boardPage(env) {
   return page(env, {
