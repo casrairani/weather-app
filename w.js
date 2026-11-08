@@ -923,11 +923,17 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
 .bc-name { display: flex; flex-direction: column; align-items: center; gap: 8px } .bc-name .ico { width: 36px; height: 36px; margin: 0; padding: 3px }
 .pg-s { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px } .pg-s .ico { width: 28px; height: 28px; margin: 0; padding: 3px }
 .mh .ico { width: 18px; height: 18px } .pr-top b .ico { width: 20px; height: 20px }
+
+/* homepage showdown strip */
+.sd-home { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px } @media (max-width: 900px) { .sd-home { grid-template-columns: 1fr } }
+.sdh { display: grid; gap: 8px; padding: 16px; border-radius: 18px; border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); color: #fff; text-decoration: none; background: radial-gradient(90% 70% at 0% 100%, rgba(225,35,46,.25), transparent 60%), radial-gradient(90% 70% at 100% 0%, rgba(29,78,216,.3), transparent 60%), var(--arena) }
+.sdh .kw { font: 700 14px/1.2 var(--f-mono); color: var(--gold) } .sdh .rw { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 800 24px/1 var(--f-display); text-transform: uppercase; opacity: .7 } .sdh .rw.lead { opacity: 1 } .sdh .rw .ico { width: 22px; height: 22px }
+.sdh .ra { color: #ff6b79 } .sdh .rb { color: #8aa6ff } .sdh .ft { font-size: 14px; color: rgba(255,255,255,.7) }
 </style>
 
 <header class="top"><div class="wrap">
   <a class="logo" href="/" aria-label="SEO Fights home"><span>SEO</span><svg class="gloves" viewBox="4 0 64 40" aria-hidden="true"><defs><symbol id="glv" viewBox="0 0 40 40"><path d="M9 15.5C9 9 13.6 5 20.2 5h3.6C31 5 36 9.6 36 16.4v3.4c0 4.8-3.2 8.3-7.7 9.1L27 29v3.2H11.6v-4.6C9.9 26.1 9 23.8 9 21.2z"/><path d="M13.5 18.2c0-3.2 2.3-5.4 5.6-5.4h4.6" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/><rect x="10.6" y="31" width="17.4" height="6" rx="2"/><rect x="10.6" y="31" width="17.4" height="2" rx="1" fill="rgba(255,255,255,.35)"/></symbol></defs><g transform="rotate(-14 24 22)"><use href="#glv" width="40" height="40" fill="#E1232E"/></g><g transform="rotate(14 48 22)"><use href="#glv" x="-72" width="40" height="40" fill="#1D4ED8" transform="scale(-1,1)"/></g></svg><span>Fights</span></a>
-  <nav class="links"><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/pricing">Pricing</a></nav>
+  <nav class="links"><a href="/showdowns">Showdown</a><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/pricing">Pricing</a></nav>
   <a class="btn sm" href="/#top">Start a fight</a>
 </div></header>
 
@@ -1085,6 +1091,12 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
 
   __SUMMARY__
 
+  <section id="showdowns" hidden><div class="wrap">
+    <div class="sec-head"><h2 class="display">SEO Showdown</h2><span class="tag">2 sites \xB7 1 keyword \xB7 14 days on Google</span></div>
+    <div class="sd-home" id="sdHome"></div>
+    <p class="more"><a class="btn ghost" href="/showdowns">See every showdown</a></p>
+  </div></section>
+
   <section id="why"><div class="wrap">
     <div class="sec-head"><h2 class="display">Built to win</h2></div>
     <div class="feats">
@@ -1149,7 +1161,7 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
     <a class="tmrr" href="https://trustmrr.com/startup/seo-fights" target="_blank" rel="noopener"><img src="https://trustmrr.com/api/embed/seo-fights?format=svg&amp;theme=light" alt="TrustMRR verified revenue badge" width="180" height="74" loading="lazy"></a>
   </div>
 </div>
-<nav class="ft-col" aria-label="Product"><b>Product</b><a href="/#test">Start a fight</a><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/blog">Blog</a></nav>
+<nav class="ft-col" aria-label="Product"><b>Product</b><a href="/#test">Start a fight</a><a href="/fights">Biggest fights</a><a href="/showdowns">SEO Showdown</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/blog">Blog</a></nav>
 <nav class="ft-col" aria-label="Free tools"><b>Free tools</b><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a><a href="/tools">All tools</a></nav>
 <nav class="ft-col" aria-label="Compare"><b>Compare</b><a href="/alternatives/ahrefs-alternative">Ahrefs alternative</a><a href="/alternatives/semrush-alternative">Semrush alternative</a><a href="/alternatives/moz-alternative">Moz alternative</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest alternative</a><a href="/tools-like">More \u2192</a></nav>
 <nav class="ft-col" aria-label="Company"><b>Company</b><a href="/about">About</a><a href="/contact">Contact</a><a href="/remove">Remove my site</a><a href="/account" data-acct>Sign in</a></nav>
@@ -1516,6 +1528,15 @@ $("#freeBtn") && $("#freeBtn").addEventListener("click", async e => {
   if (ME) { toast("You're already in. Put your site in the ring \u{1F94A}"); go(); return; }
   withAccount(go, "Create your free account", "Free forever, no card: 1 fight a week, every fight result, and 1 try of each tool a week.", "/#test");
 });
+
+/* ---------- live showdowns strip ---------- */
+if (VIEW === "home" && location.pathname === "/") fetch("/api/showdowns?n=3").then(r => r.json()).then(j => {
+  const list = (j && j.live) || []; if (!list.length) return;
+  const rk = p => p == null ? "30+" : "#" + p, P = p => p == null ? 999 : p;
+  $("#sdHome").innerHTML = list.map(s => { const lead = P(s.a_now) < P(s.b_now) ? "a" : P(s.b_now) < P(s.a_now) ? "b" : "";
+    return \`<a class="sdh" href="/showdown/\${encodeURIComponent(s.id)}"><span class="kw">\u201C\${esc(s.keyword)}\u201D</span><span class="rw \${lead === "a" ? "lead" : ""}"><b class="ra">\${ico(s.a)}\${esc(brandName(s.a))}</b><i>\${rk(s.a_now)}</i></span><span class="rw \${lead === "b" ? "lead" : ""}"><b class="rb">\${ico(s.b)}\${esc(brandName(s.b))}</b><i>\${rk(s.b_now)}</i></span><span class="ft">Day \${s.day} of 14 \xB7 pick a winner \u2192</span></a>\`; }).join("");
+  $("#showdowns").hidden = false;
+}).catch(() => {});
 /* ---------- main card ---------- */
 const ALL_FIGHTS = location.pathname === "/fights"; if (ALL_FIGHTS) document.documentElement.classList.add("fights-page");
 function splitHTML(c, p) {
@@ -2499,6 +2520,12 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
 .pg-s { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px } .pg-s .ico { width: 28px; height: 28px; margin: 0; padding: 3px }
 .mh .ico { width: 18px; height: 18px } .pr-top b .ico { width: 20px; height: 20px }
 
+/* homepage showdown strip */
+.sd-home { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px } @media (max-width: 900px) { .sd-home { grid-template-columns: 1fr } }
+.sdh { display: grid; gap: 8px; padding: 16px; border-radius: 18px; border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); color: #fff; text-decoration: none; background: radial-gradient(90% 70% at 0% 100%, rgba(225,35,46,.25), transparent 60%), radial-gradient(90% 70% at 100% 0%, rgba(29,78,216,.3), transparent 60%), var(--arena) }
+.sdh .kw { font: 700 14px/1.2 var(--f-mono); color: var(--gold) } .sdh .rw { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 800 24px/1 var(--f-display); text-transform: uppercase; opacity: .7 } .sdh .rw.lead { opacity: 1 } .sdh .rw .ico { width: 22px; height: 22px }
+.sdh .ra { color: #ff6b79 } .sdh .rb { color: #8aa6ff } .sdh .ft { font-size: 14px; color: rgba(255,255,255,.7) }
+
 #agOut[hidden] { display: none !important }
 [data-tool] { display: none }
 .tools-hero { padding-block: 56px 8px }
@@ -2543,7 +2570,7 @@ td.url { max-width: 340px; overflow-wrap: anywhere; font-size: 15px } td.url sma
 
 <header class="top"><div class="wrap">
   <a class="logo" href="/" aria-label="SEO Fights home"><span>SEO</span><svg class="gloves" viewBox="4 0 64 40" aria-hidden="true"><defs><symbol id="glv" viewBox="0 0 40 40"><path d="M9 15.5C9 9 13.6 5 20.2 5h3.6C31 5 36 9.6 36 16.4v3.4c0 4.8-3.2 8.3-7.7 9.1L27 29v3.2H11.6v-4.6C9.9 26.1 9 23.8 9 21.2z"/><path d="M13.5 18.2c0-3.2 2.3-5.4 5.6-5.4h4.6" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/><rect x="10.6" y="31" width="17.4" height="6" rx="2"/><rect x="10.6" y="31" width="17.4" height="2" rx="1" fill="rgba(255,255,255,.35)"/></symbol></defs><g transform="rotate(-14 24 22)"><use href="#glv" width="40" height="40" fill="#E1232E"/></g><g transform="rotate(14 48 22)"><use href="#glv" x="-72" width="40" height="40" fill="#1D4ED8" transform="scale(-1,1)"/></g></svg><span>Fights</span></a>
-  <nav class="links"><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/pricing">Pricing</a></nav>
+  <nav class="links"><a href="/showdowns">Showdown</a><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/pricing">Pricing</a></nav>
   <a class="btn sm" href="/">Start a fight</a>
 </div></header>
 
@@ -2671,7 +2698,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
     <a class="tmrr" href="https://trustmrr.com/startup/seo-fights" target="_blank" rel="noopener"><img src="https://trustmrr.com/api/embed/seo-fights?format=svg&amp;theme=light" alt="TrustMRR verified revenue badge" width="180" height="74" loading="lazy"></a>
   </div>
 </div>
-<nav class="ft-col" aria-label="Product"><b>Product</b><a href="/#test">Start a fight</a><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/blog">Blog</a></nav>
+<nav class="ft-col" aria-label="Product"><b>Product</b><a href="/#test">Start a fight</a><a href="/fights">Biggest fights</a><a href="/showdowns">SEO Showdown</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/pricing">Pricing</a><a href="/blog">Blog</a></nav>
 <nav class="ft-col" aria-label="Free tools"><b>Free tools</b><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a><a href="/tools">All tools</a></nav>
 <nav class="ft-col" aria-label="Compare"><b>Compare</b><a href="/alternatives/ahrefs-alternative">Ahrefs alternative</a><a href="/alternatives/semrush-alternative">Semrush alternative</a><a href="/alternatives/moz-alternative">Moz alternative</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest alternative</a><a href="/tools-like">More \u2192</a></nav>
 <nav class="ft-col" aria-label="Company"><b>Company</b><a href="/about">About</a><a href="/contact">Contact</a><a href="/remove">Remove my site</a><a href="/account" data-acct>Sign in</a></nav>
@@ -3394,11 +3421,11 @@ async function get(url, ms = 9e3) {
   }
 }
 var LIMITS = {
-  free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"], rivals: [1, "week"], links: [1, "week"], gen: [1, "week"], hunts: [0, "month"] },
-  pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"], hunts: [0, "month"] },
-  agency: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"], hunts: [30, "month"] },
-  lifetime: { fights: [40, "month"], battles: [0, "month"], strategy: [0, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"], hunts: [0, "month"] },
-  owner: { fights: [1e6, "month"], battles: [1e6, "month"], strategy: [1e6, "month"], rivals: [1e6, "month"], links: [1e6, "month"], gen: [1e6, "month"], hunts: [1e6, "month"] }
+  free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"], rivals: [1, "week"], links: [1, "week"], gen: [1, "week"], hunts: [0, "month"], showdowns: [0, "month"] },
+  pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"], hunts: [0, "month"], showdowns: [2, "month"] },
+  agency: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"], hunts: [30, "month"], showdowns: [10, "month"] },
+  lifetime: { fights: [40, "month"], battles: [0, "month"], strategy: [0, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"], hunts: [0, "month"], showdowns: [1, "month"] },
+  owner: { fights: [1e6, "month"], battles: [1e6, "month"], strategy: [1e6, "month"], rivals: [1e6, "month"], links: [1e6, "month"], gen: [1e6, "month"], hunts: [1e6, "month"], showdowns: [1e6, "month"] }
   // owner: unlimited
 }, PLAN_NAMES = { free: "Free", pro: "Pro", agency: "Agency", lifetime: "Lifetime", owner: "Owner" }, paid = (m) => !!m && m.plan !== "free", planOf = (m) => m ? LIMITS[m.plan] ? m.plan : "pro" : "free", TOOL_LIMITS = { rivals: 3, keywords: 20 };
 async function canUse(env, who, what, plan) {
@@ -3442,7 +3469,9 @@ var NEW_TABLES = [
   "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT NOT NULL, exp INTEGER)",
   "CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, kind TEXT NOT NULL, plan TEXT, info TEXT)",
   "CREATE INDEX IF NOT EXISTS events_at ON events (at)",
-  "CREATE INDEX IF NOT EXISTS events_kind_at ON events (kind, at)"
+  "CREATE INDEX IF NOT EXISTS events_kind_at ON events (kind, at)",
+  "CREATE TABLE IF NOT EXISTS showdowns (id TEXT PRIMARY KEY, a TEXT NOT NULL, b TEXT NOT NULL, keyword TEXT NOT NULL, gl TEXT DEFAULT 'us', start INTEGER, ends INTEGER, by TEXT, xa TEXT, xb TEXT, status TEXT DEFAULT 'live', winner TEXT, votes_a INTEGER DEFAULT 0, votes_b INTEGER DEFAULT 0, views INTEGER DEFAULT 0)",
+  "CREATE TABLE IF NOT EXISTS showdown_ranks (id TEXT NOT NULL, day INTEGER NOT NULL, a_pos INTEGER, b_pos INTEGER, at INTEGER, PRIMARY KEY (id, day))"
 ], NOT_HIDDEN = "slug NOT IN (SELECT slug FROM hidden_fights)", HIDDEN = /* @__PURE__ */ new Set(), HIDDEN_AT = 0;
 async function refreshHidden(env, force) {
   if (!(!env.DB || !force && Date.now() - HIDDEN_AT < 3e5)) {
@@ -3493,6 +3522,137 @@ function withStore(env) {
     let out = await env.AI.run(model, opts), inTok = JSON.stringify(opts && (opts.messages || opts.prompt) || "").length / 4, outTok = String(out && out.response || "").length / 4;
     return await logEv(e, "ai", null, Math.round(inTok * 0.026668 + outTok * 0.204805)), out;
   } }), e.__ev = (kind, info) => logEv(e, kind, null, info), e;
+}
+var SD_DAYS = 14, SD_OPENER = { a: "granola.ai", b: "otter.ai", keyword: "ai note taker", gl: "us" }, kwSlug = (k) => String(k).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60), sdDay = (sd, at = Date.now()) => Math.max(0, Math.min(SD_DAYS, Math.floor((at - sd.start) / 864e5))), posOf = (p) => p ?? 999;
+async function sdGet(env, id) {
+  await tables(env);
+  let sd = await env.DB.prepare("SELECT * FROM showdowns WHERE id=?1").bind(id).first();
+  return sd ? (sd.ranks = (await env.DB.prepare("SELECT day, a_pos, b_pos, at FROM showdown_ranks WHERE id=?1 ORDER BY day").bind(id).all()).results, sd) : null;
+}
+async function sdCheck(env, sd) {
+  let day = sdDay(sd), r = (await battle(env, sd.a, sd.b, [sd.keyword], sd.gl || "us")).rows[0] || {};
+  if (await env.DB.prepare("INSERT INTO showdown_ranks (id, day, a_pos, b_pos, at) VALUES (?1, ?2, ?3, ?4, ?5) ON CONFLICT(id, day) DO UPDATE SET a_pos=?3, b_pos=?4, at=?5").bind(sd.id, day, r.a ?? null, r.b ?? null, Date.now()).run(), day >= SD_DAYS) {
+    let ranks = (await env.DB.prepare("SELECT a_pos, b_pos FROM showdown_ranks WHERE id=?1").bind(sd.id).all()).results, avg = (k) => ranks.reduce((t, x) => t + posOf(x[k]), 0) / (ranks.length || 1), fa = posOf(r.a), fb = posOf(r.b), winner = fa < fb ? "a" : fb < fa ? "b" : avg("a_pos") < avg("b_pos") ? "a" : avg("b_pos") < avg("a_pos") ? "b" : "tie";
+    await env.DB.prepare("UPDATE showdowns SET status='done', winner=?2 WHERE id=?1").bind(sd.id, winner).run();
+  }
+  return r;
+}
+async function sdCreate(env, o) {
+  await tables(env);
+  let a = hostOf(norm(o.a)), b = hostOf(norm(o.b)), keyword = String(o.keyword || "").trim().toLowerCase().replace(/\s+/g, " ").slice(0, 80);
+  if (a === b) throw new Error("Pick two different websites.");
+  if (keyword.length < 2) throw new Error('Enter a keyword, like "ai note taker".');
+  let gl = COUNTRY[o.gl] ? o.gl : "us", id = `${a}-vs-${b}--${kwSlug(keyword)}`, old = await env.DB.prepare("SELECT id, status FROM showdowns WHERE id=?1").bind(id).first();
+  if (old && old.status === "live") return { id, existed: !0 };
+  let start = Date.now(), handle = (h) => (String(h || "").replace(/^@/, "").match(/^[A-Za-z0-9_]{1,15}$/) || [])[0] || null;
+  if (await env.DB.prepare("INSERT INTO showdowns (id, a, b, keyword, gl, start, ends, by, xa, xb, status, winner, votes_a, votes_b, views) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,'live',NULL,0,0,0) ON CONFLICT(id) DO UPDATE SET start=?6, ends=?7, by=?8, xa=?9, xb=?10, status='live', winner=NULL, votes_a=0, votes_b=0").bind(id, a, b, keyword, gl, start, start + SD_DAYS * 864e5, o.by || null, handle(o.xa), handle(o.xb)).run(), await env.DB.prepare("DELETE FROM showdown_ranks WHERE id=?1").bind(id).run(), env.SERPER_KEY)
+    try {
+      await sdCheck(env, { id, a, b, keyword, gl, start });
+    } catch {
+    }
+  return await logEv(env, "showdown_new", null, id), { id, existed: !1 };
+}
+async function sdEnsureOpener(env) {
+  try {
+    await tables(env), (await env.DB.prepare("SELECT COUNT(*) AS n FROM showdowns").first()).n || await sdCreate(env, { ...SD_OPENER, by: "owner" });
+  } catch {
+  }
+}
+async function sdDaily(env) {
+  if (!env.DB || !env.SERPER_KEY) return;
+  await sdEnsureOpener(env);
+  let live = (await env.DB.prepare("SELECT * FROM showdowns WHERE status='live' ORDER BY start LIMIT 60").all()).results;
+  for (let sd of live) {
+    let day = sdDay(sd);
+    if (!await env.DB.prepare("SELECT 1 FROM showdown_ranks WHERE id=?1 AND day=?2").bind(sd.id, day).first() || day >= SD_DAYS)
+      try {
+        await sdCheck(env, sd);
+      } catch {
+      }
+  }
+}
+async function sdList(env, status, limit = 24) {
+  return await tables(env), (await env.DB.prepare(`SELECT s.*, (SELECT a_pos FROM showdown_ranks r WHERE r.id=s.id ORDER BY day DESC LIMIT 1) AS a_now, (SELECT b_pos FROM showdown_ranks r WHERE r.id=s.id ORDER BY day DESC LIMIT 1) AS b_now FROM showdowns s WHERE status=?1 ORDER BY ${status === "live" ? "views + votes_a + votes_b DESC, start DESC" : "start DESC"} LIMIT ?2`).bind(status, limit).all()).results;
+}
+var sdName = (h) => {
+  let base = h.split(".").length > 2 && !/\.(co|com)\.[a-z]{2}$/.test(h) ? h.split(".").slice(-2)[0] : h.split(".")[0];
+  return base.charAt(0).toUpperCase() + base.slice(1);
+}, sdRank = (p) => p == null ? "30+" : "#" + p;
+function sdCard(sd) {
+  let day = sdDay(sd), A = sdName(sd.a), B2 = sdName(sd.b), ic = (h) => `<img class="ico" src="/icon/${esc2(h)}" alt="" width="64" height="64" loading="lazy" onerror="this.remove()">`, lead = posOf(sd.a_now) < posOf(sd.b_now) ? "a" : posOf(sd.b_now) < posOf(sd.a_now) ? "b" : null;
+  return `<a class="sd-card" href="/showdown/${esc2(sd.id)}"><span class="sd-kw">\u201C${esc2(sd.keyword)}\u201D</span>
+<span class="sd-row ${lead === "a" ? "lead" : ""}"><b class="ra">${ic(sd.a)}${esc2(A)}</b><i>${sdRank(sd.a_now)}</i></span>
+<span class="sd-row ${lead === "b" ? "lead" : ""}"><b class="rb">${ic(sd.b)}${esc2(B2)}</b><i>${sdRank(sd.b_now)}</i></span>
+<span class="sd-foot">${sd.status === "done" ? sd.winner === "a" ? `\u{1F3C6} ${esc2(A)} won` : sd.winner === "b" ? `\u{1F3C6} ${esc2(B2)} won` : "Draw" : `Day ${day} of ${SD_DAYS}`}</span></a>`;
+}
+var SD_CSS = `<style>
+.sd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0 0 26px}@media(max-width:900px){.sd-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.sd-grid{grid-template-columns:1fr}}
+.sd-card{display:grid;gap:8px;padding:16px;border-radius:18px;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);background:radial-gradient(90% 70% at 0% 100%,rgba(225,35,46,.25),transparent 60%),radial-gradient(90% 70% at 100% 0%,rgba(29,78,216,.3),transparent 60%),#0F1B3D;color:#fff;text-decoration:none}
+.sd-kw{font:700 14px/1.2 var(--f-mono);color:var(--gold)}.sd-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font:800 24px/1 var(--f-display);text-transform:uppercase;opacity:.7}.sd-row.lead{opacity:1}.sd-row i{font-style:normal}.sd-row .ra{color:#ff6b79}.sd-row .rb{color:#8aa6ff}.sd-row .ico{width:22px;height:22px}
+.sd-foot{font-size:14px;color:rgba(255,255,255,.7)}
+.sd-hero{border-radius:24px;border:3px solid var(--gold);box-shadow:8px 8px 0 var(--ink);padding:clamp(18px,3vw,28px);background:radial-gradient(120% 80% at 50% 0%,#172654,#0F1B3D 70%);color:#fff;display:grid;gap:18px;margin-bottom:22px}
+.sd-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:700 13px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.sd-board{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;text-align:center}.sd-side{display:grid;gap:4px;justify-items:center}.sd-side.trail{opacity:.6}
+.sd-side .nm{display:flex;flex-direction:column;align-items:center;gap:8px;font:800 clamp(24px,3.4vw,38px)/1 var(--f-display);text-transform:uppercase}.sd-side .nm .ico{width:40px;height:40px;padding:3px}
+.sd-side .rk{font:800 clamp(64px,9vw,110px)/.9 var(--f-display)}.sd-side.a .nm,.sd-side.a .rk{color:#ff4d5e}.sd-side.b .nm,.sd-side.b .rk{color:#6b8fff}.sd-side small{font:600 13px/1.2 var(--f-mono);color:rgba(255,255,255,.65);text-transform:uppercase}
+.sd-mid{display:grid;gap:8px;justify-items:center;padding-bottom:26px}.sd-mid b{font:800 22px var(--f-display);color:rgba(255,255,255,.4)}
+.sd-line{text-align:center;font-size:17px}.sd-chart{background:rgba(255,255,255,.04);border-radius:16px;padding:12px}.sd-chart svg{width:100%;height:auto;display:block}
+.sd-pick{display:grid;gap:10px;justify-items:center;text-align:center}.sd-pick .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.sd-pick button{min-height:48px;padding:0 20px;border-radius:14px;font:800 20px var(--f-display);text-transform:uppercase;cursor:pointer;border:2px solid #fff;color:#fff}.sd-pick .pa{background:#E1232E}.sd-pick .pb{background:#1D4ED8}
+.sd-split{width:min(420px,100%);display:flex;height:10px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.12)}.sd-split i{display:block;height:100%}.sd-split .a{background:#ff4d5e}.sd-split .b{background:#5b84ff}
+.sd-acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.sd-acts .btn{min-height:46px}
+.sd-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sd-form label{display:grid;gap:6px;font:600 13px/1 var(--f-mono);text-transform:uppercase;color:var(--muted)}.sd-form input,.sd-form select{min-height:50px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:0 14px;font:500 17px var(--f-body)}.sd-form .full{grid-column:1/-1}@media(max-width:600px){.sd-form{grid-template-columns:1fr}}
+</style>`;
+function sdChart(sd, A, B2) {
+  let x = (d) => 34 + d / SD_DAYS * 596, y = (p) => 12 + (Math.min(posOf(p), 31) - 1) / 30 * 182, line = (k, c) => {
+    let pts = sd.ranks.map((r) => `${x(r.day).toFixed(1)},${y(r[k]).toFixed(1)}`);
+    return pts.length ? `<polyline fill="none" stroke="${c}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="${pts.join(" ")}"/>${sd.ranks.map((r) => `<circle cx="${x(r.day).toFixed(1)}" cy="${y(r[k]).toFixed(1)}" r="4" fill="${c}"><title>Day ${r.day}: ${sdRank(r[k])}</title></circle>`).join("")}` : "";
+  }, grid = [1, 10, 20, 30].map((p) => `<line x1="34" x2="630" y1="${y(p)}" y2="${y(p)}" stroke="rgba(255,255,255,.12)"/><text x="28" y="${y(p) + 4}" text-anchor="end" font-size="11" fill="rgba(255,255,255,.55)">#${p}${p === 30 ? "+" : ""}</text>`).join(""), days = [[0, "start"], [7, "middle"], [14, "end"]].map(([d, an]) => `<text x="${x(d)}" y="214" text-anchor="${an}" font-size="11" fill="rgba(255,255,255,.55)">Day ${d}</text>`).join("");
+  return `<div class="sd-chart"><svg viewBox="0 0 640 220" role="img" aria-label="Google rank per day: ${esc2(A)} in red, ${esc2(B2)} in blue. Higher is better.">${grid}${days}${line("a_pos", "#ff4d5e")}${line("b_pos", "#5b84ff")}</svg></div>`;
+}
+function sdPage(sd) {
+  let A = sdName(sd.a), B2 = sdName(sd.b), day = sdDay(sd), last = sd.ranks[sd.ranks.length - 1] || {}, pa = last.a_pos, pb = last.b_pos, lead = posOf(pa) < posOf(pb) ? "a" : posOf(pb) < posOf(pa) ? "b" : null, done = sd.status === "done", ic = (h) => `<img class="ico" src="/icon/${esc2(h)}" alt="" width="64" height="64" onerror="this.remove()">`, line = done ? sd.winner === "a" || sd.winner === "b" ? `\u{1F3C6} <b>${esc2(sd.winner === "a" ? A : B2)}</b> wins the showdown.` : "It ended in a draw." : pa == null && pb == null ? "Neither site is in Google's top 30 for this yet." : lead ? `<b>${esc2(lead === "a" ? A : B2)}</b> leads${pa != null && pb != null ? ` by ${Math.abs(pa - pb)} spot${Math.abs(pa - pb) === 1 ? "" : "s"}` : ""} on day ${day}.` : `Dead even on day ${day}.`, ends = new Date(sd.ends).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Vancouver" }), url = `${SITE}/showdown/${sd.id}`, share = `\u{1F94A} SEO Showdown ${done ? "final" : `day ${day}/${SD_DAYS}`}
+${A} ${sdRank(pa)} vs ${B2} ${sdRank(pb)} on Google for "${sd.keyword}"
+${done ? "" : `who takes it? \u{1F447}
+`}`, handles = [sd.xa, sd.xb].filter(Boolean).map((h) => "@" + h).join(" ");
+  return `${SD_CSS}<div class="sd-hero">
+<div class="sd-top"><span>\u{1F3C6} SEO Showdown \xB7 \u201C${esc2(sd.keyword)}\u201D \xB7 Google ${esc2(COUNTRY[sd.gl] || "US")}</span><span>${done ? "Final" : `Day ${day} of ${SD_DAYS} \xB7 ends ${esc2(ends)}`}</span></div>
+<div class="sd-board"><div class="sd-side a ${lead === "b" ? "trail" : ""}"><span class="nm">${ic(sd.a)}${esc2(A)}</span><span class="rk">${sdRank(pa)}</span><small>on Google</small></div>
+<div class="sd-mid"><b>VS</b></div>
+<div class="sd-side b ${lead === "a" ? "trail" : ""}"><span class="nm">${ic(sd.b)}${esc2(B2)}</span><span class="rk">${sdRank(pb)}</span><small>on Google</small></div></div>
+<p class="sd-line">${line}</p>
+${sdChart(sd, A, B2)}
+<div class="sd-pick" id="sdPick" data-id="${esc2(sd.id)}" data-a="${esc2(A)}" data-b="${esc2(B2)}" data-va="${sd.votes_a || 0}" data-vb="${sd.votes_b || 0}">
+<b>${done ? "Who did people pick?" : "Who takes Google on day 14?"}</b>
+<div class="btns"${done ? " hidden" : ""}><button type="button" class="pa" data-side="a">${esc2(A)}</button><button type="button" class="pb" data-side="b">${esc2(B2)}</button></div>
+<div class="sd-split" id="sdSplit" hidden><i class="a"></i><i class="b"></i></div><span id="sdCrowd" class="muted"></span></div>
+<div class="sd-acts"><a class="btn fight" target="_blank" rel="noopener" href="https://x.com/intent/post?text=${encodeURIComponent(share + (handles ? handles + `
+` : ""))}&url=${encodeURIComponent(url)}">Post on X</a><a class="btn ghost" href="/fight/${esc2(slugOf(sd.a, sd.b))}" style="color:#fff;border-color:rgba(255,255,255,.4)">See the page fight</a><a class="btn ghost" href="/showdowns#new" style="color:#fff;border-color:rgba(255,255,255,.4)">Start your own</a></div>
+</div>
+<p class="muted">We check Google once a day (top 30 results, ${esc2(COUNTRY[sd.gl] || "United States")}). \u201C30+\u201D means not in the top 30. After ${SD_DAYS} days, the better rank wins. Ties go to the better average.</p>
+<script>(()=>{const box=document.getElementById("sdPick");if(!box)return;const id=box.dataset.id,key="sdpick:"+id;let va=+box.dataset.va,vb=+box.dataset.vb;
+const show=(side)=>{const t=va+vb||1,sa=Math.round(va/t*100);const sp=document.getElementById("sdSplit");sp.hidden=false;sp.children[0].style.width=sa+"%";sp.children[1].style.width=(100-sa)+"%";
+document.getElementById("sdCrowd").textContent=(side?"You picked "+(side==="a"?box.dataset.a:box.dataset.b)+" \xB7 ":"")+sa+"% "+box.dataset.a+" \xB7 "+(100-sa)+"% "+box.dataset.b;const b=box.querySelector(".btns");if(b&&side)b.hidden=true;};
+let mine=null;try{mine=localStorage.getItem(key)}catch{}if(mine||box.querySelector(".btns").hidden)show(mine);
+box.querySelectorAll("button[data-side]").forEach(btn=>btn.addEventListener("click",async()=>{const side=btn.dataset.side;try{localStorage.setItem(key,side)}catch{}if(side==="a")va++;else vb++;show(side);
+try{const r=await fetch("/api/showdown/vote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id,side})});if(r.ok){const j=await r.json();va=j.votes_a;vb=j.votes_b;show(side);}}catch{}}));})();</script>`;
+}
+function sdIndex(live, done) {
+  return `${SD_CSS}<h2 class="display" style="font-size:clamp(34px,5vw,52px);margin:6px 0 14px">Live now</h2>
+<div class="sd-grid">${live.map(sdCard).join("") || '<p class="muted">No live showdowns yet. Start the first one below.</p>'}</div>
+${done.length ? `<h2 class="display" style="font-size:clamp(34px,5vw,52px);margin:6px 0 14px">Finished</h2><div class="sd-grid">${done.map(sdCard).join("")}</div>` : ""}
+<form class="panel" id="new" novalidate><h3>Start a showdown</h3><p class="sub">2 sites, 1 keyword, ${SD_DAYS} days. We check Google every day and keep score in public. Pro gets 2 a month, Agency 10, Lifetime 1.</p>
+<div class="sd-form"><label>Red corner<input id="sdA" placeholder="yoursite.com" autocomplete="off"></label><label>Blue corner<input id="sdB" placeholder="rival.com" autocomplete="off"></label>
+<label class="full">Keyword<input id="sdK" placeholder="ai note taker" autocomplete="off"></label>
+<label>Country<select id="sdG">${Object.entries(COUNTRY).map(([k, v]) => `<option value="${k}">${esc2(v)}</option>`).join("")}</select></label>
+<label>X handles (optional)<input id="sdX" placeholder="@you @rival" autocomplete="off"></label></div>
+<p id="sdMsg" class="muted" hidden></p><button class="btn fight" type="submit" id="sdGo" style="margin-top:14px">Start the showdown</button></form>
+<script>(()=>{const f=document.getElementById("new"),$=s=>document.getElementById(s),msg=t=>{$("sdMsg").textContent=t;$("sdMsg").hidden=!t};
+f.addEventListener("submit",e=>{e.preventDefault();const a=$("sdA").value.trim(),b=$("sdB").value.trim(),keyword=$("sdK").value.trim();if(!a||!b||!keyword){msg("Fill in both sites and a keyword.");return;}
+const go=async()=>{$("sdGo").disabled=true;$("sdGo").textContent="Checking Google\u2026";const xs=$("sdX").value.match(/@?[A-Za-z0-9_]{1,15}/g)||[];
+try{const r=await fetch("/api/showdown",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({a,b,keyword,gl:$("sdG").value,xa:xs[0]||"",xb:xs[1]||""})});
+if(window.gateCheck&&!(await window.gateCheck(r)))return;const j=await r.json();if(!r.ok){msg(j.error||"Try again.");return;}location.href="/showdown/"+j.id;}
+catch{msg("Try again.");}finally{$("sdGo").disabled=false;$("sdGo").textContent="Start the showdown";}};
+window.withAccount?window.withAccount(go,"Sign up to start a showdown","Free account first. Showdowns are part of Pro: 2 a month, checked on Google every day.","/showdowns#new"):go();});})();</script>`;
 }
 async function adminHtml(env) {
   await tables(env);
@@ -4201,7 +4361,8 @@ var USAGE = [
   ["gen:robots", "gen", "Robots.txt generator"],
   ["gen:schema", "gen", "Schema generator"],
   ["gen:llms", "gen", "llms.txt generator"],
-  ["hunts", "hunts", "Prospect hunts"]
+  ["hunts", "hunts", "Prospect hunts"],
+  ["showdowns", "showdowns", "Showdowns"]
 ], COUNTRY = { us: "United States", ca: "Canada", gb: "United Kingdom", au: "Australia", nz: "New Zealand", ie: "Ireland" };
 async function dashboardData(env, m) {
   let plan = planOf(m), L = LIMITS[plan];
@@ -4746,6 +4907,67 @@ var worker_default = {
       let key = u.searchParams.get("key") || "", m = env.DB && await env.DB.prepare("SELECT key FROM members WHERE key=?1 AND active=1").bind(key).first();
       return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fights", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
     }
+    if (p === "/showdowns")
+      return await sdEnsureOpener(env), infoPage(env, {
+        path: p,
+        cache: "public, max-age=120",
+        title: "SEO Showdown: 2 sites, 1 keyword, 14 days \xB7 SEO Fights",
+        desc: "Two websites fight for one Google keyword for 14 days. We check the rank every day, in public. Pick a winner.",
+        h1: 'SEO <span class="r">Showdown</span>',
+        lede: `2 sites. 1 keyword. ${SD_DAYS} days. Google decides. Everything public.`,
+        body: sdIndex(await sdList(env, "live"), await sdList(env, "done", 12))
+      });
+    if (p.startsWith("/showdown/")) {
+      let sd = await sdGet(env, decodeURIComponent(p.slice(10)));
+      if (!sd) return infoPage(env, { path: p, status: 404, noindex: !0, title: "Showdown not found \xB7 SEO Fights", h1: "Not found", lede: "This showdown doesn't exist.", body: '<p><a class="btn fight" href="/showdowns">See live showdowns</a></p>' });
+      ctx.waitUntil(env.DB.prepare("UPDATE showdowns SET views=views+1 WHERE id=?1").bind(sd.id).run());
+      let A = sdName(sd.a), B2 = sdName(sd.b);
+      return infoPage(env, {
+        path: p,
+        cache: "public, max-age=300",
+        title: `${A} vs ${B2} for "${sd.keyword}": SEO Showdown \xB7 SEO Fights`,
+        desc: `${A} vs ${B2}: who ranks higher on Google for "${sd.keyword}" after ${SD_DAYS} days? Daily ranks, in public.`,
+        h1: `<span class="r">${esc2(A)}</span> vs <span class="b">${esc2(B2)}</span>`,
+        lede: `Who ranks higher on Google for \u201C${esc2(sd.keyword)}\u201D after ${SD_DAYS} days?`,
+        body: sdPage(sd)
+      });
+    }
+    if (p === "/api/showdowns")
+      return json({ live: (await sdList(env, "live", Math.min(12, parseInt(u.searchParams.get("n") || "3", 10) || 3))).map((s) => ({ id: s.id, a: s.a, b: s.b, keyword: s.keyword, day: sdDay(s), a_now: s.a_now, b_now: s.b_now })) }, 200, { "cache-control": "public, max-age=120" });
+    if (p === "/api/showdown" && req.method === "POST") {
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      let body;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "Bad request" }, 400);
+      }
+      let plan = planOf(m);
+      if (!LIMITS[plan].showdowns[0]) return json({ error: "Showdowns are part of Pro: 2 a month, checked on Google every day." }, 402);
+      if (!await canUse(env, m.key, "showdowns", plan)) return OUT(plan, "showdowns");
+      if (!env.SERPER_KEY) return json({ error: "Showdowns aren't available right now. Try again soon." }, 503);
+      try {
+        let r = await sdCreate(env, { ...body, by: m.key });
+        return r.existed || ctx.waitUntil(spend(env, m.key, "showdowns", plan)), json({ id: r.id, existed: r.existed });
+      } catch (e) {
+        return json({ error: e && e.message || "Enter two valid websites and a keyword." }, 400);
+      }
+    }
+    if (p === "/api/showdown/vote" && req.method === "POST") {
+      let body;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "Bad request" }, 400);
+      }
+      let id = String(body.id || ""), side = body.side === "a" ? "a" : body.side === "b" ? "b" : null;
+      if (!id || !side || !env.DB) return json({ error: "Bad request" }, 400);
+      let k = `sv:${id}:${ipOf(req)}`;
+      await env.LIMITS.get(k) || (await env.DB.prepare(`UPDATE showdowns SET votes_${side} = COALESCE(votes_${side}, 0) + 1 WHERE id=?1 AND status='live'`).bind(id).run(), ctx.waitUntil(Promise.all([env.LIMITS.put(k, side, { expirationTtl: 30 * 86400 }), logEv(env, "showdown_vote", null, `${id}:${side}`)])));
+      let row = await env.DB.prepare("SELECT COALESCE(votes_a,0) AS votes_a, COALESCE(votes_b,0) AS votes_b FROM showdowns WHERE id=?1").bind(id).first();
+      return json(row || { votes_a: 0, votes_b: 0 });
+    }
     if (p === "/admin") {
       let m = await member(req, env);
       return !m || m.plan !== "owner" ? new Response("Not found", { status: 404 }) : infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Stats \xB7 SEO Fights", h1: 'Your <span class="r">stats</span>', lede: "Owner only. Times are Vancouver time.", body: await adminHtml(env) });
@@ -4974,7 +5196,7 @@ var worker_default = {
         posts = env.DB ? (await env.DB.prepare("SELECT slug, at FROM posts WHERE fight IS NULL OR fight NOT IN (SELECT slug FROM hidden_fights) ORDER BY at DESC LIMIT 5000").all()).results : [];
       } catch {
       }
-      let urls = ["/", "/pricing", "/fights", ...Object.keys(TOOL_PAGES), "/about", "/blog", ...POSTS.map((x) => "/blog/" + x.slug), "/tools-like", ...Object.keys(ALT_PAGES), "/contact", "/remove", "/terms", "/privacy", "/cookie-policy"].map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(posts.map((r) => `<url><loc>${SITE}/blog/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.at).toISOString().slice(0, 10)}</lastmod></url>`)).concat(rows.map((r) => `<url><loc>${SITE}/fight/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`));
+      let urls = ["/", "/pricing", "/fights", ...Object.keys(TOOL_PAGES), "/about", "/blog", ...POSTS.map((x) => "/blog/" + x.slug), "/tools-like", ...Object.keys(ALT_PAGES), "/contact", "/remove", "/terms", "/privacy", "/cookie-policy"].map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(posts.map((r) => `<url><loc>${SITE}/blog/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.at).toISOString().slice(0, 10)}</lastmod></url>`)).concat(rows.map((r) => `<url><loc>${SITE}/fight/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`)).concat([`<url><loc>${SITE}/showdowns</loc></url>`]).concat(env.DB ? (await env.DB.prepare("SELECT id, start FROM showdowns ORDER BY start DESC LIMIT 2000").all().catch(() => ({ results: [] }))).results.map((r) => `<url><loc>${SITE}/showdown/${encodeURIComponent(r.id)}</loc><lastmod>${new Date(r.start).toISOString().slice(0, 10)}</lastmod></url>`) : []);
       return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join("")}</urlset>`, { headers: { "content-type": "application/xml" } });
     }
     return p === "/robots.txt" ? new Response(`User-agent: *
@@ -4993,6 +5215,7 @@ Sitemap: ${SITE}/sitemap.xml
 - [Keyword Battle](${SITE}/keywords-battle): who ranks higher on Google for 10 keywords
 - [Free SEO tools](${SITE}/tools): broken link checker, robots.txt, schema and llms.txt generators
 - [Biggest fights](${SITE}/fights): most-watched brand vs brand results
+- [SEO Showdown](${SITE}/showdowns): two sites, one keyword, 14 days of daily Google ranks
 - [Blog](${SITE}/blog): plain guides to beating competitors on SEO
 - [About](${SITE}/about): built in public by ${X_URL}
 
@@ -5012,6 +5235,10 @@ Free: 1 fight per week. Pro: $19/month. Agency: $99/month. Lifetime: founder pri
       }
       try {
         await autoBlog(env);
+      } catch {
+      }
+      try {
+        await sdDaily(env);
       } catch {
       }
     })());
