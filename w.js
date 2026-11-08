@@ -563,6 +563,12 @@ html[data-view=fight]:not([data-revealed]) #sealed, html[data-view=fight]:not([d
 .pick:hover { transform: scale(1.03) } .pick:active { transform: scale(.98) }
 .pvs { font: 900 30px/1 var(--f-display); color: var(--muted) }
 .gate-note { color: var(--muted); margin: 20px 0 8px }
+.unlock h2 { margin-bottom: 6px }
+.unlock-row { display: flex; gap: 10px; max-width: 560px; margin: 18px auto 10px }
+.unlock-row input { flex: 1; min-width: 0; border: 0; border-radius: 16px; padding: 18px; background: var(--bg); color: var(--ink); font: 500 18px var(--f-body); box-shadow: inset 0 0 0 1px var(--line) }
+.unlock-row .btn { padding: 18px 28px; font-size: 24px; border-radius: 16px }
+.fine { color: var(--muted); font-size: 13px; margin: 0 }
+@media (max-width: 560px) { .unlock-row { flex-direction: column } }
 @media (max-width: 560px) { .picks { grid-template-columns: 1fr } }
 .verdict { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; justify-content: center; text-align: center; padding: 16px 20px; border-radius: 18px; margin-bottom: 22px }
 .verdict b { font: 900 30px/1 var(--f-display); text-transform: uppercase }
@@ -624,8 +630,16 @@ footer a { color: inherit }
       <h2 class="display">Pick your champion</h2>
       <div class="picks"><button type="button" class="pick a" data-side="a" id="pickA"></button><span class="pvs">VS</span><button type="button" class="pick b" data-side="b" id="pickB"></button></div>
       <p class="gate-note" id="gateNote">Tap one to lock in your pick. Then see all 31 checks.</p>
-      <button type="button" class="linkbtn" id="skipGate">Just show me the result</button>
+      <button type="button" class="linkbtn" id="skipGate">Skip the pick</button>
     </div>
+
+    <form class="gate unlock" id="unlock" hidden novalidate>
+      <span class="eyebrow" id="unlockEyebrow">Result is ready</span>
+      <h2 class="display">See who won</h2>
+      <p class="gate-note" id="unlockNote">Sign up free to unlock this fight and every fight after it.</p>
+      <div class="unlock-row"><input id="unlockEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn fight" type="submit" id="unlockBtn">Show me</button></div>
+      <p class="fine">Free forever. We only email you about your fights.</p>
+    </form>
 
     <div class="sealed-wrap" id="sealed">
       <div class="verdict" id="verdict" hidden></div>
@@ -928,7 +942,7 @@ if (VIEW === "home") {
 /* ---------- fight page: pick, then reveal ---------- */
 function reveal(pick, votes) {
   document.documentElement.dataset.revealed = "1";
-  $("#gate").hidden = true;
+  $("#gate").hidden = true; $("#unlock").hidden = true;
   render(D, true, true);
   const sum = document.querySelector(".seo-sum"); if (sum) sum.hidden = false;
   if (pick === "a" || pick === "b") {
@@ -942,19 +956,39 @@ function reveal(pick, votes) {
   }
   document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
+const fan = () => store.get("fan");
+let pendingPick = null, pendingVotes = null;
+function needUnlock(pick, votes) {
+  if (fan()) { reveal(pick, votes); return; }
+  pendingPick = pick; pendingVotes = votes;
+  $("#gate").hidden = true; $("#unlock").hidden = false;
+  $("#unlockEyebrow").textContent = pick === "a" || pick === "b" ? \`You picked \${D[pick].host}\` : "Result is ready";
+  setTimeout(() => $("#unlockEmail").focus(), 60);
+}
+$("#unlock").addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = $("#unlockEmail").value.trim();
+  if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) { toast("Enter a valid email to see the result"); return; }
+  $("#unlockBtn").disabled = true; $("#unlockBtn").textContent = "Unlocking\u2026";
+  try { await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, plan: "fan", fight: D.slug, info: { pick: pendingPick || "" } }) }); } catch {}
+  store.set("fan", email);
+  $("#unlock").hidden = true;
+  reveal(pendingPick, pendingVotes);
+});
 if (VIEW === "fight") {
   $("#pickA").textContent = D.a.host; $("#pickB").textContent = D.b.host;
   const saved = store.get("pick:" + D.slug);
-  if (new URLSearchParams(location.search).get("r") === "1" || saved) { reveal(saved === "a" || saved === "b" ? saved : null); }
+  const own = new URLSearchParams(location.search).get("r") === "1";
+  if (own || saved) needUnlock(saved === "a" || saved === "b" ? saved : null);
   else {
     $("#gate").hidden = false;
     document.querySelectorAll(".pick").forEach(btn => btn.addEventListener("click", async () => {
       const side = btn.dataset.side; store.set("pick:" + D.slug, side);
       let votes = null;
       try { const r = await fetch("/api/vote", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ slug: D.slug, side }) }); if (r.ok) votes = await r.json(); } catch {}
-      reveal(side, votes);
+      needUnlock(side, votes);
     }));
-    $("#skipGate").addEventListener("click", () => { store.set("pick:" + D.slug, "skip"); reveal(null); });
+    $("#skipGate").addEventListener("click", () => { store.set("pick:" + D.slug, "skip"); needUnlock(null); });
   }
 }
 
@@ -1299,6 +1333,12 @@ html[data-view=fight]:not([data-revealed]) #sealed, html[data-view=fight]:not([d
 .pick:hover { transform: scale(1.03) } .pick:active { transform: scale(.98) }
 .pvs { font: 900 30px/1 var(--f-display); color: var(--muted) }
 .gate-note { color: var(--muted); margin: 20px 0 8px }
+.unlock h2 { margin-bottom: 6px }
+.unlock-row { display: flex; gap: 10px; max-width: 560px; margin: 18px auto 10px }
+.unlock-row input { flex: 1; min-width: 0; border: 0; border-radius: 16px; padding: 18px; background: var(--bg); color: var(--ink); font: 500 18px var(--f-body); box-shadow: inset 0 0 0 1px var(--line) }
+.unlock-row .btn { padding: 18px 28px; font-size: 24px; border-radius: 16px }
+.fine { color: var(--muted); font-size: 13px; margin: 0 }
+@media (max-width: 560px) { .unlock-row { flex-direction: column } }
 @media (max-width: 560px) { .picks { grid-template-columns: 1fr } }
 .verdict { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; justify-content: center; text-align: center; padding: 16px 20px; border-radius: 18px; margin-bottom: 22px }
 .verdict b { font: 900 30px/1 var(--f-display); text-transform: uppercase }
