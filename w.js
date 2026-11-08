@@ -535,7 +535,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 /* ---- views ---- */
 html[data-view=home] #fight, html[data-view=home] .seo-sum { display: none }
-html[data-view=fight] #maincard { display: none }
+html[data-view=fight] #maincard, html[data-view=fight] #night, html[data-view=fight] #tonight, html[data-view=fight] #testYours { display: none }
 html[data-view=fight]:not([data-revealed]) #sealed, html[data-view=fight]:not([data-revealed]) .seo-sum { display: none }
 /* ---- main card posters ---- */
 .cat-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px }
@@ -593,6 +593,29 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.tonight { display: inline-grid; justify-items: center; gap: 6px; margin: 22px auto 4px; padding: 16px 26px; border-radius: 24px; background: #0b0d13; color: #fff; text-decoration: none; box-shadow: 0 20px 60px rgba(11,13,19,.25); outline: 2px solid #f2c14e; outline-offset: -2px }
+.tonight .tn-tag { font: 700 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #f2c14e }
+.tonight .tn-m { font: 800 clamp(30px, 6vw, 52px)/1 var(--f-display); text-transform: uppercase; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; justify-content: center }
+.tonight .tn-m .r { color: #ff3b4e } .tonight .tn-m .b { color: #5b82ff } .tonight .tn-m i { font-style: normal; font-size: .45em; color: rgba(255,255,255,.55) }
+.tonight .tn-go { font-size: 13px; color: rgba(255,255,255,.7) }
+.test-yours { margin: 26px 0 0; font: 800 clamp(20px, 3vw, 26px)/1.1 var(--f-display); text-transform: uppercase; color: var(--ink) }
+.test-yours + .ring { margin-top: 14px; outline: 3px solid transparent; box-shadow: 0 0 0 3px rgba(224,38,58,.18), 0 24px 70px rgba(36,87,245,.18) }
+#night { padding-block: 8px 24px }
+.night-card { background: #0b0d13; color: #fff; border-radius: 28px; padding: 22px; display: grid; gap: 18px; outline: 2px solid #f2c14e; outline-offset: -2px }
+.nc-head { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font: 700 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase } .nc-tag { color: #f2c14e } .nc-votes { color: rgba(255,255,255,.55) }
+.nc-tape { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; text-align: center }
+.nc-f { display: grid; gap: 4px; opacity: .75 } .nc-f.won { opacity: 1 }
+.nc-host { font: 800 clamp(22px, 4vw, 34px)/1 var(--f-display); text-transform: uppercase }
+.nc-f.a .nc-host, .nc-f.a .nc-score { color: #ff3b4e } .nc-f.b .nc-host, .nc-f.b .nc-score { color: #5b82ff }
+.nc-score { font: 800 clamp(56px, 10vw, 96px)/1 var(--f-display) } .nc-belt { font: 700 12px/1 var(--f-mono); color: #f2c14e; letter-spacing: .1em; text-transform: uppercase; min-height: 12px }
+.nc-vs { font: 800 20px var(--f-display); color: rgba(255,255,255,.4) }
+.nc-rounds { display: grid; gap: 8px }
+.nr { display: grid; grid-template-columns: 34px 1fr 96px 1fr 34px; gap: 10px; align-items: center; font-size: 13px }
+.nr .v { font-weight: 700; color: rgba(255,255,255,.55); text-align: center } .nr .v.w { color: #fff } .nr .nm { text-align: center; color: rgba(255,255,255,.7); font: 600 11px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .08em }
+.nr .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; display: flex } .nr .bar.a { justify-content: flex-end } .nr .bar i { display: block; height: 100%; border-radius: 99px } .nr .bar.a i { background: #ff3b4e } .nr .bar.b i { background: #5b82ff }
+.nc-cta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center } .night-card .btn.ghost { color: #fff; border-color: rgba(255,255,255,.3); background: transparent }
+@media (max-width: 640px) { .nr { grid-template-columns: 26px 1fr 70px 1fr 26px; gap: 6px } }
+
 .upsell { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 26px }
 .upsell .up { position: relative; padding-top: 30px; border: 2px solid transparent; display: grid; align-content: start; gap: 12px } .upsell .up .sub { margin: 0 } .upsell .up .btn { justify-self: start } .upsell .badge-prev img { width: 280px; height: 72px }
 .upsell .up.fixit { border-color: var(--red, #e0263a); box-shadow: 0 18px 50px rgba(224,38,58,.18) }
@@ -604,6 +627,7 @@ footer a { color: inherit }
 @media (max-width: 760px) { .upsell { grid-template-columns: 1fr } }
 .price .pill.gold { background: #f2c14e; color: #0b0d13; left: auto; right: 22px }
 
+.btn.google { display: inline-flex; gap: 10px; align-items: center; justify-content: center; background: #fff; color: #1f1f1f; border: 1px solid #dadce0; font-weight: 600 } .gate .btn.google { margin-top: 10px }
 .poster.night { outline: 3px solid #f2c14e; outline-offset: -3px } .poster.night .pc-cat { background: #f2c14e; color: #0b0d13 }
 footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 24px }
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
@@ -633,7 +657,9 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
   <div class="wrap hero">
     <span class="live"><b></b>Live SEO fights \xB7 Google + AI</span>
     <h1 class="display">__H1__</h1>
+    <a class="tonight" id="tonight" href="#night" hidden><span class="tn-tag">\u{1F319} Rivalry of the Night</span><span class="tn-m"><b class="r" id="tnA"></b><i>vs</i><b class="b" id="tnB"></b></span><span class="tn-go">See who wins \u2193</span></a>
     <p class="lede">__LEDE__</p>
+    <p class="test-yours" id="testYours">\u26A1 Now test yours. Your site vs your rival.</p>
     <form class="ring" id="duelForm" novalidate>
       <div class="corner red"><label for="a">Red corner \xB7 You</label><input id="a" name="a" inputmode="url" autocomplete="off" placeholder="yoursite.com" value="__A__"></div>
       <div class="vs" aria-hidden="true">VS</div>
@@ -646,8 +672,21 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
     <div class="proof"><span>31 ranking signals</span><span>Real page data, not estimates</span><span>Google + AI-ready checks</span></div>
   </div>
 
+  <section id="night" hidden><div class="wrap">
+    <div class="night-card">
+      <div class="nc-head"><span class="nc-tag">\u{1F319} Rivalry of the Night \xB7 free result</span><span class="nc-votes" id="ncVotes"></span></div>
+      <div class="nc-tape">
+        <div class="nc-f a"><span class="nc-host" id="ncA"></span><span class="nc-score" id="ncSA"></span><span class="nc-belt" id="ncBA"></span></div>
+        <div class="nc-vs">VS</div>
+        <div class="nc-f b"><span class="nc-host" id="ncB"></span><span class="nc-score" id="ncSB"></span><span class="nc-belt" id="ncBB"></span></div>
+      </div>
+      <div class="nc-rounds" id="ncRounds"></div>
+      <div class="nc-cta"><a class="btn fight" id="ncMine" href="#top">Can your site beat them?</a><a class="btn ghost" id="ncFull" href="#">See all 31 checks</a></div>
+    </div>
+  </div></section>
+
   <section id="maincard"><div class="wrap">
-    <div class="sec-head"><h2 class="display" id="mcTitle">Tonight's main card</h2><span class="tag">Results hidden \xB7 tap to reveal</span></div>
+    <div class="sec-head"><h2 class="display" id="mcTitle">More rivalries</h2><span class="tag">Sign in to see who wins</span></div>
     <div class="cat-chips" id="catChips"></div>
     <div class="cards" id="cards"></div>
     <p class="more" id="mcMore"><a class="btn ghost" href="/fights">See every fight</a></p>
@@ -667,6 +706,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
       <h2 class="display">See who won</h2>
       <p class="gate-note" id="unlockNote">Sign up free to unlock this fight and every fight after it.</p>
       <div class="unlock-row"><input id="unlockEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn fight" type="submit" id="unlockBtn">Show me</button></div>
+      <a class="btn google" id="unlockGoogle" href="/auth/google" hidden><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2 5-4.4 6.6v5.5h7.1c4.1-3.8 6.5-9.4 6.5-16.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.4l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9H4.5v5.7C8.1 41.1 15.5 46 24 46z"/><path fill="#FBBC05" d="M11.8 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2v-5.7H4.5C3 17.1 2 20.4 2 24s1 6.9 2.5 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.8c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.2 29.9 2 24 2 15.5 2 8.1 6.9 4.5 14.1l7.3 5.7c1.7-5.2 6.5-9 12.2-9z"/></svg>Continue with Google</a>
       <p class="fine">Free account. No password, no card. By signing up you agree to the <a href="/terms">Terms</a>.</p>
     </form>
 
@@ -821,6 +861,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
     <span class="eyebrow" id="suEyebrow">Free account</span>
     <h3 class="display" id="suTitle">Sign up to use this</h3>
     <p id="suText">Takes 5 seconds. No password, no card.</p>
+    <a class="btn google" id="suGoogle" href="/auth/google" hidden><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2 5-4.4 6.6v5.5h7.1c4.1-3.8 6.5-9.4 6.5-16.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.4l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9H4.5v5.7C8.1 41.1 15.5 46 24 46z"/><path fill="#FBBC05" d="M11.8 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2v-5.7H4.5C3 17.1 2 20.4 2 24s1 6.9 2.5 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.8c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.2 29.9 2 24 2 15.5 2 8.1 6.9 4.5 14.1l7.3 5.7c1.7-5.2 6.5-9 12.2-9z"/></svg>Continue with Google</a>
     <div id="suFields"><input id="suEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"></div>
     <button class="btn fight" type="submit" id="suBtn">Create free account</button>
     <a class="btn fight" id="suPro" href="/go/pro" hidden>Go Pro \xB7 $19/month</a>
@@ -831,21 +872,23 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 <script>
 (() => {
   const q = s => document.querySelector(s);
-  window.ME = null;
-  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => (window.ME = j && j.plan ? j : null)).catch(() => null);
-  let next = null;
+  window.ME = null; window.AUTH = {};
+  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
+  let next = null, nextUrl = null;
   const open = (mode, title, text) => {
     const pay = mode === "pay";
     q("#suEyebrow").textContent = pay ? "Out of free tries" : "Free account";
     q("#suTitle").textContent = title; q("#suText").textContent = text;
     q("#suFields").hidden = pay; q("#suBtn").hidden = pay; q("#suFine").hidden = pay; q("#suPro").hidden = !pay;
+    const g = q("#suGoogle"); g.hidden = pay || !(window.AUTH && window.AUTH.google); g.href = "/auth/google?next=" + encodeURIComponent(nextUrl || location.pathname + location.search);
+    q("#suBtn").textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account";
     q("#suModal").hidden = false; if (!pay) setTimeout(() => q("#suEmail").focus(), 50);
   };
   // Run \`fn\` only for signed-in people; everyone else gets the sign-up box first.
-  window.withAccount = async (fn, title, text) => {
+  window.withAccount = async (fn, title, text, url) => {
     await window.meReady;
     if (window.ME) { fn && fn(); return; }
-    next = fn; open("signup", title || "Sign up to use this", text || "Free account: see every fight result, 1 fight a week and 1 try of each tool a week. Takes 5 seconds.");
+    next = fn; nextUrl = url || null; open("signup", title || "Sign up to use this", text || "Free account: see every fight result, 1 fight a week and 1 try of each tool a week. Takes 5 seconds.");
   };
   // Free tries used up: push to Pro.
   window.paywall = (msg) => open("pay", "Go Pro to keep going", msg || "You've used your free tries this week. Pro gives you 40 fights a month and every tool.");
@@ -863,13 +906,14 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
     if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) { q("#suText").textContent = "Enter a valid email."; return; }
     btn.disabled = true; btn.textContent = "Creating\u2026";
     try {
-      const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
+      const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, next: nextUrl || location.pathname + location.search }) });
       const j = await r.json();
       if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
+      if (j.sent) { q("#suEyebrow").textContent = "Almost there"; q("#suTitle").textContent = "Check your inbox \u{1F4EC}"; q("#suText").textContent = \`We sent a sign-in link to \${email}. Tap it and you're in.\`; q("#suFields").hidden = true; q("#suBtn").hidden = true; q("#suGoogle").hidden = true; return; }
       window.ME = j; try { localStorage.setItem("fan", email); } catch {}
       q("#suModal").hidden = true; const f = next; next = null; f && f();
     } catch { q("#suText").textContent = "Try again."; }
-    finally { btn.disabled = false; btn.textContent = "Create free account"; }
+    finally { btn.disabled = false; btn.textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account"; }
   });
 })();
 </script>
@@ -885,7 +929,7 @@ const NEW_IDS = new Set(["aibots","llms","entity","faq","ttfb","size","compress"
 let D = DEMO;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
-const FOTN = "__FOTN__";
+const FOTN = "__FOTN__", NIGHT = __NIGHT__;
 function personalizeUpsell(pick) {
   const own = store.get("pick:" + D.slug) === "own" || new URLSearchParams(location.search).get("r") === "1";
   const fix = $("#upFix"), belt = $("#upBadge");
@@ -1056,12 +1100,12 @@ $("#rivalBtn").addEventListener("click", async () => {
 
 /* ---------- main card ---------- */
 function renderCards(cat) {
-  const list = CARDS.filter(c => !cat || c.category === cat).sort((x, y) => (y.slug === FOTN) - (x.slug === FOTN));
+  const list = CARDS.filter(c => (!cat || c.category === cat) && !(NIGHT && location.pathname === "/" && c.slug === NIGHT.slug)).sort((x, y) => (y.slug === FOTN) - (x.slug === FOTN));
   $("#cards").innerHTML = list.map(c => {
     const picks = (c.votes_a || 0) + (c.votes_b || 0);
     const night = c.slug === FOTN;
     return \`<a class="poster\${night ? " night" : ""}" href="/fight/\${encodeURIComponent(c.slug)}">
-      <span class="pc-cat">\${night ? "\u{1F319} Fight of the Night \xB7 free" : esc(c.category || "Featured")}</span>
+      <span class="pc-cat">\${night ? "\u{1F319} Rivalry of the Night \xB7 free" : esc(c.category || "Featured")}</span>
       <span class="pc-a">\${esc(pretty(c.a))}</span>
       <span class="pc-vs">VS</span>
       <span class="pc-b">\${esc(pretty(c.b))}</span>
@@ -1069,6 +1113,30 @@ function renderCards(cat) {
     </a>\`;
   }).join("") || \`<p class="sub">No fights here yet.</p>\`;
 }
+function renderNight() {
+  if (!NIGHT || VIEW !== "home" || location.pathname !== "/") return;
+  const A = brandName(NIGHT.a.host), B = brandName(NIGHT.b.host), W = NIGHT.winner;
+  $("#tnA").textContent = A; $("#tnB").textContent = B; $("#tonight").hidden = false;
+  $("#ncA").textContent = A; $("#ncB").textContent = B;
+  $("#ncSA").textContent = NIGHT.a.score; $("#ncSB").textContent = NIGHT.b.score;
+  $("#ncBA").textContent = W === "a" ? "\u2605 Winner" : ""; $("#ncBB").textContent = W === "b" ? "\u2605 Winner" : "";
+  document.querySelector(".nc-f.a").classList.toggle("won", W === "a"); document.querySelector(".nc-f.b").classList.toggle("won", W === "b");
+  const votes = (NIGHT.votes_a || 0) + (NIGHT.votes_b || 0); $("#ncVotes").textContent = votes ? votes.toLocaleString() + (votes === 1 ? " fan picked" : " fans picked") : "";
+  $("#ncRounds").innerHTML = CATS.map(([k, , name]) => { const x = NIGHT.a.scores[k], y = NIGHT.b.scores[k];
+    return \`<div class="nr"><span class="v \${x >= y ? "w" : ""}">\${x}</span><div class="bar a"><i style="width:\${x}%"></i></div><span class="nm">\${name}</span><div class="bar b"><i style="width:\${y}%"></i></div><span class="v \${y >= x ? "w" : ""}">\${y}</span></div>\`; }).join("");
+  const champ = W ? NIGHT[W].host : NIGHT.b.host;
+  $("#ncMine").textContent = \`Can your site beat \${brandName(champ)}?\`;
+  $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = ""; $("#top").scrollIntoView({ behavior: "smooth" }); setTimeout(() => $("#a").focus(), 500); });
+  $("#ncFull").href = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
+  $("#night").hidden = false;
+}
+renderNight();
+// Every other result needs an account: tapping a poster opens sign-in first.
+document.addEventListener("click", async e => {
+  const a = e.target.closest("a.poster"); if (!a || a.classList.contains("night")) return;
+  e.preventDefault(); const href = a.getAttribute("href");
+  withAccount(() => { location.href = href; }, "Sign in to see who wins", "Free account. See every fight result, run 1 fight a week, try every tool.", href);
+});
 if (VIEW === "home") {
   const cats = [...new Set(CARDS.map(c => c.category).filter(Boolean))];
   $("#catChips").innerHTML = [\`<button type="button" class="chip on" data-c="">All</button>\`, ...cats.map(c => \`<button type="button" class="chip" data-c="\${esc(c)}">\${esc(c)}</button>\`)].join("");
@@ -1107,6 +1175,7 @@ async function fullFight() { // locked pages only carry the names; fetch the res
 }
 async function needUnlock(pick, votes) {
   await meReady;
+  if (window.AUTH && AUTH.google) { const g = $("#unlockGoogle"); g.href = "/auth/google?next=" + encodeURIComponent(location.pathname); g.hidden = false; }
   if (ME || D.slug === FOTN) { if (await fullFight()) reveal(pick, votes); return; }
   pendingPick = pick; pendingVotes = votes;
   $("#gate").hidden = true; $("#unlock").hidden = false;
@@ -1119,9 +1188,10 @@ $("#unlock").addEventListener("submit", async e => {
   if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) { toast("Enter a valid email to see the result"); return; }
   $("#unlockBtn").disabled = true; $("#unlockBtn").textContent = "Unlocking\u2026";
   try {
-    const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
+    const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, next: location.pathname }) });
     const j = await r.json();
     if (!r.ok) { toast(j.error || "Try again"); $("#unlockBtn").disabled = false; $("#unlockBtn").textContent = "Show me"; return; }
+    if (j.sent) { $("#unlock").innerHTML = \`<span class="eyebrow">Almost there</span><h2 class="display">Check your inbox \u{1F4EC}</h2><p class="gate-note">We sent a sign-in link to \${esc(email)}. Tap it and this result opens.</p>\`; return; }
     window.ME = j;
   } catch { toast("Try again"); $("#unlockBtn").disabled = false; $("#unlockBtn").textContent = "Show me"; return; }
   store.set("fan", email);
@@ -1458,7 +1528,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 /* ---- views ---- */
 html[data-view=home] #fight, html[data-view=home] .seo-sum { display: none }
-html[data-view=fight] #maincard { display: none }
+html[data-view=fight] #maincard, html[data-view=fight] #night, html[data-view=fight] #tonight, html[data-view=fight] #testYours { display: none }
 html[data-view=fight]:not([data-revealed]) #sealed, html[data-view=fight]:not([data-revealed]) .seo-sum { display: none }
 /* ---- main card posters ---- */
 .cat-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px }
@@ -1516,6 +1586,29 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.tonight { display: inline-grid; justify-items: center; gap: 6px; margin: 22px auto 4px; padding: 16px 26px; border-radius: 24px; background: #0b0d13; color: #fff; text-decoration: none; box-shadow: 0 20px 60px rgba(11,13,19,.25); outline: 2px solid #f2c14e; outline-offset: -2px }
+.tonight .tn-tag { font: 700 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #f2c14e }
+.tonight .tn-m { font: 800 clamp(30px, 6vw, 52px)/1 var(--f-display); text-transform: uppercase; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; justify-content: center }
+.tonight .tn-m .r { color: #ff3b4e } .tonight .tn-m .b { color: #5b82ff } .tonight .tn-m i { font-style: normal; font-size: .45em; color: rgba(255,255,255,.55) }
+.tonight .tn-go { font-size: 13px; color: rgba(255,255,255,.7) }
+.test-yours { margin: 26px 0 0; font: 800 clamp(20px, 3vw, 26px)/1.1 var(--f-display); text-transform: uppercase; color: var(--ink) }
+.test-yours + .ring { margin-top: 14px; outline: 3px solid transparent; box-shadow: 0 0 0 3px rgba(224,38,58,.18), 0 24px 70px rgba(36,87,245,.18) }
+#night { padding-block: 8px 24px }
+.night-card { background: #0b0d13; color: #fff; border-radius: 28px; padding: 22px; display: grid; gap: 18px; outline: 2px solid #f2c14e; outline-offset: -2px }
+.nc-head { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font: 700 12px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase } .nc-tag { color: #f2c14e } .nc-votes { color: rgba(255,255,255,.55) }
+.nc-tape { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; text-align: center }
+.nc-f { display: grid; gap: 4px; opacity: .75 } .nc-f.won { opacity: 1 }
+.nc-host { font: 800 clamp(22px, 4vw, 34px)/1 var(--f-display); text-transform: uppercase }
+.nc-f.a .nc-host, .nc-f.a .nc-score { color: #ff3b4e } .nc-f.b .nc-host, .nc-f.b .nc-score { color: #5b82ff }
+.nc-score { font: 800 clamp(56px, 10vw, 96px)/1 var(--f-display) } .nc-belt { font: 700 12px/1 var(--f-mono); color: #f2c14e; letter-spacing: .1em; text-transform: uppercase; min-height: 12px }
+.nc-vs { font: 800 20px var(--f-display); color: rgba(255,255,255,.4) }
+.nc-rounds { display: grid; gap: 8px }
+.nr { display: grid; grid-template-columns: 34px 1fr 96px 1fr 34px; gap: 10px; align-items: center; font-size: 13px }
+.nr .v { font-weight: 700; color: rgba(255,255,255,.55); text-align: center } .nr .v.w { color: #fff } .nr .nm { text-align: center; color: rgba(255,255,255,.7); font: 600 11px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .08em }
+.nr .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; display: flex } .nr .bar.a { justify-content: flex-end } .nr .bar i { display: block; height: 100%; border-radius: 99px } .nr .bar.a i { background: #ff3b4e } .nr .bar.b i { background: #5b82ff }
+.nc-cta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center } .night-card .btn.ghost { color: #fff; border-color: rgba(255,255,255,.3); background: transparent }
+@media (max-width: 640px) { .nr { grid-template-columns: 26px 1fr 70px 1fr 26px; gap: 6px } }
+
 .upsell { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 26px }
 .upsell .up { position: relative; padding-top: 30px; border: 2px solid transparent; display: grid; align-content: start; gap: 12px } .upsell .up .sub { margin: 0 } .upsell .up .btn { justify-self: start } .upsell .badge-prev img { width: 280px; height: 72px }
 .upsell .up.fixit { border-color: var(--red, #e0263a); box-shadow: 0 18px 50px rgba(224,38,58,.18) }
@@ -1527,6 +1620,7 @@ footer a { color: inherit }
 @media (max-width: 760px) { .upsell { grid-template-columns: 1fr } }
 .price .pill.gold { background: #f2c14e; color: #0b0d13; left: auto; right: 22px }
 
+.btn.google { display: inline-flex; gap: 10px; align-items: center; justify-content: center; background: #fff; color: #1f1f1f; border: 1px solid #dadce0; font-weight: 600 } .gate .btn.google { margin-top: 10px }
 .poster.night { outline: 3px solid #f2c14e; outline-offset: -3px } .poster.night .pc-cat { background: #f2c14e; color: #0b0d13 }
 footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 24px }
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
@@ -1726,6 +1820,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
     <span class="eyebrow" id="suEyebrow">Free account</span>
     <h3 class="display" id="suTitle">Sign up to use this</h3>
     <p id="suText">Takes 5 seconds. No password, no card.</p>
+    <a class="btn google" id="suGoogle" href="/auth/google" hidden><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2 5-4.4 6.6v5.5h7.1c4.1-3.8 6.5-9.4 6.5-16.1z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.4l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9H4.5v5.7C8.1 41.1 15.5 46 24 46z"/><path fill="#FBBC05" d="M11.8 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2v-5.7H4.5C3 17.1 2 20.4 2 24s1 6.9 2.5 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.8c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.2 29.9 2 24 2 15.5 2 8.1 6.9 4.5 14.1l7.3 5.7c1.7-5.2 6.5-9 12.2-9z"/></svg>Continue with Google</a>
     <div id="suFields"><input id="suEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"></div>
     <button class="btn fight" type="submit" id="suBtn">Create free account</button>
     <a class="btn fight" id="suPro" href="/go/pro" hidden>Go Pro \xB7 $19/month</a>
@@ -1736,21 +1831,23 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
 <script>
 (() => {
   const q = s => document.querySelector(s);
-  window.ME = null;
-  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => (window.ME = j && j.plan ? j : null)).catch(() => null);
-  let next = null;
+  window.ME = null; window.AUTH = {};
+  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
+  let next = null, nextUrl = null;
   const open = (mode, title, text) => {
     const pay = mode === "pay";
     q("#suEyebrow").textContent = pay ? "Out of free tries" : "Free account";
     q("#suTitle").textContent = title; q("#suText").textContent = text;
     q("#suFields").hidden = pay; q("#suBtn").hidden = pay; q("#suFine").hidden = pay; q("#suPro").hidden = !pay;
+    const g = q("#suGoogle"); g.hidden = pay || !(window.AUTH && window.AUTH.google); g.href = "/auth/google?next=" + encodeURIComponent(nextUrl || location.pathname + location.search);
+    q("#suBtn").textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account";
     q("#suModal").hidden = false; if (!pay) setTimeout(() => q("#suEmail").focus(), 50);
   };
   // Run \`fn\` only for signed-in people; everyone else gets the sign-up box first.
-  window.withAccount = async (fn, title, text) => {
+  window.withAccount = async (fn, title, text, url) => {
     await window.meReady;
     if (window.ME) { fn && fn(); return; }
-    next = fn; open("signup", title || "Sign up to use this", text || "Free account: see every fight result, 1 fight a week and 1 try of each tool a week. Takes 5 seconds.");
+    next = fn; nextUrl = url || null; open("signup", title || "Sign up to use this", text || "Free account: see every fight result, 1 fight a week and 1 try of each tool a week. Takes 5 seconds.");
   };
   // Free tries used up: push to Pro.
   window.paywall = (msg) => open("pay", "Go Pro to keep going", msg || "You've used your free tries this week. Pro gives you 40 fights a month and every tool.");
@@ -1768,13 +1865,14 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
     if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) { q("#suText").textContent = "Enter a valid email."; return; }
     btn.disabled = true; btn.textContent = "Creating\u2026";
     try {
-      const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
+      const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, next: nextUrl || location.pathname + location.search }) });
       const j = await r.json();
       if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
+      if (j.sent) { q("#suEyebrow").textContent = "Almost there"; q("#suTitle").textContent = "Check your inbox \u{1F4EC}"; q("#suText").textContent = \`We sent a sign-in link to \${email}. Tap it and you're in.\`; q("#suFields").hidden = true; q("#suBtn").hidden = true; q("#suGoogle").hidden = true; return; }
       window.ME = j; try { localStorage.setItem("fan", email); } catch {}
       q("#suModal").hidden = true; const f = next; next = null; f && f();
     } catch { q("#suText").textContent = "Try again."; }
-    finally { btn.disabled = false; btn.textContent = "Create free account"; }
+    finally { btn.disabled = false; btn.textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account"; }
   });
 })();
 </script>
@@ -2205,13 +2303,32 @@ async function toolUse(env, req, what) {
   let k = `t:${what}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}:${ipOf(req)}`, n = parseInt(await env.LIMITS.get(k) || "0", 10);
   return n >= TOOL_LIMITS[what] ? !1 : (await env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }), !0);
 }
-var NEED_ACCOUNT = () => json({ error: "Sign up free to use this.", signup: !0 }, 401), OUT = (plan, what) => json({ error: plan === "free" ? `You've used your free ${what} this week. Go Pro to keep going.` : `You've hit this month's ${what} limit. It resets on the 1st.` }, 429), FOTN = "", FOTN_AT = 0;
+var rand = () => [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, "0")).join(""), safeNext = (n) => typeof n == "string" && n.startsWith("/") && !n.startsWith("//") ? n.slice(0, 300) : "/";
+async function loginEmail(env, email) {
+  let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
+  if (old && old.active) return old.key;
+  if (old)
+    return await env.DB.prepare("UPDATE members SET plan='free', active=1 WHERE email=?1").bind(email).run(), old.key;
+  let key = rand();
+  return await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), key;
+}
+var signedIn = (key, next, extra) => {
+  let h = new Headers({ location: next });
+  return h.append("set-cookie", cookieFor(key)), extra && h.append("set-cookie", extra), new Response(null, { status: 302, headers: h });
+}, NEED_ACCOUNT = () => json({ error: "Sign up free to use this.", signup: !0 }, 401), OUT = (plan, what) => json({ error: plan === "free" ? `You've used your free ${what} this week. Go Pro to keep going.` : `You've hit this month's ${what} limit. It resets on the 1st.` }, 429), FOTN = "", FOTN_AT = 0, HEADLINERS = ["apple.com-vs-samsung.com", "nike.com-vs-adidas.com", "coca-cola.com-vs-pepsi.com", "openai.com-vs-anthropic.com", "uber.com-vs-lyft.com", "netflix.com-vs-disneyplus.com", "amazon.com-vs-walmart.com", "playstation.com-vs-xbox.com", "instagram.com-vs-tiktok.com", "starbucks.com-vs-dunkindonuts.com", "airbnb.com-vs-vrbo.com", "tesla.com-vs-rivian.com", "dominos.com-vs-pizzahut.com", "spotify.com-vs-soundcloud.com", "google.com-vs-bing.com", "doordash.com-vs-ubereats.com", "shein.com-vs-temu.com", "duolingo.com-vs-babbel.com"];
+async function nightData(env) {
+  if (!FOTN) return null;
+  let f = await storedFight(env, FOTN);
+  if (!f) return null;
+  let d = f.d;
+  return { slug: d.slug, winner: d.winner, votes_a: d.votes_a, votes_b: d.votes_b, a: { host: d.a.host, score: d.a.score, scores: d.a.scores }, b: { host: d.b.host, score: d.b.score, scores: d.b.scores }, checks: (d.rows || []).length };
+}
 async function refreshFotn(env) {
   if (!(!env.DB || Date.now() - FOTN_AT < 6e5)) {
     FOTN_AT = Date.now();
     try {
-      let rows = (await env.DB.prepare("SELECT slug FROM fights WHERE category IS NOT NULL ORDER BY slug").all()).results;
-      rows.length && (FOTN = rows[Math.floor(Date.now() / 864e5) % rows.length].slug);
+      let have = new Set((await env.DB.prepare("SELECT slug FROM fights WHERE category IS NOT NULL").all()).results.map((r) => r.slug)), pool = HEADLINERS.filter((x) => have.has(x)), list = pool.length ? pool : [...have].sort();
+      list.length && (FOTN = list[Math.floor(Date.now() / 864e5) % list.length]);
     } catch {
     }
   }
@@ -2295,16 +2412,17 @@ function page(env, o) {
     __CARDS__: JSON.stringify(o.cards || []).replace(/</g, "\\u003c"),
     __SUMMARY__: o.summary || "",
     __FOTN__: esc(FOTN),
+    __NIGHT__: JSON.stringify(o.night || null).replace(/</g, "\\u003c"),
     __DATA__: JSON.stringify(d.locked ? d : withReport(d, !1)).replace(/</g, "\\u003c"),
     __LIVE__: o.live ? "true" : "false"
   };
-  return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFEN|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE|FOTN)__/g, (m) => fill[m]), o);
+  return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFEN|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE|FOTN|NIGHT)__/g, (m) => fill[m]), o);
 }
 var HOME = {
   title: "SEO Fights \xB7 Compare website SEO side by side",
   desc: "Compare your website's SEO against a competitor in seconds. 31 live checks across Google and AI readiness, a clear winner, and the exact fixes to win.",
   h1: 'Who wins<br>the <span class="r">SEO</span> <span class="b">fight?</span>',
-  lede: "Enter your website and a competitor. 31 real checks, a clear winner, and the exact moves to take the belt.",
+  lede: "31 live checks. 5 rounds. One winner. Google and AI search.",
   mode: "Example fight"
 };
 function fightPage(env, d, path, locked) {
@@ -2455,14 +2573,19 @@ Keywords: ${kws.join(", ")}
 Page text: ${text}
 
 List 8 real websites that compete with ${siteHost} for the same customers and Google searches.` }
-  ] }), list = [];
-  try {
-    list = JSON.parse((out && out.response || "").match(/\[[\s\S]*\]/)[0]);
-  } catch {
-    return [];
+  ] }), resp = out && out.response, list = [];
+  if (Array.isArray(resp)) list = resp;
+  else if (resp && typeof resp == "object") list = Object.values(resp).flat();
+  else {
+    let txt = String(resp || "");
+    try {
+      list = JSON.parse(txt.match(/\[[\s\S]*?\]/)[0]);
+    } catch {
+      list = txt.match(/[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}/gi) || [];
+    }
   }
-  let clean = [...new Set(list.map((h) => String(h).toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0]).filter((h) => /^[a-z0-9.-]+\.[a-z]{2,}$/.test(h) && h !== siteHost && !unsafeHost(h)))].slice(0, 8);
-  return (await Promise.all(clean.map(async (h) => {
+  list = list.map((x) => x && typeof x == "object" ? x.domain || x.url || x.host || "" : x);
+  let clean = [...new Set(list.map((h) => String(h).toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0]).filter((h) => /^[a-z0-9.-]+\.[a-z]{2,}$/.test(h) && h !== siteHost && !unsafeHost(h)))].slice(0, 8), ok = (await Promise.all(clean.map(async (h) => {
     let ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 5e3);
     try {
       return (await fetch("https://" + h, { method: "HEAD", redirect: "follow", signal: ctl.signal, headers: { "user-agent": UA } })).status < 500 ? { host: h } : null;
@@ -2471,7 +2594,8 @@ List 8 real websites that compete with ${siteHost} for the same customers and Go
     } finally {
       clearTimeout(t);
     }
-  }))).filter(Boolean).slice(0, 5);
+  }))).filter(Boolean);
+  return (ok.length ? ok : clean.map((h) => ({ host: h }))).slice(0, 5);
 }
 var RIVALS = [
   ["apple.com", "samsung.com", "Tech"],
@@ -2834,8 +2958,8 @@ var worker_default = {
       return f ? json(withReport(f.d, paid(m)), 200, { "cache-control": "no-store" }) : json({ error: "Fight not found." }, 404);
     }
     if (p === "/api/me") {
-      let m = await member(req, env);
-      return json(m ? { plan: planOf(m), name: PLAN_NAMES[planOf(m)], email: m.email } : {}, 200, { "cache-control": "no-store" });
+      let m = await member(req, env), auth = { google: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET), link: !!env.RESEND_KEY };
+      return json(m ? { plan: planOf(m), name: PLAN_NAMES[planOf(m)], email: m.email, auth } : { auth }, 200, { "cache-control": "no-store" });
     }
     if (p === "/api/signup" && req.method === "POST") {
       let body;
@@ -2847,7 +2971,14 @@ var worker_default = {
       let email = String(body.email || "").trim().toLowerCase();
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 200) return json({ error: "Enter a valid email." }, 400);
       if (!env.DB) return json({ error: "Not set up" }, 503);
-      let k = `su:${ipOf(req)}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`, n = env.LIMITS ? parseInt(await env.LIMITS.get(k) || "0", 10) : 0, old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
+      let k = `su:${ipOf(req)}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`, n = env.LIMITS ? parseInt(await env.LIMITS.get(k) || "0", 10) : 0;
+      if (env.RESEND_KEY && env.LIMITS) {
+        if (n >= 20) return json({ error: "Too many tries from here today." }, 429);
+        ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
+        let t = rand();
+        return await env.LIMITS.put(`login:${t}`, JSON.stringify({ email, next: safeNext(body.next) }), { expirationTtl: 1800 }), await sendEmail(env, email, "Your SEO Fights sign-in link \u{1F94A}", `<div style="font-family:system-ui,sans-serif;max-width:480px"><h2 style="margin:0 0 12px">Tap to sign in</h2><p><a href="${SITE}/auth/email?t=${t}" style="display:inline-block;background:#e0263a;color:#fff;padding:14px 22px;border-radius:12px;text-decoration:none;font-weight:700">Sign in to SEO Fights</a></p><p style="color:#666;font-size:13px">This link works once and expires in 30 minutes. If you didn't ask for it, ignore this email.</p></div>`) ? json({ sent: !0, email }) : json({ error: "Couldn't send the email. Try again." }, 502);
+      }
+      let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
       if (!(old && old.plan === "free")) {
         if (n >= 20) return json({ error: "Too many sign-ups from here today." }, 429);
         env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
@@ -2968,6 +3099,32 @@ var worker_default = {
       let m = env.DB && await env.DB.prepare("SELECT key, plan FROM members WHERE email=?1 AND active=1").bind(email).first();
       return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fights access link", `<p><a href="${SITE}/activate?key=${m.key}">Tap to switch on ${PLAN_NAMES[m.plan] || "Pro"} on this device</a></p>`)), json({ ok: !0 });
     }
+    if (p === "/auth/email") {
+      let t = u.searchParams.get("t") || "", raw = env.LIMITS && t ? await env.LIMITS.get(`login:${t}`) : null;
+      if (!raw) return infoPage(env, { path: p, noindex: !0, status: 400, title: "Link expired \xB7 SEO Fights", h1: "Link expired", lede: "Sign-in links work once and last 30 minutes.", body: '<p><a class="btn fight" href="/account">Get a new link</a></p>' });
+      ctx.waitUntil(env.LIMITS.delete(`login:${t}`));
+      let { email, next } = JSON.parse(raw);
+      return signedIn(await loginEmail(env, email), safeNext(next));
+    }
+    if (p === "/auth/google") {
+      if (!env.GOOGLE_CLIENT_ID) return new Response(null, { status: 302, headers: { location: "/account" } });
+      let state = rand(), next = safeNext(u.searchParams.get("next")), q = new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, redirect_uri: SITE + "/auth/google/callback", response_type: "code", scope: "openid email", state, prompt: "select_account" }), h = new Headers({ location: "https://accounts.google.com/o/oauth2/v2/auth?" + q });
+      return h.append("set-cookie", `rf_oauth=${state}.${encodeURIComponent(next)}; Path=/auth; Max-Age=600; HttpOnly; Secure; SameSite=Lax`), new Response(null, { status: 302, headers: h });
+    }
+    if (p === "/auth/google/callback") {
+      let [state, nextEnc] = (cookie(req, "rf_oauth") || "").split("."), fail = () => infoPage(env, { path: p, noindex: !0, status: 400, title: "Sign-in failed \xB7 SEO Fights", h1: "Sign-in didn't work", lede: "Try again, or use your email instead.", body: '<p><a class="btn fight" href="/">Back to SEO Fights</a></p>' });
+      if (!state || state !== u.searchParams.get("state") || !u.searchParams.get("code")) return fail();
+      try {
+        let tok = await (await fetch("https://oauth2.googleapis.com/token", {
+          method: "POST",
+          headers: { "content-type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ code: u.searchParams.get("code"), client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, redirect_uri: SITE + "/auth/google/callback", grant_type: "authorization_code" })
+        })).json(), claims = JSON.parse(atob(tok.id_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+        return !claims.email || !claims.email_verified || claims.aud !== env.GOOGLE_CLIENT_ID ? fail() : signedIn(await loginEmail(env, String(claims.email).toLowerCase()), safeNext(decodeURIComponent(nextEnc || "%2F")), "rf_oauth=; Path=/auth; Max-Age=0; HttpOnly; Secure; SameSite=Lax");
+      } catch {
+        return fail();
+      }
+    }
     if (p === "/login" || p === "/signup") return new Response(null, { status: 302, headers: { location: "/account" } });
     if (p === "/account") {
       let m = await member(req, env);
@@ -3032,7 +3189,7 @@ Sitemap: ${SITE}/sitemap.xml
 - [About](${SITE}/about): built in public by ${X_URL}
 
 Free: 1 fight per week. Pro: $19/month. Agency: $99/month. Lifetime: founder price from $49 once, rising as spots sell.
-`, { headers: { "content-type": "text/plain; charset=utf-8" } }) : p === "/" ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: "", b: "" }) : page(env, { ...HOME, status: 404, cache: "no-store" });
+`, { headers: { "content-type": "text/plain; charset=utf-8" } }) : p === "/" ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), night: await nightData(env), a: "", b: "", cache: "public, max-age=120" }) : page(env, { ...HOME, status: 404, cache: "no-store" });
   },
   async scheduled(event, env, ctx) {
     env.SITE_URL && (SITE = env.SITE_URL), new Date(event.scheduledTime).getUTCDay() === 1 && new Date(event.scheduledTime).getUTCHours() === 15 ? ctx.waitUntil(weekly(env)) : ctx.waitUntil(autoFights(env, 12));
