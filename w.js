@@ -4742,7 +4742,7 @@ var worker_default = {
         if (!email) return json({ received: !0 });
         let plan = planFromSession(o);
         await env.DB.prepare(`INSERT INTO members (key, email, plan, customer, subscription, session_id, active, created_at) VALUES (?1,?2,?3,?4,?5,?6,1,?7)
-          ON CONFLICT(email) DO UPDATE SET plan=?3, customer=?4, subscription=COALESCE(?5, subscription), session_id=?6, active=1`).bind(crypto.randomUUID().replace(/-/g, ""), email, plan, o.customer || "", o.subscription || null, o.id, Date.now()).run();
+          ON CONFLICT(email) DO UPDATE SET plan=CASE WHEN members.plan='owner' THEN 'owner' ELSE ?3 END, customer=?4, subscription=COALESCE(?5, subscription), session_id=?6, active=1`).bind(crypto.randomUUID().replace(/-/g, ""), email, plan, o.customer || "", o.subscription || null, o.id, Date.now()).run();
         let row = await env.DB.prepare("SELECT key FROM members WHERE email=?1").bind(email).first();
         ctx.waitUntil(sendEmail(env, email, `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`, EMAIL.welcome(env, plan, email, row.key))), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(
           env,
