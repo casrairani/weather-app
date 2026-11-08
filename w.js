@@ -270,7 +270,7 @@ async function serp(env, q, gl = "us", page2 = 1) {
     body: JSON.stringify({ q, gl, page: page2 })
   });
   if (!r.ok) throw new Error("search failed");
-  return ((await r.json()).organic || []).map((o, i) => ({ pos: (page2 - 1) * 10 + i + 1, host: host(o.link), url: o.link }));
+  return env.__ev && await env.__ev("serper", q.slice(0, 60)), ((await r.json()).organic || []).map((o, i) => ({ pos: (page2 - 1) * 10 + i + 1, host: host(o.link), url: o.link }));
 }
 var DIRECTORY = /(^|\.)(yelp|yellowpages|yp|tripadvisor|facebook|instagram|linkedin|angi|angieslist|homeadvisor|thumbtack|houzz|bbb|mapquest|nextdoor|expertise|bark|porch|zillow|realtor|healthgrades|zocdoc|opentable|groupon|foursquare|manta|chamberofcommerce|superpages|citysearch|wikipedia|reddit|quora|youtube|google|apple|amazon|indeed|glassdoor|craigslist|kijiji|yellowpages|411|canada411|threebestrated|bestprosintown|topratedlocal|birdeye|trustpilot|clutch|upcity|designrush|forbes|nerdwallet|bobvila|thespruce|consumeraffairs|redfin|trulia|homestars|tiktok|x|twitter|pinterest|medium|wix|squarespace|godaddy)\./i;
 async function localBusinesses(env, industry, city, gl = "us") {
@@ -1215,7 +1215,7 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
         av.setAttribute("aria-label", "Account menu (" + em + ")"); av.setAttribute("aria-haspopup", "menu"); av.setAttribute("aria-expanded", "false");
         menu.className = "avmenu"; menu.hidden = true; menu.setAttribute("role", "menu");
         const esc = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-        menu.innerHTML = \`<div class="who"><b>\${esc(window.ME.name || "Free")} plan</b>\${esc(em)}</div><a role="menuitem" href="/account">Account</a><a role="menuitem" href="/account#billing">\${window.ME.plan === "pro" || window.ME.plan === "agency" ? "Billing / cancel plan" : "Billing"}</a><a role="menuitem" href="/account#settings">Emails and data</a><a role="menuitem" class="out" href="/logout">Sign out</a>\`;
+        menu.innerHTML = \`<div class="who"><b>\${esc(window.ME.name || "Free")} plan</b>\${esc(em)}</div><a role="menuitem" href="/account">Account</a>\${window.ME.plan === "owner" ? '<a role="menuitem" href="/admin">\u{1F4CA} Stats</a>' : ""}<a role="menuitem" href="/account#billing">\${window.ME.plan === "pro" || window.ME.plan === "agency" ? "Billing / cancel plan" : "Billing"}</a><a role="menuitem" href="/account#settings">Emails and data</a><a role="menuitem" class="out" href="/logout">Sign out</a>\`;
         const close = () => { menu.hidden = true; av.setAttribute("aria-expanded", "false"); };
         av.addEventListener("click", e => { e.stopPropagation(); const open = menu.hidden; menu.hidden = !open; av.setAttribute("aria-expanded", String(open)); if (open) menu.querySelector("a").focus(); });
         document.addEventListener("click", e => { if (!menu.hidden && !menu.contains(e.target)) close(); });
@@ -2717,7 +2717,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
         av.setAttribute("aria-label", "Account menu (" + em + ")"); av.setAttribute("aria-haspopup", "menu"); av.setAttribute("aria-expanded", "false");
         menu.className = "avmenu"; menu.hidden = true; menu.setAttribute("role", "menu");
         const esc = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-        menu.innerHTML = \`<div class="who"><b>\${esc(window.ME.name || "Free")} plan</b>\${esc(em)}</div><a role="menuitem" href="/account">Account</a><a role="menuitem" href="/account#billing">\${window.ME.plan === "pro" || window.ME.plan === "agency" ? "Billing / cancel plan" : "Billing"}</a><a role="menuitem" href="/account#settings">Emails and data</a><a role="menuitem" class="out" href="/logout">Sign out</a>\`;
+        menu.innerHTML = \`<div class="who"><b>\${esc(window.ME.name || "Free")} plan</b>\${esc(em)}</div><a role="menuitem" href="/account">Account</a>\${window.ME.plan === "owner" ? '<a role="menuitem" href="/admin">\u{1F4CA} Stats</a>' : ""}<a role="menuitem" href="/account#billing">\${window.ME.plan === "pro" || window.ME.plan === "agency" ? "Billing / cancel plan" : "Billing"}</a><a role="menuitem" href="/account#settings">Emails and data</a><a role="menuitem" class="out" href="/logout">Sign out</a>\`;
         const close = () => { menu.hidden = true; av.setAttribute("aria-expanded", "false"); };
         av.addEventListener("click", e => { e.stopPropagation(); const open = menu.hidden; menu.hidden = !open; av.setAttribute("aria-expanded", String(open)); if (open) menu.querySelector("a").focus(); });
         document.addEventListener("click", e => { if (!menu.hidden && !menu.contains(e.target)) close(); });
@@ -3407,7 +3407,7 @@ async function canUse(env, who, what, plan) {
 async function spend(env, who, what, plan) {
   if (!env.LIMITS) return;
   let per = LIMITS[plan][what.split(":")[0]][1], k = `u:${what}:${period(per)}:${who}`, n = parseInt(await env.LIMITS.get(k) || "0", 10);
-  await env.LIMITS.put(k, String(n + 1), { expirationTtl: per === "month" ? 32 * 86400 : 8 * 86400 });
+  await env.LIMITS.put(k, String(n + 1), { expirationTtl: per === "month" ? 32 * 86400 : 8 * 86400 }), await logEv(env, "use", plan, what);
 }
 async function toolUse(env, req, what) {
   if (!env.LIMITS) return !0;
@@ -3437,7 +3437,11 @@ var NEW_TABLES = [
   "CREATE INDEX IF NOT EXISTS posts_at ON posts (at DESC)",
   "CREATE TABLE IF NOT EXISTS hidden_fights (slug TEXT PRIMARY KEY, at INTEGER)",
   "CREATE TABLE IF NOT EXISTS email_prefs (email TEXT PRIMARY KEY, fights INTEGER DEFAULT 1, keywords INTEGER DEFAULT 1, at INTEGER)",
-  "CREATE TABLE IF NOT EXISTS deletions (email_hash TEXT, plan TEXT, stripe_customer TEXT, at INTEGER)"
+  "CREATE TABLE IF NOT EXISTS deletions (email_hash TEXT, plan TEXT, stripe_customer TEXT, at INTEGER)",
+  "CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT NOT NULL, exp INTEGER)",
+  "CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, kind TEXT NOT NULL, plan TEXT, info TEXT)",
+  "CREATE INDEX IF NOT EXISTS events_at ON events (at)",
+  "CREATE INDEX IF NOT EXISTS events_kind_at ON events (kind, at)"
 ], NOT_HIDDEN = "slug NOT IN (SELECT slug FROM hidden_fights)", HIDDEN = /* @__PURE__ */ new Set(), HIDDEN_AT = 0;
 async function refreshHidden(env, force) {
   if (!(!env.DB || !force && Date.now() - HIDDEN_AT < 3e5)) {
@@ -3458,18 +3462,92 @@ async function logFight(env, key, slug) {
   } catch {
   }
 }
+function d1Store(env) {
+  let db = env.DB, ready = () => tables(env);
+  return {
+    async get(k) {
+      await ready();
+      let r = await db.prepare("SELECT v, exp FROM kv WHERE k=?1").bind(k).first();
+      return r && !(r.exp && r.exp < Date.now()) ? r.v : null;
+    },
+    async put(k, v, o = {}) {
+      await ready(), await db.prepare("INSERT INTO kv (k, v, exp) VALUES (?1, ?2, ?3) ON CONFLICT(k) DO UPDATE SET v=?2, exp=?3").bind(k, String(v), o.expirationTtl ? Date.now() + o.expirationTtl * 1e3 : null).run();
+    },
+    async delete(k) {
+      await ready(), await db.prepare("DELETE FROM kv WHERE k=?1").bind(k).run();
+    }
+  };
+}
+async function logEv(env, kind, plan, info) {
+  if (env.DB)
+    try {
+      await tables(env), await env.DB.prepare("INSERT INTO events (at, kind, plan, info) VALUES (?1, ?2, ?3, ?4)").bind(Date.now(), kind, plan || null, info == null ? null : String(info).slice(0, 200)).run();
+    } catch {
+    }
+}
+function withStore(env) {
+  if (!env.DB || env.__wrapped) return env;
+  let e = { ...env, __wrapped: !0 };
+  return e.LIMITS = d1Store(env), env.AI && (e.AI = { run: async (model, opts) => {
+    let out = await env.AI.run(model, opts), inTok = JSON.stringify(opts && (opts.messages || opts.prompt) || "").length / 4, outTok = String(out && out.response || "").length / 4;
+    return await logEv(e, "ai", null, Math.round(inTok * 0.026668 + outTok * 0.204805)), out;
+  } }), e.__ev = (kind, info) => logEv(e, kind, null, info), e;
+}
+async function adminHtml(env) {
+  await tables(env);
+  let now = Date.now(), H = 36e5, D = 864e5, utc0 = Date.UTC((/* @__PURE__ */ new Date()).getUTCFullYear(), (/* @__PURE__ */ new Date()).getUTCMonth(), (/* @__PURE__ */ new Date()).getUTCDate()), q = async (sql, ...b) => (await env.DB.prepare(sql).bind(...b).all()).results, one = async (sql, ...b) => await env.DB.prepare(sql).bind(...b).first() || {}, [kinds, plans, aiToday, mailToday, serpAll, sales, recent, top, series, uses] = await Promise.all([
+    q("SELECT kind, SUM(at > ?1) AS d1, SUM(at > ?2) AS d7, COUNT(*) AS total FROM events GROUP BY kind", now - D, now - 7 * D),
+    q("SELECT plan, COUNT(*) AS n FROM members WHERE active=1 GROUP BY plan"),
+    one("SELECT COALESCE(SUM(CAST(info AS INTEGER)), 0) AS n FROM events WHERE kind='ai' AND at >= ?1", utc0),
+    one("SELECT COUNT(*) AS n FROM events WHERE kind='email' AND at >= ?1", utc0),
+    one("SELECT COUNT(*) AS n FROM events WHERE kind='serper'"),
+    q("SELECT info, plan, at FROM events WHERE kind='sale' ORDER BY at DESC"),
+    q("SELECT at, kind, plan, info FROM events WHERE kind NOT IN ('ai','email','serper','use') ORDER BY at DESC LIMIT 30"),
+    q(`SELECT slug, views, COALESCE(votes_a,0) + COALESCE(votes_b,0) AS picks FROM fights WHERE ${NOT_HIDDEN} ORDER BY views DESC LIMIT 8`),
+    q("SELECT CAST((at - ?1) / 86400000 AS INTEGER) AS d, kind, COUNT(*) AS n FROM events WHERE at >= ?1 AND kind IN ('signup','fight','fight_anon','pick','sale','wall') GROUP BY d, kind", now - 30 * D),
+    q("SELECT info AS what, COUNT(*) AS n FROM events WHERE kind='use' AND at > ?1 GROUP BY info ORDER BY n DESC", now - 7 * D)
+  ]), K = Object.fromEntries(kinds.map((r) => [r.kind, r])), k = (n, f = "d1") => K[n] && K[n][f] || 0, P = Object.fromEntries(plans.map((r) => [r.plan, r.n])), pc = (n) => P[n] || 0, mrr = pc("pro") * 19 + pc("agency") * 99, members = Object.values(P).reduce((a, b) => a + b, 0), money = sales.reduce((a, r) => a + (parseFloat(r.info) || 0), 0), ladder = LADDER.find(([cap]) => LIFE_SOLD < cap) || LADDER[LADDER.length - 1], left = ladder[0] === 1 / 0 ? "no cap" : `${ladder[0] - LIFE_SOLD} left at $${ladder[1]}`, t = (ms) => new Date(ms).toLocaleString("en-CA", { timeZone: "America/Vancouver", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }), tile = (label, v, sub = "") => `<div class="st-tile"><span>${esc2(label)}</span><b>${esc2(String(v))}</b>${sub ? `<small>${esc2(sub)}</small>` : ""}</div>`, meter = (label, used, cap, note) => {
+    let pct = Math.min(100, Math.round(used / cap * 100));
+    return `<div class="st-meter"><div><b>${esc2(label)}</b><span>${used.toLocaleString()} of ${cap.toLocaleString()} ${esc2(note)}</span></div><div class="st-bar ${pct > 80 ? "hot" : ""}"><i style="width:${pct}%"></i></div></div>`;
+  }, days = [...Array(30)].map((_, i) => i), sum = (kinds2) => days.map((d) => series.filter((r) => r.d === d && kinds2.includes(r.kind)).reduce((a, r) => a + r.n, 0)), chart = (label, vals, color) => {
+    let max = Math.max(1, ...vals), W2 = 600, Hh = 90, bw = W2 / vals.length;
+    return `<figure class="st-chart"><figcaption><b>${esc2(label)}</b><span>${vals.reduce((a, b) => a + b, 0).toLocaleString()} in 30 days \xB7 today ${vals[vals.length - 1]}</span></figcaption><svg viewBox="0 0 ${W2} ${Hh}" role="img" aria-label="${esc2(label)} per day, last 30 days" preserveAspectRatio="none">${vals.map((v, i) => `<rect x="${(i * bw + 1).toFixed(1)}" y="${(Hh - v / max * (Hh - 4)).toFixed(1)}" width="${(bw - 2).toFixed(1)}" height="${(v / max * (Hh - 4)).toFixed(1)}" rx="2" fill="${color}"><title>${v}</title></rect>`).join("")}</svg></figure>`;
+  }, NAMES = { signup: "\u{1F195} Sign-up", fight: "\u{1F94A} Fight (member)", fight_anon: "\u{1F440} Fight (no account)", pick: "\u{1F446} Pick", wall: "\u{1F9F1} Hit the wall", sale: "\u{1F4B0} Sale", cancel: "\u21A9\uFE0F Cancel", link_sent: "\u{1F4EC} Sign-in link sent" };
+  return `<style>
+.st-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 22px}.st-tile{border:2px solid var(--ink);border-radius:16px;padding:14px;background:var(--surface);display:grid;gap:4px}.st-tile span{font:600 13px/1.2 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.st-tile b{font:800 40px/1 var(--f-display)}.st-tile small{color:var(--muted);font-size:14px}
+.st-sec{margin:28px 0 12px;font:800 28px/1 var(--f-display);text-transform:uppercase}.st-chart{margin:0 0 14px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}.st-chart figcaption{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}.st-chart span{color:var(--muted);font-size:14px}.st-chart svg{width:100%;height:90px;display:block}
+.st-meter{display:grid;gap:6px;margin:0 0 14px}.st-meter>div:first-child{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.st-meter span{color:var(--muted);font-size:14px}.st-bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.st-bar i{display:block;height:100%;background:#22c55e}.st-bar.hot i{background:#ef4444}
+.st-tbl{width:100%;border-collapse:collapse;font-size:15px}.st-tbl td,.st-tbl th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.st-tbl th{font:600 13px/1 var(--f-mono);text-transform:uppercase;color:var(--muted)}.st-tbl td.n{text-align:right;font-variant-numeric:tabular-nums}.st-wrap{overflow-x:auto}
+@media(max-width:760px){.st-grid{grid-template-columns:1fr 1fr}.st-tile b{font-size:32px}}
+</style>
+<h2 class="st-sec">Last 24 hours</h2>
+<div class="st-grid">${tile("Sign-ups", k("signup"), `${k("signup", "d7")} this week`)}${tile("Fights", k("fight") + k("fight_anon"), `${k("fight_anon")} without an account`)}${tile("Picks", k("pick"), `${k("pick", "d7")} this week`)}${tile("Hit the wall", k("wall"), "asked to sign up or upgrade")}</div>
+<h2 class="st-sec">Money</h2>
+<div class="st-grid">${tile("MRR", `$${mrr}`, `${pc("pro")} Pro \xB7 ${pc("agency")} Agency`)}${tile("All-time sales", `$${money.toFixed(0)}`, `${sales.length} checkouts`)}${tile("Lifetime", pc("lifetime"), left)}${tile("Accounts", members, `${pc("free")} free`)}</div>
+<h2 class="st-sec">Last 30 days</h2>
+${chart("Sign-ups", sum(["signup"]), "#E1232E")}${chart("Fights", sum(["fight", "fight_anon"]), "#1D4ED8")}${chart("Picks", sum(["pick"]), "#E8B21C")}${chart("Hit the sign-up wall", sum(["wall"]), "#8b93a7")}
+<h2 class="st-sec">Free limits today</h2>
+${meter("Workers AI", aiToday.n || 0, 1e4, "neurons (resets 5pm)")}${meter("Sign-in and other emails", mailToday.n || 0, 100, "emails (Resend free)")}${meter("Google searches (Serper)", serpAll.n || 0, 2500, "free searches, all time")}
+<h2 class="st-sec">Tools used this week</h2>
+<div class="st-wrap"><table class="st-tbl"><tr><th>Tool</th><th class="n">Uses</th></tr>${uses.map((r) => `<tr><td>${esc2(r.what)}</td><td class="n">${r.n}</td></tr>`).join("") || '<tr><td colspan="2">Nothing yet.</td></tr>'}</table></div>
+<h2 class="st-sec">Most viewed fights</h2>
+<div class="st-wrap"><table class="st-tbl"><tr><th>Fight</th><th class="n">Views</th><th class="n">Picks</th></tr>${top.map((r) => `<tr><td><a href="/fight/${esc2(r.slug)}">${esc2(r.slug.replace("-vs-", " vs "))}</a></td><td class="n">${r.views || 0}</td><td class="n">${r.picks || 0}</td></tr>`).join("")}</table></div>
+<h2 class="st-sec">Latest activity</h2>
+<div class="st-wrap"><table class="st-tbl"><tr><th>When</th><th>What</th><th>Details</th></tr>${recent.map((r) => `<tr><td>${t(r.at)}</td><td>${NAMES[r.kind] || esc2(r.kind)}${r.plan && r.plan !== "free" ? ` \xB7 ${esc2(r.plan)}` : ""}</td><td>${esc2(r.info || "")}</td></tr>`).join("") || '<tr><td colspan="3">Nothing yet. Activity shows up here as it happens.</td></tr>'}</table></div>
+<p class="muted" style="margin-top:18px">Visitors, countries and where people came from: Cloudflare dashboard \u2192 Analytics &amp; Logs \u2192 Web Analytics.</p>`;
+}
 async function member(req, env) {
   let key = cookie(req, "rf_key");
   return !key || !env.DB ? null : env.DB.prepare("SELECT * FROM members WHERE key=?1 AND active=1").bind(key).first();
 }
 var SIGNOUT_COOKIE = "rf_key=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax", cookieFor = (key) => `rf_key=${key}; Path=/; Max-Age=34560000; HttpOnly; Secure; SameSite=Lax`;
-async function loginEmail(env, email) {
+async function loginEmail(env, email, via = "link") {
   let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
   if (old && old.active) return old.key;
   if (old)
     return await env.DB.prepare("UPDATE members SET plan='free', active=1 WHERE email=?1").bind(email).run(), old.key;
   let key = rand();
-  return await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), key;
+  return await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), await logEv(env, "signup", "free", `${via}: ${email}`), key;
 }
 var signedIn = (key, next, extra) => {
   let h = new Headers({ location: next });
@@ -3838,11 +3916,12 @@ async function sendEmail(env, to, subject, body, opts = {}) {
   let msg = { from: env.FROM_EMAIL || "SEO Fights <fights@seofights.com>", to, subject, html: body, text: opts.text || toText(body) };
   opts.replyTo && (msg.reply_to = opts.replyTo), opts.unsubscribe && (msg.headers = { "List-Unsubscribe": `<${opts.unsubscribe}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" });
   try {
-    return (await fetch("https://api.resend.com/emails", {
+    let r = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { authorization: `Bearer ${env.RESEND_KEY}`, "content-type": "application/json" },
       body: JSON.stringify(msg)
-    })).ok;
+    });
+    return r.ok && await logEv(env, "email", null, subject.slice(0, 60)), r.ok;
   } catch {
     return !1;
   }
@@ -4311,6 +4390,7 @@ async function autoPost(env, slug) {
 }
 var worker_default = {
   async fetch(req, env, ctx) {
+    env = withStore(env);
     let u = new URL(req.url);
     SITE = env.SITE_URL || u.origin;
     let p = u.pathname.replace(/\/+$/, "") || "/";
@@ -4330,10 +4410,11 @@ var worker_default = {
         let old2 = await storedFight(env, slug);
         if (old2 && old2.age < 36e5) return json(teaser(old2.d));
         let now = /* @__PURE__ */ new Date(), wk = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - (now.getUTCDay() + 6) % 7)), day = wk.toISOString().slice(0, 10), k = `anon:${day}:${ipOf(req)}`;
-        if (cookie(req, "rf_af") === day || env.LIMITS && await env.LIMITS.get(k)) return json({ error: "Sign up free to keep fighting.", signup: !0, anon: !0 }, 401);
+        if (cookie(req, "rf_af") === day || env.LIMITS && await env.LIMITS.get(k))
+          return ctx.waitUntil(logEv(env, "wall", null, "fight")), json({ error: "Sign up free to keep fighting.", signup: !0, anon: !0 }, 401);
         try {
           let d = await runFight(a, b, env, !0);
-          return ctx.waitUntil(Promise.all([saveFight(env, d), env.LIMITS ? env.LIMITS.put(k, "1", { expirationTtl: 8 * 86400 }) : null])), json(teaser(d), 200, { "set-cookie": `rf_af=${day}; Path=/; Max-Age=${8 * 86400}; Secure; SameSite=Lax` });
+          return ctx.waitUntil(Promise.all([saveFight(env, d), env.LIMITS ? env.LIMITS.put(k, "1", { expirationTtl: 8 * 86400 }) : null, logEv(env, "fight_anon", null, slug)])), json(teaser(d), 200, { "set-cookie": `rf_af=${day}; Path=/; Max-Age=${8 * 86400}; Secure; SameSite=Lax` });
         } catch (e) {
           return e instanceof Blocked && env.DB && ctx.waitUntil(env.DB.prepare("INSERT OR REPLACE INTO blocked (slug, reason, at) VALUES (?1, 'blocked', ?2)").bind(slug, Date.now()).run()), json({ error: e instanceof Blocked ? e.message : "Couldn't reach one of the sites. Check the address and try again." }, e instanceof Blocked ? 422 : 502);
         }
@@ -4343,10 +4424,10 @@ var worker_default = {
         return ctx.waitUntil(Promise.all([env.DB.prepare("UPDATE fights SET views=views+1 WHERE slug=?1").bind(slug).run(), logFight(env, m.key, slug)])), json(withReport(old.d, paid(m)));
       let who = m.key, plan = planOf(m);
       if (!await canUse(env, who, "fights", plan))
-        return json({ error: paid(m) ? `You've used your ${LIMITS[plan].fights[0]} fights this month. They reset on the 1st.` : "You've used your free fight this week. Go Pro for 40 fights a month." }, 429);
+        return ctx.waitUntil(logEv(env, "wall", plan, "fight limit")), json({ error: paid(m) ? `You've used your ${LIMITS[plan].fights[0]} fights this month. They reset on the 1st.` : "You've used your free fight this week. Go Pro for 40 fights a month." }, 429);
       try {
         let d = await runFight(a, b, env);
-        return ctx.waitUntil(Promise.all([saveFight(env, d), spend(env, who, "fights", plan), logFight(env, who, d.slug)])), json(withReport(d, paid(m)));
+        return ctx.waitUntil(Promise.all([saveFight(env, d), spend(env, who, "fights", plan), logFight(env, who, d.slug), logEv(env, "fight", plan, d.slug)])), json(withReport(d, paid(m)));
       } catch (e) {
         return e instanceof Blocked && env.DB && ctx.waitUntil(env.DB.prepare("INSERT OR REPLACE INTO blocked (slug, reason, at) VALUES (?1, 'blocked', ?2)").bind(slug, Date.now()).run()), json({ error: e instanceof Blocked ? e.message : "Couldn't reach one of the sites. Check the address and try again." }, e instanceof Blocked ? 422 : 502);
       }
@@ -4368,7 +4449,7 @@ var worker_default = {
       let slug = String(body.slug || "").toLowerCase(), side = body.side === "a" ? "a" : body.side === "b" ? "b" : null;
       if (!slug || !side || !env.DB) return json({ error: "Bad request" }, 400);
       let k = `v:${slug}:${ipOf(req)}`;
-      env.LIMITS && await env.LIMITS.get(k) || (await env.DB.prepare(`UPDATE fights SET votes_${side} = COALESCE(votes_${side}, 0) + 1 WHERE slug = ?1`).bind(slug).run(), env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, side, { expirationTtl: 60 * 86400 })));
+      env.LIMITS && await env.LIMITS.get(k) || (await env.DB.prepare(`UPDATE fights SET votes_${side} = COALESCE(votes_${side}, 0) + 1 WHERE slug = ?1`).bind(slug).run(), env.LIMITS && ctx.waitUntil(Promise.all([env.LIMITS.put(k, side, { expirationTtl: 60 * 86400 }), logEv(env, "pick", null, `${slug}:${side}`)])));
       let row = await env.DB.prepare("SELECT COALESCE(votes_a,0) AS votes_a, COALESCE(votes_b,0) AS votes_b FROM fights WHERE slug=?1").bind(slug).first();
       return json(row || { votes_a: 0, votes_b: 0 });
     }
@@ -4607,7 +4688,7 @@ var worker_default = {
         if (n >= 20) return json({ error: "Too many tries from here today." }, 429);
         ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
         let t = rand();
-        return await env.LIMITS.put(`login:${t}`, JSON.stringify({ email, next: safeNext(body.next) }), { expirationTtl: 1800 }), await sendEmail(env, email, "Your SEO Fights sign-in link", EMAIL.signIn(`${SITE}/auth/email?t=${t}`)) ? json({ sent: !0, email }) : json({ error: "Couldn't send the email. Try again." }, 502);
+        return await env.LIMITS.put(`login:${t}`, JSON.stringify({ email, next: safeNext(body.next) }), { expirationTtl: 1800 }), await sendEmail(env, email, "Your SEO Fights sign-in link", EMAIL.signIn(`${SITE}/auth/email?t=${t}`)) ? (ctx.waitUntil(logEv(env, "link_sent", null, email)), json({ sent: !0, email })) : json({ error: "Couldn't send the email. Try again." }, 502);
       }
       let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
       if (!(old && old.plan === "free")) {
@@ -4616,7 +4697,7 @@ var worker_default = {
       }
       if (old && old.plan !== "free" && old.active) return json({ error: "This email has a paid plan. Get your access link on the Account page." }, 409);
       let key = old && old.plan === "free" ? old.key : null;
-      return key || (key = rand(), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, EMAIL.owner("New free sign-up", [["Email", email], ["Plan", "Free"]])))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
+      return key || (key = rand(), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : (await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), ctx.waitUntil(logEv(env, "signup", "free", `direct: ${email}`))), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, EMAIL.owner("New free sign-up", [["Email", email], ["Plan", "Free"]])))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
     }
     if (p === "/api/restore" && req.method === "POST") {
       let body;
@@ -4652,7 +4733,7 @@ var worker_default = {
           headers: { "content-type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({ code: u.searchParams.get("code"), client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, redirect_uri: SITE + "/auth/google/callback", grant_type: "authorization_code" })
         })).json(), claims = JSON.parse(atob(tok.id_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
-        return !claims.email || !claims.email_verified || claims.aud !== env.GOOGLE_CLIENT_ID ? fail() : signedIn(await loginEmail(env, String(claims.email).toLowerCase()), safeNext(decodeURIComponent(nextEnc || "%2F")), "rf_oauth=; Path=/auth; Max-Age=0; HttpOnly; Secure; SameSite=Lax");
+        return !claims.email || !claims.email_verified || claims.aud !== env.GOOGLE_CLIENT_ID ? fail() : signedIn(await loginEmail(env, String(claims.email).toLowerCase(), "google"), safeNext(decodeURIComponent(nextEnc || "%2F")), "rf_oauth=; Path=/auth; Max-Age=0; HttpOnly; Secure; SameSite=Lax");
       } catch {
         return fail();
       }
@@ -4663,6 +4744,10 @@ var worker_default = {
     if (p === "/activate") {
       let key = u.searchParams.get("key") || "", m = env.DB && await env.DB.prepare("SELECT key FROM members WHERE key=?1 AND active=1").bind(key).first();
       return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fights", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
+    }
+    if (p === "/admin") {
+      let m = await member(req, env);
+      return !m || m.plan !== "owner" ? new Response("Not found", { status: 404 }) : infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Stats \xB7 SEO Fights", h1: 'Your <span class="r">stats</span>', lede: "Owner only. Times are Vancouver time.", body: await adminHtml(env) });
     }
     if (p === "/dashboard" || p === "/account") {
       let m = await member(req, env), H1 = 'Your <span class="r">acc</span><span class="b">ount</span>';
@@ -4760,7 +4845,7 @@ var worker_default = {
         await env.DB.prepare(`INSERT INTO members (key, email, plan, customer, subscription, session_id, active, created_at) VALUES (?1,?2,?3,?4,?5,?6,1,?7)
           ON CONFLICT(email) DO UPDATE SET plan=CASE WHEN members.plan='owner' THEN 'owner' ELSE ?3 END, customer=?4, subscription=COALESCE(?5, subscription), session_id=?6, active=1`).bind(crypto.randomUUID().replace(/-/g, ""), email, plan, o.customer || "", o.subscription || null, o.id, Date.now()).run();
         let row = await env.DB.prepare("SELECT key FROM members WHERE email=?1").bind(email).first();
-        ctx.waitUntil(sendEmail(env, email, `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`, EMAIL.welcome(env, plan, email, row.key))), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(
+        ctx.waitUntil(logEv(env, "sale", plan, `${(o.amount_total || 0) / 100} ${String(o.currency || "usd").toUpperCase()} \xB7 ${email}`)), ctx.waitUntil(sendEmail(env, email, `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`, EMAIL.welcome(env, plan, email, row.key))), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(
           env,
           env.OWNER_EMAIL,
           `\u{1F4B0} New ${PLAN_NAMES[plan]}: ${email}`,
@@ -4771,7 +4856,7 @@ var worker_default = {
         let on = ["active", "trialing", "past_due"].includes(o.status) ? 1 : 0;
         await env.DB.prepare("UPDATE members SET active=?1 WHERE (subscription=?2 OR customer=?3) AND plan IN ('pro','agency')").bind(on, o.id, o.customer).run();
       }
-      return ev.type === "customer.subscription.deleted" && await env.DB.prepare("UPDATE members SET plan='free', active=1, subscription=NULL WHERE (subscription=?1 OR customer=?2) AND plan IN ('pro','agency')").bind(o.id, o.customer).run(), (ev.type === "charge.dispute.created" || ev.type === "charge.refunded") && await env.DB.prepare("UPDATE members SET active=0 WHERE customer=?1 AND plan != 'owner'").bind(o.customer || "").run(), json({ received: !0 });
+      return ev.type === "customer.subscription.deleted" && (ctx.waitUntil(logEv(env, "cancel", null, o.customer || "")), await env.DB.prepare("UPDATE members SET plan='free', active=1, subscription=NULL WHERE (subscription=?1 OR customer=?2) AND plan IN ('pro','agency')").bind(o.id, o.customer).run()), (ev.type === "charge.dispute.created" || ev.type === "charge.refunded") && await env.DB.prepare("UPDATE members SET active=0 WHERE customer=?1 AND plan != 'owner'").bind(o.customer || "").run(), json({ received: !0 });
     }
     if (p === "/welcome") return infoPage(env, { path: p, noindex: !0, title: "Welcome to SEO Fights", h1: `You're <span class="r">in</span> \u{1F94A}`, lede: "Setting up your plan\u2026", body: WELCOME_HTML });
     if (p === "/api/welcome") {
@@ -4914,7 +4999,12 @@ Free: 1 fight per week. Pro: $19/month. Agency: $99/month. Lifetime: founder pri
 `, { headers: { "content-type": "text/plain; charset=utf-8" } }) : p === "/" ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), night: await nightData(env), a: "", b: "", cache: "public, max-age=120" }) : page(env, { ...HOME, status: 404, cache: "no-store" });
   },
   async scheduled(event, env, ctx) {
-    env.SITE_URL && (SITE = env.SITE_URL), new Date(event.scheduledTime).getUTCDay() === 1 && new Date(event.scheduledTime).getUTCHours() === 15 ? ctx.waitUntil(weekly(env)) : ctx.waitUntil((async () => {
+    env = withStore(env), ctx.waitUntil((async () => {
+      try {
+        await tables(env), await env.DB.prepare("DELETE FROM kv WHERE exp IS NOT NULL AND exp < ?1").bind(Date.now()).run(), await env.DB.prepare("DELETE FROM events WHERE at < ?1").bind(Date.now() - 400 * 864e5).run();
+      } catch {
+      }
+    })()), env.SITE_URL && (SITE = env.SITE_URL), new Date(event.scheduledTime).getUTCDay() === 1 && new Date(event.scheduledTime).getUTCHours() === 15 ? ctx.waitUntil(weekly(env)) : ctx.waitUntil((async () => {
       try {
         await autoFights(env, 12);
       } catch {
