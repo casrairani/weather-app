@@ -1,0 +1,20 @@
+name = "seofight"
+main = "w.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+no_bundle = true
+
+[observability]
+enabled = true
+
+[triggers]
+crons = ["0 15 * * MON"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "rankfight"
+database_id = "e6e6ccc6-95b6-4f38-9be5-a7d3cdf523df"
+
+[[kv_namespaces]]
+binding = "LIMITS"
+id = "badb1569d9ae43368d464f53e7143555"
