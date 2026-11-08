@@ -3043,6 +3043,8 @@ var worker_default = {
     let u = new URL(req.url);
     SITE = env.SITE_URL || u.origin;
     let p = u.pathname.replace(/\/+$/, "") || "/";
+    if (u.hostname.endsWith(".workers.dev") && !p.startsWith("/api/") && (env.CANONICAL_HOST || "seofights.com") !== u.hostname)
+      return Response.redirect(`https://${env.CANONICAL_HOST || "seofights.com"}${u.pathname}${u.search}`, 301);
     if (p.startsWith("/api/") || await Promise.all([refreshLife(env), refreshFotn(env)]), p === "/api/duel") {
       let a, b;
       try {
