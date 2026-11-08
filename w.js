@@ -593,6 +593,7 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.poster.night { outline: 3px solid #f2c14e; outline-offset: -3px } .poster.night .pc-cat { background: #f2c14e; color: #0b0d13 }
 footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 24px }
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
 footer .fcols b { color: var(--ink); font-size: 14px }
@@ -655,7 +656,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
       <h2 class="display">See who won</h2>
       <p class="gate-note" id="unlockNote">Sign up free to unlock this fight and every fight after it.</p>
       <div class="unlock-row"><input id="unlockEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn fight" type="submit" id="unlockBtn">Show me</button></div>
-      <p class="fine">Free forever. We only email you about your fights.</p>
+      <p class="fine">Free account. No password, no card. By signing up you agree to the <a href="/terms">Terms</a>.</p>
     </form>
 
     <div class="sealed-wrap" id="sealed">
@@ -802,6 +803,64 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
   </form>
 </div>
 <div class="toast" id="toast" hidden></div>
+<div class="modal" id="suModal" hidden role="dialog" aria-modal="true" aria-labelledby="suTitle">
+  <form class="box lead" id="suForm" novalidate>
+    <span class="eyebrow" id="suEyebrow">Free account</span>
+    <h3 class="display" id="suTitle">Sign up to use this</h3>
+    <p id="suText">Takes 5 seconds. No password, no card.</p>
+    <div id="suFields"><input id="suEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"></div>
+    <button class="btn fight" type="submit" id="suBtn">Create free account</button>
+    <a class="btn fight" id="suPro" href="/go/pro" hidden>Go Pro \xB7 $19/month</a>
+    <p class="muted" id="suFine" style="font-size:13px;margin:0">Already paid? <a href="/account">Get your access link</a>. By signing up you agree to the <a href="/terms">Terms</a>.</p>
+    <button class="linkbtn" type="button" id="suClose">Not now</button>
+  </form>
+</div>
+<script>
+(() => {
+  const q = s => document.querySelector(s);
+  window.ME = null;
+  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => (window.ME = j && j.plan ? j : null)).catch(() => null);
+  let next = null;
+  const open = (mode, title, text) => {
+    const pay = mode === "pay";
+    q("#suEyebrow").textContent = pay ? "Out of free tries" : "Free account";
+    q("#suTitle").textContent = title; q("#suText").textContent = text;
+    q("#suFields").hidden = pay; q("#suBtn").hidden = pay; q("#suFine").hidden = pay; q("#suPro").hidden = !pay;
+    q("#suModal").hidden = false; if (!pay) setTimeout(() => q("#suEmail").focus(), 50);
+  };
+  // Run \`fn\` only for signed-in people; everyone else gets the sign-up box first.
+  window.withAccount = async (fn, title, text) => {
+    await window.meReady;
+    if (window.ME) { fn && fn(); return; }
+    next = fn; open("signup", title || "Sign up to use this", text || "Free account: see every fight result, 1 fight a week and 1 try of each tool a week. Takes 5 seconds.");
+  };
+  // Free tries used up: push to Pro.
+  window.paywall = (msg) => open("pay", "Go Pro to keep going", msg || "You've used your free tries this week. Pro gives you 40 fights a month and every tool.");
+  // Read an API response: true if it worked, opens the right box if not.
+  window.gateCheck = async (r) => {
+    if (r.status === 401) { window.ME = null; open("signup", "Sign up to use this", "Free account: see every fight result, 1 fight a week and 1 try of each tool a week."); return false; }
+    if (r.status === 402 || r.status === 429) { let m = ""; try { m = (await r.clone().json()).error; } catch {} window.paywall(m); return false; }
+    return true;
+  };
+  q("#suClose").addEventListener("click", () => { q("#suModal").hidden = true; next = null; });
+  q("#suModal").addEventListener("click", e => { if (e.target.id === "suModal") { q("#suModal").hidden = true; next = null; } });
+  q("#suForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = q("#suEmail").value.trim(), btn = q("#suBtn");
+    if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) { q("#suText").textContent = "Enter a valid email."; return; }
+    btn.disabled = true; btn.textContent = "Creating\u2026";
+    try {
+      const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
+      const j = await r.json();
+      if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
+      window.ME = j; try { localStorage.setItem("fan", email); } catch {}
+      q("#suModal").hidden = true; const f = next; next = null; f && f();
+    } catch { q("#suText").textContent = "Try again."; }
+    finally { btn.disabled = false; btn.textContent = "Create free account"; }
+  });
+})();
+</script>
+
 
 <script>
 const VIEW = document.documentElement.dataset.view;
@@ -813,6 +872,7 @@ const NEW_IDS = new Set(["aibots","llms","entity","faq","ttfb","size","compress"
 let D = DEMO;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const FOTN = "__FOTN__";
 const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
 const site = /claude|localhost/.test(location.host) ? "seofight.app" : location.host.replace(/^www\\./, "");
 const pretty = h => h.replace(/\\.(com|co|io|org|net|app)$/i, "");
@@ -854,7 +914,7 @@ function render(d, live, keepLabel) {
   const W = d.winner ? brandName(d[d.winner].host) : null, L = d.winner ? brandName(d[d.winner === "a" ? "b" : "a"].host) : null;
   const tags = [d.a.host, d.b.host].map(h => HANDLES[h.replace(/^www\\./, "")]).filter(Boolean).map(h => "@" + h).join(" ");
   const post = W
-    ? \`\${A} vs \${B} \u{1F94A}\\nWho has better SEO?\\n\\n\u{1F3C6} \${W} wins \${hi}\u2013\${lo}\\n\${L} loses \${d.rows.filter(r => r.edge === d.winner).length} rounds\\n\\n\${tags ? tags + " rematch? \u{1F440}\\n\\n" : ""}Fight your rival \u{1F447}\`
+    ? \`\${A} vs \${B} \u{1F94A}\\nWho has better SEO?\\n\\n\u{1F3C6} \${W} wins \${hi}\u2013\${lo}\\n\${L} lost \${d.rows.filter(r => r.edge === d.winner).length} checks\\n\\n\${tags ? tags + " rematch? \u{1F440}\\n\\n" : ""}Fight your rival \u{1F447}\`
     : \`\${A} vs \${B} \u{1F94A}\\nWho has better SEO?\\n\\nDead even, \${hi}\u2013\${lo}. Nobody wins.\\n\\n\${tags ? tags + " tiebreaker? \u{1F440}\\n\\n" : ""}Fight your rival \u{1F447}\`;
   $("#xBtn").href = \`https://x.com/intent/post?text=\${encodeURIComponent(post + "\\n")}&url=\${encodeURIComponent(url)}&via=kas_irani\`;
   SHARE_TEXT = W ? \`\${A} vs \${B}: \${W} wins the SEO fight \${hi}\u2013\${lo} \u{1F94A} Can your site beat \${W}?\` : \`\${A} vs \${B}: dead even on SEO \u{1F94A} Who breaks the tie?\`;
@@ -925,11 +985,12 @@ $("#duelForm").addEventListener("submit", async e => {
   const a = $("#a").value.trim(), b = $("#b").value.trim(), err = $("#err");
   err.hidden = true;
   if (!a || !b) { err.textContent = "Enter both websites to start the fight."; err.hidden = false; return; }
+  await meReady; if (!ME) { withAccount(() => $("#duelForm").requestSubmit(), "Sign up to start your fight", "Free account: 1 fight a week, every fight result, and 1 try of each tool. Takes 5 seconds."); return; }
   const btn = $("#fightBtn"); btn.disabled = true; btn.textContent = "Fighting\u2026";
   try {
     const r = await fetch(\`/api/duel?a=\${encodeURIComponent(a)}&b=\${encodeURIComponent(b)}\`);
     const j = await r.json();
-    if (r.status === 429) { openLead("more"); throw new Error(j.error); }
+    if (!(await gateCheck(r))) { btn.disabled = false; btn.textContent = "Fight"; return; }
     if (!r.ok) throw new Error(j.error || "Fight failed");
     store.set("pick:" + j.slug, "own");
     location.href = \`/fight/\${j.slug}?r=1\`;
@@ -942,10 +1003,12 @@ $("#duelForm").addEventListener("submit", async e => {
 
 $("#rivalBtn").addEventListener("click", async () => {
   const a = $("#a").value.trim(); if (!a) { toast("Enter your website first"); $("#a").focus(); return; }
+  await meReady; if (!ME) { withAccount(() => $("#rivalBtn").click(), "Sign up to find your rivals", "Free account: find your top rivals once a week, plus 1 fight a week."); return; }
   const btn = $("#rivalBtn"); btn.textContent = "Finding rivals\u2026";
   try {
     const r = await fetch(\`/api/rivals?site=\${encodeURIComponent(a)}\`); const j = await r.json();
     if (r.status === 503) { openLead("rivals"); return; }
+    if (!(await gateCheck(r))) return;
     if (!r.ok) throw new Error(j.error);
     const list = $("#rivalList");
     list.innerHTML = j.rivals.length ? j.rivals.map(x => \`<button type="button" data-h="\${esc(x.host)}">\${esc(x.host)}</button>\`).join("") : "<span>No clear rivals found. Try entering one.</span>";
@@ -957,15 +1020,16 @@ $("#rivalBtn").addEventListener("click", async () => {
 
 /* ---------- main card ---------- */
 function renderCards(cat) {
-  const list = CARDS.filter(c => !cat || c.category === cat);
+  const list = CARDS.filter(c => !cat || c.category === cat).sort((x, y) => (y.slug === FOTN) - (x.slug === FOTN));
   $("#cards").innerHTML = list.map(c => {
     const picks = (c.votes_a || 0) + (c.votes_b || 0);
-    return \`<a class="poster" href="/fight/\${encodeURIComponent(c.slug)}">
-      <span class="pc-cat">\${esc(c.category || "Featured")}</span>
+    const night = c.slug === FOTN;
+    return \`<a class="poster\${night ? " night" : ""}" href="/fight/\${encodeURIComponent(c.slug)}">
+      <span class="pc-cat">\${night ? "\u{1F319} Fight of the Night \xB7 free" : esc(c.category || "Featured")}</span>
       <span class="pc-a">\${esc(pretty(c.a))}</span>
       <span class="pc-vs">VS</span>
       <span class="pc-b">\${esc(pretty(c.b))}</span>
-      <span class="pc-foot"><b>Tap to reveal</b><span>\${picks ? picks.toLocaleString() + " picks" : "Be the first to pick"}</span></span>
+      <span class="pc-foot"><b>\${night ? "Free tonight" : "Tap to reveal"}</b><span>\${picks ? picks.toLocaleString() + " picks" : "Be the first to pick"}</span></span>
     </a>\`;
   }).join("") || \`<p class="sub">No fights here yet.</p>\`;
 }
@@ -998,10 +1062,10 @@ function reveal(pick, votes) {
   }
   document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
-const fan = () => store.get("fan");
 let pendingPick = null, pendingVotes = null;
-function needUnlock(pick, votes) {
-  if (fan()) { reveal(pick, votes); return; }
+async function needUnlock(pick, votes) {
+  await meReady;
+  if (ME || D.slug === FOTN) { reveal(pick, votes); return; }
   pendingPick = pick; pendingVotes = votes;
   $("#gate").hidden = true; $("#unlock").hidden = false;
   $("#unlockEyebrow").textContent = pick === "a" || pick === "b" ? \`You picked \${D[pick].host}\` : "Result is ready";
@@ -1012,7 +1076,12 @@ $("#unlock").addEventListener("submit", async e => {
   const email = $("#unlockEmail").value.trim();
   if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) { toast("Enter a valid email to see the result"); return; }
   $("#unlockBtn").disabled = true; $("#unlockBtn").textContent = "Unlocking\u2026";
-  try { await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, plan: "fan", fight: D.slug, info: { pick: pendingPick || "" } }) }); } catch {}
+  try {
+    const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
+    const j = await r.json();
+    if (!r.ok) { toast(j.error || "Try again"); $("#unlockBtn").disabled = false; $("#unlockBtn").textContent = "Show me"; return; }
+    window.ME = j;
+  } catch { toast("Try again"); $("#unlockBtn").disabled = false; $("#unlockBtn").textContent = "Show me"; return; }
   store.set("fan", email);
   $("#unlock").hidden = true;
   reveal(pendingPick, pendingVotes);
@@ -1405,6 +1474,7 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.poster.night { outline: 3px solid #f2c14e; outline-offset: -3px } .poster.night .pc-cat { background: #f2c14e; color: #0b0d13 }
 footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 24px }
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
 footer .fcols b { color: var(--ink); font-size: 14px }
@@ -1422,6 +1492,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 .price .left { color: var(--red, #e0263a); font-weight: 700 }
 
 
+html:not([data-me]) pre.out { filter: blur(5px); user-select: none; -webkit-user-select: none }
 [data-tool] { display: none }
 .tools-hero { padding-block: 56px 8px }
 .tools-hero h1 { font-size: clamp(52px, 9vw, 104px) }
@@ -1597,12 +1668,81 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
 </div><div class="wrap fcopy">\xA9 2026 SEO Fight</div></footer>
 <div class="toast" id="toast" hidden></div>
 
+<div class="modal" id="suModal" hidden role="dialog" aria-modal="true" aria-labelledby="suTitle">
+  <form class="box lead" id="suForm" novalidate>
+    <span class="eyebrow" id="suEyebrow">Free account</span>
+    <h3 class="display" id="suTitle">Sign up to use this</h3>
+    <p id="suText">Takes 5 seconds. No password, no card.</p>
+    <div id="suFields"><input id="suEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"></div>
+    <button class="btn fight" type="submit" id="suBtn">Create free account</button>
+    <a class="btn fight" id="suPro" href="/go/pro" hidden>Go Pro \xB7 $19/month</a>
+    <p class="muted" id="suFine" style="font-size:13px;margin:0">Already paid? <a href="/account">Get your access link</a>. By signing up you agree to the <a href="/terms">Terms</a>.</p>
+    <button class="linkbtn" type="button" id="suClose">Not now</button>
+  </form>
+</div>
+<script>
+(() => {
+  const q = s => document.querySelector(s);
+  window.ME = null;
+  window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => (window.ME = j && j.plan ? j : null)).catch(() => null);
+  let next = null;
+  const open = (mode, title, text) => {
+    const pay = mode === "pay";
+    q("#suEyebrow").textContent = pay ? "Out of free tries" : "Free account";
+    q("#suTitle").textContent = title; q("#suText").textContent = text;
+    q("#suFields").hidden = pay; q("#suBtn").hidden = pay; q("#suFine").hidden = pay; q("#suPro").hidden = !pay;
+    q("#suModal").hidden = false; if (!pay) setTimeout(() => q("#suEmail").focus(), 50);
+  };
+  // Run \`fn\` only for signed-in people; everyone else gets the sign-up box first.
+  window.withAccount = async (fn, title, text) => {
+    await window.meReady;
+    if (window.ME) { fn && fn(); return; }
+    next = fn; open("signup", title || "Sign up to use this", text || "Free account: see every fight result, 1 fight a week and 1 try of each tool a week. Takes 5 seconds.");
+  };
+  // Free tries used up: push to Pro.
+  window.paywall = (msg) => open("pay", "Go Pro to keep going", msg || "You've used your free tries this week. Pro gives you 40 fights a month and every tool.");
+  // Read an API response: true if it worked, opens the right box if not.
+  window.gateCheck = async (r) => {
+    if (r.status === 401) { window.ME = null; open("signup", "Sign up to use this", "Free account: see every fight result, 1 fight a week and 1 try of each tool a week."); return false; }
+    if (r.status === 402 || r.status === 429) { let m = ""; try { m = (await r.clone().json()).error; } catch {} window.paywall(m); return false; }
+    return true;
+  };
+  q("#suClose").addEventListener("click", () => { q("#suModal").hidden = true; next = null; });
+  q("#suModal").addEventListener("click", e => { if (e.target.id === "suModal") { q("#suModal").hidden = true; next = null; } });
+  q("#suForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = q("#suEmail").value.trim(), btn = q("#suBtn");
+    if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)) { q("#suText").textContent = "Enter a valid email."; return; }
+    btn.disabled = true; btn.textContent = "Creating\u2026";
+    try {
+      const r = await fetch("/api/signup", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email }) });
+      const j = await r.json();
+      if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
+      window.ME = j; try { localStorage.setItem("fan", email); } catch {}
+      q("#suModal").hidden = true; const f = next; next = null; f && f();
+    } catch { q("#suText").textContent = "Try again."; }
+    finally { btn.disabled = false; btn.textContent = "Create free account"; }
+  });
+})();
+</script>
+
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 function toast(m) { const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2200); }
 async function copyText(text) { try { await navigator.clipboard.writeText(text); toast("Copied"); } catch { toast("Select the text and copy it"); } }
-document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => copyText($("#" + b.dataset.copy).textContent)));
+// Generators: preview is blurred and copying needs an account (free = 1 copy per generator a week).
+const GEN = { rbOut: "robots", scOut: "schema", llOut: "llms" }, usedGen = new Set();
+meReady.then(() => { if (ME) document.documentElement.dataset.me = ME.plan; });
+document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => withAccount(async () => {
+  document.documentElement.dataset.me = ME.plan;
+  const id = b.dataset.copy, tool = GEN[id];
+  if (tool && !usedGen.has(tool)) {
+    const r = await fetch("/api/use", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ tool }) });
+    if (!(await gateCheck(r))) return; usedGen.add(tool);
+  }
+  copyText($("#" + id).textContent);
+}, "Sign up to copy this", "Free account: copy each generator's file once a week. Pro: unlimited.")));
 async function sendLead(body) { const r = await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }); if (!r.ok) throw new Error("Try again"); }
 const okEmail = e => /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(e);
 document.getElementById("kbWait").addEventListener("submit", async e => {
@@ -1687,9 +1827,10 @@ function llms() {
 $("#blForm").addEventListener("submit", async e => {
   e.preventDefault(); const u = $("#blUrl").value.trim(); $("#blErr").hidden = true;
   if (!u) { $("#blErr").textContent = "Enter a page address to scan."; $("#blErr").hidden = false; return; }
+  await meReady; if (!ME) { withAccount(() => $("#blForm").requestSubmit(), "Sign up to scan your links", "Free account: 1 link scan a week, 1 fight a week. Pro: 200 scans a month."); return; }
   const btn = $("#blBtn"); btn.disabled = true; btn.textContent = "Scanning\u2026";
   try {
-    const r = await fetch(\`/api/links?url=\${encodeURIComponent(u)}\`); const j = await r.json(); if (!r.ok) throw new Error(j.error);
+    const r = await fetch(\`/api/links?url=\${encodeURIComponent(u)}\`); if (!(await gateCheck(r))) return; const j = await r.json(); if (!r.ok) throw new Error(j.error);
     $("#blChips").innerHTML = \`<span class="chip">\${j.total} links</span><span class="chip bad">\${j.broken} broken</span><span class="chip warn">\${j.redirects} redirects</span><span class="chip good">\${j.total - j.broken - j.redirects} OK</span>\`;
     $("#blRows").innerHTML = j.links.map(l => \`<tr><td class="url">\${esc(l.url)}<small>\${esc(l.text)}\${l.to ? " \u2192 " + esc(l.to) : ""}</small></td><td><span class="st \${l.kind}">\${l.status || "Timeout"}</span></td><td class="muted">\${l.internal ? "Internal" : "External"}</td></tr>\`).join("");
     $("#blOut").hidden = false;
@@ -1700,16 +1841,19 @@ $("#blForm").addEventListener("submit", async e => {
 /* ---- keyword battle ---- */
 $("#kbSuggest").addEventListener("click", async () => {
   const a = $("#kbA").value.trim(); if (!a) { toast("Enter your site first"); return; }
-  try { const r = await fetch(\`/api/keywords?site=\${encodeURIComponent(a)}&rival=\${encodeURIComponent($("#kbB").value.trim())}\`); const j = await r.json(); if (!r.ok) throw new Error(j.error); $("#kbKw").value = j.keywords.join("\\n"); }
+  await meReady; if (!ME) { withAccount(() => $("#kbSuggest").click(), "Sign up to battle", "Free account: 1 Keyword Battle a week. Pro: all 10 keywords, any country."); return; }
+  try { const r = await fetch(\`/api/keywords?site=\${encodeURIComponent(a)}&rival=\${encodeURIComponent($("#kbB").value.trim())}\`); if (!(await gateCheck(r))) return; const j = await r.json(); if (!r.ok) throw new Error(j.error); $("#kbKw").value = j.keywords.join("\\n"); }
   catch (x) { toast(liveErr(x)); }
 });
 $("#kbForm").addEventListener("submit", async e => {
   e.preventDefault(); $("#kbErr").hidden = true;
   const a = $("#kbA").value.trim(), b = $("#kbB").value.trim(), kw = $("#kbKw").value.split("\\n").map(s => s.trim()).filter(Boolean).slice(0, 10);
   if (!a || !b) { $("#kbErr").textContent = "Enter both sites."; $("#kbErr").hidden = false; return; }
+  await meReady; if (!ME) { withAccount(() => $("#kbForm").requestSubmit(), "Sign up to battle", "Free account: 1 Keyword Battle a week. Pro: all 10 keywords, any country."); return; }
   const btn = $("#kbBtn"); btn.disabled = true; btn.textContent = "Battling\u2026";
   try {
     const r = await fetch("/api/battle", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ a, b, keywords: kw, country: $("#kbCountry").value }) });
+    if (r.status !== 503 && !(await gateCheck(r))) return;
     const j = await r.json();
     if (r.status === 503) { document.getElementById("kbWait").hidden = false; document.getElementById("kbWait").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
     if (!r.ok) throw new Error(j.error);
@@ -1953,12 +2097,12 @@ var ALTS = [
 
 // src/worker.js
 var SITE = "https://seofight.app", UA = "Mozilla/5.0 (compatible; SEOFightBot/1.0; +https://seofight.app/llms.txt)", LIMITS = {
-  free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"] },
-  pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"] },
-  agency: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"] },
-  lifetime: { fights: [40, "month"], battles: [0, "month"], strategy: [0, "month"] },
-  owner: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"] }
-}, PLAN_NAMES = { pro: "Pro", agency: "Agency", lifetime: "Lifetime", owner: "Owner" }, planOf = (m) => m ? LIMITS[m.plan] ? m.plan : "pro" : "free", TOOL_LIMITS = { rivals: 3, keywords: 20, links: 10 }, esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
+  free: { fights: [1, "week"], battles: [1, "week"], strategy: [0, "month"], rivals: [1, "week"], links: [1, "week"], gen: [1, "week"] },
+  pro: { fights: [40, "month"], battles: [4, "month"], strategy: [4, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"] },
+  agency: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"] },
+  lifetime: { fights: [40, "month"], battles: [0, "month"], strategy: [0, "month"], rivals: [60, "month"], links: [200, "month"], gen: [500, "month"] },
+  owner: { fights: [200, "month"], battles: [20, "month"], strategy: [20, "month"], rivals: [300, "month"], links: [1e3, "month"], gen: [2e3, "month"] }
+}, PLAN_NAMES = { free: "Free", pro: "Pro", agency: "Agency", lifetime: "Lifetime", owner: "Owner" }, paid = (m) => !!m && m.plan !== "free", planOf = (m) => m ? LIMITS[m.plan] ? m.plan : "pro" : "free", TOOL_LIMITS = { rivals: 3, keywords: 20, links: 10 }, esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
   s = (s || "").trim(), /^https?:\/\//i.test(s) || (s = "https://" + s);
   let u = new URL(s);
   if (unsafeHost(u.hostname) || u.port) throw 0;
@@ -1995,18 +2139,29 @@ async function member(req, env) {
   return !key || !env.DB ? null : env.DB.prepare("SELECT * FROM members WHERE key=?1 AND active=1").bind(key).first();
 }
 async function canUse(env, who, what, plan) {
-  let [max, per] = LIMITS[plan][what];
+  let [max, per] = LIMITS[plan][what.split(":")[0]];
   return max === 0 ? !1 : env.LIMITS ? parseInt(await env.LIMITS.get(`u:${what}:${period(per)}:${who}`) || "0", 10) < max : !0;
 }
 async function spend(env, who, what, plan) {
   if (!env.LIMITS) return;
-  let per = LIMITS[plan][what][1], k = `u:${what}:${period(per)}:${who}`, n = parseInt(await env.LIMITS.get(k) || "0", 10);
+  let per = LIMITS[plan][what.split(":")[0]][1], k = `u:${what}:${period(per)}:${who}`, n = parseInt(await env.LIMITS.get(k) || "0", 10);
   await env.LIMITS.put(k, String(n + 1), { expirationTtl: per === "month" ? 32 * 86400 : 8 * 86400 });
 }
 async function toolUse(env, req, what) {
   if (!env.LIMITS) return !0;
   let k = `t:${what}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}:${ipOf(req)}`, n = parseInt(await env.LIMITS.get(k) || "0", 10);
   return n >= TOOL_LIMITS[what] ? !1 : (await env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }), !0);
+}
+var NEED_ACCOUNT = () => json({ error: "Sign up free to use this.", signup: !0 }, 401), OUT = (plan, what) => json({ error: plan === "free" ? `You've used your free ${what} this week. Go Pro to keep going.` : `You've hit this month's ${what} limit. It resets on the 1st.` }, 429), FOTN = "", FOTN_AT = 0;
+async function refreshFotn(env) {
+  if (!(!env.DB || Date.now() - FOTN_AT < 6e5)) {
+    FOTN_AT = Date.now();
+    try {
+      let rows = (await env.DB.prepare("SELECT slug FROM fights WHERE category IS NOT NULL ORDER BY slug").all()).results;
+      rows.length && (FOTN = rows[Math.floor(Date.now() / 864e5) % rows.length].slug);
+    } catch {
+    }
+  }
 }
 async function fetchSite(url, env) {
   let t0 = Date.now(), res = await get(url), html2 = (await res.text()).slice(0, 2e6), ms = Date.now() - t0, finalUrl = res.url || url, origin = new URL(finalUrl).origin, [robots, sitemap, llms, speed] = await Promise.all([
@@ -2085,10 +2240,11 @@ function page(env, o) {
     __VIEW__: o.view || "home",
     __CARDS__: JSON.stringify(o.cards || []).replace(/</g, "\\u003c"),
     __SUMMARY__: o.summary || "",
+    __FOTN__: esc(FOTN),
     __DATA__: JSON.stringify(withReport(d, !1)).replace(/</g, "\\u003c"),
     __LIVE__: o.live ? "true" : "false"
   };
-  return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE)__/g, (m) => fill[m]), o);
+  return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE|FOTN)__/g, (m) => fill[m]), o);
 }
 var HOME = {
   title: "SEO Fight \xB7 Compare website SEO side by side",
@@ -2140,8 +2296,8 @@ var TOOL_PAGES = {
     show: "hub",
     title: "Free SEO tools \xB7 SEO Fight",
     h1: 'Free <span class="r">SEO</span> <span class="b">tools</span>',
-    desc: "Free SEO tools: broken link checker, robots.txt generator, schema markup generator and llms.txt generator. No sign-up.",
-    lede: "Fix the technical stuff in minutes. Free, no sign-up.",
+    desc: "Free SEO tools: broken link checker, robots.txt generator, schema markup generator and llms.txt generator. Free account, 5-second sign-up.",
+    lede: "Fix the technical stuff in minutes. Free account, no card.",
     crumbs: [],
     about: "<h2>About these tools</h2><p>Each tool does one job: find broken links, control which crawlers can read your site, add structured data for rich results, and tell AI assistants what your site is about. Run a free SEO fight to see which of these your site needs most.</p>"
   },
@@ -2477,7 +2633,7 @@ var worker_default = {
     let u = new URL(req.url);
     SITE = env.SITE_URL || u.origin;
     let p = u.pathname.replace(/\/+$/, "") || "/";
-    if (p.startsWith("/api/") || await refreshLife(env), p === "/api/duel") {
+    if (p.startsWith("/api/") || await Promise.all([refreshLife(env), refreshFotn(env)]), p === "/api/duel") {
       let a, b;
       try {
         a = norm(u.searchParams.get("a")), b = norm(u.searchParams.get("b"));
@@ -2485,22 +2641,27 @@ var worker_default = {
         return json({ error: "Enter two valid websites, like shop.com and rival.com." }, 400);
       }
       if (hostOf(a) === hostOf(b)) return json({ error: "Pick two different websites." }, 400);
-      let m = await member(req, env), slug = slugOf(hostOf(a), hostOf(b)), old = await storedFight(env, slug);
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      let slug = slugOf(hostOf(a), hostOf(b)), old = await storedFight(env, slug);
       if (old && old.age < 36e5)
-        return ctx.waitUntil(env.DB.prepare("UPDATE fights SET views=views+1 WHERE slug=?1").bind(slug).run()), json(withReport(old.d, !!m));
-      let who = m ? m.key : ipOf(req), plan = planOf(m);
+        return ctx.waitUntil(env.DB.prepare("UPDATE fights SET views=views+1 WHERE slug=?1").bind(slug).run()), json(withReport(old.d, paid(m)));
+      let who = m.key, plan = planOf(m);
       if (!await canUse(env, who, "fights", plan))
-        return json({ error: m ? `You've used your ${LIMITS[plan].fights[0]} fights this month. They reset on the 1st.` : "You've used your free fight this week. Go Pro for 40 fights a month." }, 429);
+        return json({ error: paid(m) ? `You've used your ${LIMITS[plan].fights[0]} fights this month. They reset on the 1st.` : "You've used your free fight this week. Go Pro for 40 fights a month." }, 429);
       try {
         let d = await runFight(a, b, env);
-        return ctx.waitUntil(Promise.all([saveFight(env, d), spend(env, who, "fights", plan)])), json(withReport(d, !!m));
+        return ctx.waitUntil(Promise.all([saveFight(env, d), spend(env, who, "fights", plan)])), json(withReport(d, paid(m)));
       } catch (e) {
         return e instanceof Blocked && env.DB && ctx.waitUntil(env.DB.prepare("INSERT OR REPLACE INTO blocked (slug, reason, at) VALUES (?1, 'blocked', ?2)").bind(slug, Date.now()).run()), json({ error: e instanceof Blocked ? e.message : "Couldn't reach one of the sites. Check the address and try again." }, e instanceof Blocked ? 422 : 502);
       }
     }
     if (p === "/api/rivals") {
       if (!env.SERPER_KEY && !env.AI) return json({ error: "Rival finder isn't switched on yet." }, 503);
-      if (!await toolUse(env, req, "rivals")) return json({ error: "You've used the rival finder 3 times today. Try again tomorrow." }, 429);
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      if (!await canUse(env, m.key, "rivals", planOf(m))) return OUT(planOf(m), "rival finder");
+      ctx.waitUntil(spend(env, m.key, "rivals", planOf(m)));
       try {
         let site = norm(u.searchParams.get("site")), pgHtml = await (await get(site)).text(), kws = keywordsFromHtml(pgHtml, hostOf(site));
         return env.SERPER_KEY ? kws.length ? json({ rivals: await findRivals(env, hostOf(site), kws, u.searchParams.get("gl") || "us"), keywords: kws }) : json({ rivals: [] }) : json({ rivals: await aiRivals(env, hostOf(site), pgHtml, kws), keywords: kws, source: "ai" });
@@ -2509,6 +2670,7 @@ var worker_default = {
       }
     }
     if (p === "/api/keywords") {
+      if (!await member(req, env)) return NEED_ACCOUNT();
       if (!await toolUse(env, req, "keywords")) return json({ error: "Too many tries today. Type your keywords instead." }, 429);
       try {
         let site = norm(u.searchParams.get("site")), kws = keywordsFromHtml(await (await get(site)).text(), hostOf(site)), rival = u.searchParams.get("rival");
@@ -2537,31 +2699,35 @@ var worker_default = {
       }
       let kws = [...new Set((body.keywords || []).map((k) => String(k).trim().toLowerCase()).filter(Boolean))].slice(0, 10);
       if (!kws.length) return json({ error: "Add at least one keyword, or tap Suggest keywords." }, 400);
-      let m = await member(req, env), gl = m ? String(body.country || "us").slice(0, 2) : "us", who = m ? m.key : ipOf(req), plan = planOf(m);
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      let gl = paid(m) ? String(body.country || "us").slice(0, 2) : "us", who = m.key, plan = planOf(m);
       if (!await canUse(env, who, "battles", plan))
-        return json({ error: m ? LIMITS[plan].battles[0] ? `You've used your ${LIMITS[plan].battles[0]} Keyword Battles this month.` : "Keyword Battle is part of Pro and Agency." : "You've used your free Keyword Battle this week. Go Pro for 4 a month with all 10 keywords." }, 429);
+        return json({ error: paid(m) ? LIMITS[plan].battles[0] ? `You've used your ${LIMITS[plan].battles[0]} Keyword Battles this month.` : "Keyword Battle is part of Pro and Agency." : "You've used your free Keyword Battle this week. Go Pro for 4 a month with all 10 keywords." }, 429);
       try {
         let res = await battle(env, a, b, kws, gl);
-        return ctx.waitUntil(spend(env, who, "battles", plan)), m && env.DB && ctx.waitUntil(env.DB.prepare(
+        return ctx.waitUntil(spend(env, who, "battles", plan)), paid(m) && env.DB && ctx.waitUntil(env.DB.prepare(
           `INSERT INTO battles (member_key, email, a, b, gl, keywords, last, created_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8)
            ON CONFLICT(member_key, a, b) DO UPDATE SET gl=?5, keywords=?6, last=?7`
-        ).bind(m.key, m.email, a, b, gl, JSON.stringify(kws), JSON.stringify(res.rows), Date.now()).run()), m || (res.rows = res.rows.map((r, i) => i === 0 ? r : { locked: !0 }), res.winsA = res.rows[0].edge === "a" ? 1 : 0, res.winsB = res.rows[0].edge === "b" ? 1 : 0), json(res);
+        ).bind(m.key, m.email, a, b, gl, JSON.stringify(kws), JSON.stringify(res.rows), Date.now()).run()), paid(m) || (res.rows = res.rows.map((r, i) => i === 0 ? r : { locked: !0 }), res.winsA = res.rows[0].edge === "a" ? 1 : 0, res.winsB = res.rows[0].edge === "b" ? 1 : 0), json(res);
       } catch {
         return json({ error: "Google search didn't answer. Try again in a minute." }, 502);
       }
     }
     if (p === "/api/links") {
-      if (!await toolUse(env, req, "links")) return json({ error: "You've used the link checker 10 times today. Try again tomorrow." }, 429);
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      if (!await canUse(env, m.key, "links", planOf(m))) return OUT(planOf(m), "link check");
       try {
-        let url = normPage(u.searchParams.get("url")), r = await get(url, 1e4);
-        return json(await checkLinks(r.url || url, await r.text(), UA));
+        let url = normPage(u.searchParams.get("url")), r = await get(url, 1e4), out = await checkLinks(r.url || url, await r.text(), UA);
+        return ctx.waitUntil(spend(env, m.key, "links", planOf(m))), json(out);
       } catch {
         return json({ error: "Couldn't load that page. Check the address." }, 502);
       }
     }
     if (p === "/api/strategy" && req.method === "POST") {
       let m = await member(req, env);
-      if (!m) return json({ error: "AI strategy is a Pro feature." }, 402);
+      if (!paid(m)) return json({ error: "AI strategy is a Pro feature." }, 402);
       if (!env.OPENROUTER_KEY && !env.AI) return json({ error: "AI strategy isn't switched on yet." }, 503);
       let body;
       try {
@@ -2586,7 +2752,7 @@ var worker_default = {
     }
     if (p === "/api/watch" && req.method === "POST") {
       let m = await member(req, env);
-      if (!m) return json({ error: "Monday email reports are a Pro feature." }, 402);
+      if (!paid(m)) return json({ error: "Monday email reports are a Pro feature." }, 402);
       let body;
       try {
         body = await req.json();
@@ -2604,6 +2770,44 @@ var worker_default = {
         `INSERT INTO watches (email, a, b, last_a, last_b, token, active, created_at) VALUES (?1,?2,?3,?4,?5,?6,1,?7)
          ON CONFLICT(email, a, b) DO UPDATE SET active=1`
       ).bind(m.email, a, b, f?.a_score ?? 0, f?.b_score ?? 0, crypto.randomUUID(), Date.now()).run(), json({ ok: !0, email: m.email });
+    }
+    if (p === "/api/me") {
+      let m = await member(req, env);
+      return json(m ? { plan: planOf(m), name: PLAN_NAMES[planOf(m)], email: m.email } : {}, 200, { "cache-control": "no-store" });
+    }
+    if (p === "/api/signup" && req.method === "POST") {
+      let body;
+      try {
+        body = await req.json();
+      } catch {
+        return json({ error: "Bad request" }, 400);
+      }
+      let email = String(body.email || "").trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 200) return json({ error: "Enter a valid email." }, 400);
+      if (!env.DB) return json({ error: "Not set up" }, 503);
+      let k = `su:${ipOf(req)}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`, n = env.LIMITS ? parseInt(await env.LIMITS.get(k) || "0", 10) : 0;
+      if (n >= 5) return json({ error: "Too many sign-ups from here today." }, 429);
+      env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
+      let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
+      if (old && old.plan !== "free" && old.active) return json({ error: "This email has a paid plan. Get your access link on the Account page." }, 409);
+      let key = old && old.plan === "free" ? old.key : null;
+      return key || (key = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, "0")).join(""), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, `<p>${esc(email)}</p>`))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
+    }
+    if (p === "/api/use" && req.method === "POST") {
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      let body;
+      try {
+        body = await req.json();
+      } catch {
+        body = {};
+      }
+      let tool = ["robots", "schema", "llms"].includes(body.tool) ? body.tool : "robots";
+      return await canUse(env, m.key, "gen:" + tool, planOf(m)) ? (await spend(env, m.key, "gen:" + tool, planOf(m)), json({ ok: !0 })) : OUT(planOf(m), "generator use");
+    }
+    if (p.startsWith("/go/")) {
+      let to = { pro: env.STRIPE_PRO_LINK, agency: env.STRIPE_AGENCY_LINK, lifetime: lifeTier(env).link }[p.slice(4)], m = await member(req, env), dest = to && !to.startsWith("#") ? to + (m ? (to.includes("?") ? "&" : "?") + "prefilled_email=" + encodeURIComponent(m.email) : "") : "/#pricing";
+      return new Response(null, { status: 302, headers: { location: dest } });
     }
     if (p === "/api/vote" && req.method === "POST") {
       let body;
@@ -2693,6 +2897,7 @@ var worker_default = {
       let m = env.DB && await env.DB.prepare("SELECT key, plan FROM members WHERE email=?1 AND active=1").bind(email).first();
       return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fight access link", `<p><a href="${SITE}/activate?key=${m.key}">Tap to switch on ${PLAN_NAMES[m.plan] || "Pro"} on this device</a></p>`)), json({ ok: !0 });
     }
+    if (p === "/login" || p === "/signup") return new Response(null, { status: 302, headers: { location: "/account" } });
     if (p === "/account") {
       let m = await member(req, env);
       if (!m) return infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fight", h1: 'Your <span class="b">account</span>', lede: "Already paid? Get your access link by email.", body: RESTORE_HTML });
@@ -2709,7 +2914,7 @@ var worker_default = {
         h1: `<span class="r">${esc(PLAN_NAMES[plan] || "Pro")}</span> account`,
         lede: esc(m.email),
         body: `<div class="panel"><h3>This month</h3><div class="tbl-wrap"><table><tbody>${row("Fights", f, L.fights[0])}${row("Keyword Battles", kb, L.battles[0])}${row("AI strategies", ai, L.strategy[0])}</tbody></table></div></div>
-<div class="panel" style="margin-top:16px"><h3>Billing</h3>${plan === "lifetime" || plan === "owner" ? `<p class="muted">${plan === "owner" ? "Owner access." : "Lifetime: paid once, nothing to cancel."}</p>` : portal ? `<p class="muted">Change card, see invoices or cancel. If you cancel, you keep access until the end of the period you paid for. All payments are final.</p><p><a class="btn" href="${esc(portal)}" target="_blank" rel="noopener">Manage billing or cancel</a></p>` : '<p class="muted">Billing management is being set up.</p>'}</div>
+<div class="panel" style="margin-top:16px"><h3>${plan === "free" ? "Upgrade" : "Billing"}</h3>${plan === "free" ? `<p class="muted">Free: 1 fight and 1 try of each tool a week. Pro: 40 fights a month, every tool, AI strategy and Keyword Battles.</p><p><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/go/lifetime">Lifetime \xB7 $${lifeTier(env).price} once</a></p>` : plan === "lifetime" || plan === "owner" ? `<p class="muted">${plan === "owner" ? "Owner access." : "Lifetime: paid once, nothing to cancel."}</p>` : portal ? `<p class="muted">Change card, see invoices or cancel. If you cancel, you keep access until the end of the period you paid for. All payments are final.</p><p><a class="btn" href="${esc(portal)}" target="_blank" rel="noopener">Manage billing or cancel</a></p>` : '<p class="muted">Billing management is being set up.</p>'}</div>
 <p style="margin-top:16px"><a class="btn ghost" href="/">Start a fight</a> <a class="btn ghost" href="/signout">Sign out</a></p>`
       });
     }
