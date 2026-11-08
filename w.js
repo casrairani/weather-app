@@ -262,18 +262,24 @@ function keywordsFromHtml(html2, siteHost) {
       break;
   return out;
 }
-async function serp(env, q, gl = "us") {
+var DEPTH = 3;
+async function serp(env, q, gl = "us", page2 = 1) {
   let r = await fetch("https://google.serper.dev/search", {
     method: "POST",
     headers: { "X-API-KEY": env.SERPER_KEY, "content-type": "application/json" },
-    body: JSON.stringify({ q, gl, num: 100 })
+    body: JSON.stringify({ q, gl, page: page2 })
   });
   if (!r.ok) throw new Error("search failed");
-  return ((await r.json()).organic || []).map((o, i) => ({ pos: o.position || i + 1, host: host(o.link), url: o.link }));
+  return ((await r.json()).organic || []).map((o, i) => ({ pos: (page2 - 1) * 10 + i + 1, host: host(o.link), url: o.link }));
 }
 async function battle(env, a, b, keywords, gl) {
   let rows = await Promise.all(keywords.slice(0, 10).map(async (kw) => {
-    let res = await serp(env, kw, gl), find = (h) => res.find((r) => r.host === h || r.host.endsWith("." + h)), pa = find(a), pb = find(b), top = res[0];
+    let res = [], find = (h) => res.find((r) => r.host === h || r.host.endsWith("." + h));
+    for (let page2 = 1; page2 <= DEPTH; page2++) {
+      let got = await serp(env, kw, gl, page2);
+      if (res.push(...got), find(a) && find(b) || got.length < 8) break;
+    }
+    let pa = find(a), pb = find(b), top = res[0];
     return {
       keyword: kw,
       a: pa ? pa.pos : null,
@@ -656,7 +662,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 
 <header class="top"><div class="wrap">
   <a class="logo" href="/" aria-label="SEO Fights home"><i></i>SEO Fights</a>
-  <nav class="links"><a href="/fights">Fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
+  <nav class="links"><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
   <a class="btn sm" href="/#top">Start a fight</a>
 </div></header>
 
@@ -838,7 +844,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 
 <footer><div class="wrap fcols">
 <div class="fbrand"><b>SEO Fights</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="44" height="44" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a></div>
-<div><b>Product</b><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
+<div><b>Product</b><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
 <div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
 <div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
 <div><b>Company</b><a href="/about">About</a><a href="/blog">Blog</a><a href="/contact">Contact</a><a href="/account">Account</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/cookie-policy">Cookies</a></div>
@@ -1725,7 +1731,7 @@ td.url { max-width: 340px; overflow-wrap: anywhere; font-size: 13px } td.url sma
 
 <header class="top"><div class="wrap">
   <a class="logo" href="/" aria-label="SEO Fights home"><i></i>SEO Fights</a>
-  <nav class="links"><a href="/fights">Fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
+  <nav class="links"><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
   <a class="btn sm" href="/">Start a fight</a>
 </div></header>
 
@@ -1843,7 +1849,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
 
 <footer><div class="wrap fcols">
 <div class="fbrand"><b>SEO Fights</b><span>Put your site in the ring.</span><a class="xlink" href="https://x.com/kas_irani" target="_blank" rel="noopener"><img src="/kas.jpg" alt="Kas, founder of SEO Fights" width="44" height="44" loading="lazy" onerror="this.style.display='none'"><span><b>Made by Kas</b><small>\u{1D54F} @kas_irani \xB7 building in public</small></span></a></div>
-<div><b>Product</b><a href="/fights">Biggest fights</a><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
+<div><b>Product</b><a href="/keywords-battle">Keyword Battle</a><a href="/agency">For agencies</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div>
 <div><b>Free tools</b><a href="/tools">All tools</a><a href="/tools/broken-link-checker">Broken link checker</a><a href="/tools/robots-txt-generator">Robots.txt generator</a><a href="/tools/schema-markup-generator">Schema generator</a><a href="/tools/llms-txt-generator">llms.txt generator</a></div>
 <div><b>Alternatives</b><a href="/alternatives/ahrefs-alternative">Ahrefs</a><a href="/alternatives/semrush-alternative">Semrush</a><a href="/alternatives/moz-alternative">Moz</a><a href="/alternatives/ubersuggest-alternative">Ubersuggest</a><a href="/tools-like">More \u2192</a></div>
 <div><b>Company</b><a href="/about">About</a><a href="/blog">Blog</a><a href="/contact">Contact</a><a href="/account">Account</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/cookie-policy">Cookies</a></div>
@@ -2623,7 +2629,7 @@ var TOOL_PAGES = {
     desc: "Pick 10 keywords and see who ranks higher on Google, you or your competitor. Any country. Weekly movement emails on Pro.",
     lede: "Pick 10 keywords. See who ranks higher on Google for each one, you or your rival.",
     crumbs: [],
-    about: "<h2>How Keyword Battle works</h2><p>We search Google for each keyword in the country you pick and find where both sites appear in the top 100. Free shows 1 of 10 keywords. Pro shows all 10, any country, and emails you every Monday when positions move.</p>"
+    about: "<h2>How Keyword Battle works</h2><p>We search Google for each keyword in the country you pick and find where both sites appear in the top 30. Free shows 1 of 10 keywords. Pro shows all 10, any country, and emails you every Monday when positions move.</p>"
   }
 };
 function toolPage(env, path, url) {
@@ -2897,7 +2903,11 @@ var worker_default = {
       ctx.waitUntil(spend(env, m.key, "rivals", planOf(m)));
       try {
         let site = norm(u.searchParams.get("site")), pgHtml = await (await get(site)).text(), kws = keywordsFromHtml(pgHtml, hostOf(site));
-        return env.SERPER_KEY ? kws.length ? json({ rivals: await findRivals(env, hostOf(site), kws, u.searchParams.get("gl") || "us"), keywords: kws }) : json({ rivals: [] }) : json({ rivals: await aiRivals(env, hostOf(site), pgHtml, kws), keywords: kws, source: "ai" });
+        if (env.AI) {
+          let ai = await aiRivals(env, hostOf(site), pgHtml, kws).catch(() => []);
+          if (ai.length || !env.SERPER_KEY) return json({ rivals: ai, keywords: kws, source: "ai" });
+        }
+        return kws.length ? json({ rivals: await findRivals(env, hostOf(site), kws, u.searchParams.get("gl") || "us"), keywords: kws }) : json({ rivals: [] });
       } catch {
         return json({ error: "Couldn't read that site. Check the address." }, 502);
       }
