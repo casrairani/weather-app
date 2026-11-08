@@ -1091,7 +1091,7 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 12px; op
     <div class="prices">
       <div class="price"><h3>Free</h3><div class="amt">$0<small>forever</small></div>
         <ul><li>Free account, email only</li><li>1 fight per week</li><li>See every fight result</li><li>1 try of each tool a week</li><li>1 of 10 keywords in Keyword Battle</li></ul>
-        <a class="btn ghost" href="#top">Start fighting</a></div>
+        <a class="btn ghost" id="freeBtn" href="/#test">Create free account</a></div>
       <div class="price pop"><span class="pill">Most picked</span><h3>Pro</h3><div class="amt">$19<small>/month</small></div>
         <ul><li>40 fights per month</li><li>AI strategy (4 per month)</li><li>4 Keyword Battles, all 10 keywords</li><li>Any country</li><li>Clean report export</li><li>Monday movement reports</li></ul>
         <a class="btn" href="__PRO__" data-lead="pro">Go Pro</a></div>
@@ -1465,6 +1465,14 @@ $("#rivalBtn").addEventListener("click", async () => {
   finally { btn.textContent = "Find SEO rivals for me"; }
 });
 
+/* ---------- free plan button: sign up, then go fight ---------- */
+$("#freeBtn") && $("#freeBtn").addEventListener("click", async e => {
+  e.preventDefault();
+  const go = () => { if (location.pathname !== "/") { location.href = "/#test"; return; } $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); };
+  await meReady;
+  if (ME) { toast("You're already in. Put your site in the ring \u{1F94A}"); go(); return; }
+  withAccount(go, "Create your free account", "Free forever, no card: 1 fight a week, every fight result, and 1 try of each tool a week.", "/#test");
+});
 /* ---------- main card ---------- */
 const ALL_FIGHTS = location.pathname === "/fights"; if (ALL_FIGHTS) document.documentElement.classList.add("fights-page");
 function splitHTML(c, p) {
