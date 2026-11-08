@@ -673,8 +673,8 @@ function countUp(el, to) {
   el.textContent = to; requestAnimationFrame(step);
 }
 
-function render(d, live) {
-  $("#modeTag").textContent = live ? "Live result" : "Example fight";
+function render(d, live, keepLabel) {
+  if (!keepLabel) $("#modeTag").textContent = live ? "Live result" : "Example fight";
   $("#hostA").textContent = d.a.host; $("#hostB").textContent = d.b.host;
   $("#thA").textContent = d.a.host; $("#thB").textContent = d.b.host;
   countUp($("#scoreA"), d.a.score); countUp($("#scoreB"), d.b.score);
@@ -798,7 +798,7 @@ $("#dlBtn").addEventListener("click", () => {
   $("#card").toBlob(b => { const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = \`seofight-\${D.a.host}-vs-\${D.b.host}.png\`; a.click(); toast("Saving image\u2026 if nothing happens, long-press the card to save it"); });
 });
 
-render(D, LIVE);
+render(D, LIVE, true);
 const q = new URLSearchParams(location.search); /* old ?a=&b= links still work */
 if (q.get("a") && q.get("b")) { $("#a").value = q.get("a"); $("#b").value = q.get("b"); $("#duelForm").requestSubmit(); }
 </script>
@@ -1386,8 +1386,16 @@ async function pagespeed(url, env) {
   let lcp = (await (await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=mobile&category=performance&key=${env.PSI_KEY}`)).json())?.lighthouseResult?.audits?.["largest-contentful-paint"]?.numericValue;
   return lcp ? { lcp: lcp / 1e3 } : null;
 }
+var Blocked = class extends Error {
+};
+function blockedHost(p) {
+  let challenge = /cf-browser-verification|cf_chl_|just a moment\.\.\.|attention required|access denied|captcha|px-captcha|_incapsula_|are you a robot|request unsuccessful/i, tiny = p.html.length < 1500;
+  return !!([401, 403, 429, 503].includes(p.status) || (p.status === 202 || tiny) && challenge.test(p.html.slice(0, 2e4)));
+}
 async function runFight(a, b, env) {
-  let [pa, pb] = await Promise.all([fetchSite(a, env), fetchSite(b, env)]), d = duel(analyze(pa), analyze(pb));
+  let [pa, pb] = await Promise.all([fetchSite(a, env), fetchSite(b, env)]), blocked = [pa, pb].filter(blockedHost).map((p) => hostOf(p.url));
+  if (blocked.length) throw new Blocked(blocked.length === 2 ? `${blocked[0]} and ${blocked[1]} both block SEO robots, so we can't score them fairly. Try other sites.` : `${blocked[0]} blocks SEO robots, so we can't score it fairly. Try another site.`);
+  let d = duel(analyze(pa), analyze(pb));
   return d.slug = slugOf(d.a.host, d.b.host), d.at = Date.now(), d;
 }
 var withReport = (d, pro) => ({ ...d, markdown: toMarkdown(d) + (pro ? "" : WATERMARK) });
@@ -1625,8 +1633,8 @@ var worker_default = {
       try {
         let d = await runFight(a, b, env);
         return ctx.waitUntil(Promise.all([saveFight(env, d), spend(env, who, "fights", plan)])), json(withReport(d, !!m));
-      } catch {
-        return json({ error: "Couldn't reach one of the sites. Check the address and try again." }, 502);
+      } catch (e) {
+        return json({ error: e instanceof Blocked ? e.message : "Couldn't reach one of the sites. Check the address and try again." }, e instanceof Blocked ? 422 : 502);
       }
     }
     if (p === "/api/rivals") {
@@ -1772,13 +1780,14 @@ var worker_default = {
       let rows = env.DB ? (await env.DB.prepare("SELECT slug, updated_at FROM fights ORDER BY views DESC LIMIT 45000").all()).results : [], urls = ["/", "/fights", ...Object.keys(TOOL_PAGES)].map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(rows.map((r) => `<url><loc>${SITE}/fight/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`));
       return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join("")}</urlset>`, { headers: { "content-type": "application/xml" } });
     }
-    return p === "/robots.txt" ? new Response(`User-agent: *
+    if (p === "/robots.txt") return new Response(`User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /activate
 
 Sitemap: ${SITE}/sitemap.xml
-`, { headers: { "content-type": "text/plain" } }) : p === "/llms.txt" ? new Response(`# SEO Fight
+`, { headers: { "content-type": "text/plain" } });
+    if (p === "/llms.txt") return new Response(`# SEO Fight
 
 > SEO Fight compares two websites head to head on 31 live SEO and AI-search checks, names a winner, and gives the loser a ranked fix list.
 
@@ -1790,7 +1799,17 @@ Sitemap: ${SITE}/sitemap.xml
 - [Biggest fights](${SITE}/fights): most-watched brand vs brand results
 
 Free: 1 fight per week. Pro: $12/month. Lifetime: $79 once.
-`, { headers: { "content-type": "text/plain; charset=utf-8" } }) : p === "/" ? page(env, HOME) : page(env, { ...HOME, status: 404, cache: "no-store" });
+`, { headers: { "content-type": "text/plain; charset=utf-8" } });
+    if (p === "/") {
+      let featured = null;
+      try {
+        let s = env.DB && await env.DB.prepare("SELECT v FROM settings WHERE k='featured'").first();
+        s && (featured = (await storedFight(env, s.v))?.d || null);
+      } catch {
+      }
+      return page(env, { ...HOME, data: featured || void 0, live: !!featured, mode: featured ? "Featured fight" : "Example fight", a: "", b: "" });
+    }
+    return page(env, { ...HOME, status: 404, cache: "no-store" });
   },
   async scheduled(event, env, ctx) {
     env.SITE_URL && (SITE = env.SITE_URL), ctx.waitUntil(weekly(env));
