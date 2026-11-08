@@ -245,13 +245,13 @@ var STOP = new Set("a an and are as at be by for from has have home how in is it
   }
 };
 function keywordsFromHtml(html2, siteHost) {
-  let brand = siteHost.split(".")[0].replace(/[-_]/g, " ").toLowerCase(), title = strip2((html2.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || ""), desc = (html2.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)/i) || [])[1] || "", heads = (html2.match(/<h[12][^>]*>[\s\S]*?<\/h[12]>/gi) || []).map(strip2), sources = [[title, 3], [heads.join(" | "), 2], [desc, 1]], score = /* @__PURE__ */ new Map();
+  let brand2 = siteHost.split(".")[0].replace(/[-_]/g, " ").toLowerCase(), title = strip2((html2.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || ""), desc = (html2.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)/i) || [])[1] || "", heads = (html2.match(/<h[12][^>]*>[\s\S]*?<\/h[12]>/gi) || []).map(strip2), sources = [[title, 3], [heads.join(" | "), 2], [desc, 1]], score = /* @__PURE__ */ new Map();
   for (let [text, w] of sources)
     for (let part of text.toLowerCase().split(/[|·•–—:,.!?()\[\]"]+/)) {
       let words = part.split(/\s+/).map((x) => x.replace(/[^\p{L}\p{N}&'-]/gu, "")).filter(Boolean);
       for (let n = 3; n >= 2; n--) for (let i = 0; i + n <= words.length; i++) {
         let g = words.slice(i, i + n);
-        if (STOP.has(g[0]) || STOP.has(g[n - 1]) || g.join(" ").includes(brand)) continue;
+        if (STOP.has(g[0]) || STOP.has(g[n - 1]) || g.join(" ").includes(brand2)) continue;
         let k = g.join(" ");
         score.set(k, (score.get(k) || 0) + w * n);
       }
@@ -945,6 +945,9 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
   const q = s => document.querySelector(s);
   window.ME = null; window.AUTH = {};
   window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
+  // Signed in: the header button goes to the dashboard instead of "Start a fight".
+  const dashBtn = () => { if (!window.ME) return; document.querySelectorAll("header.top .btn.sm").forEach(b => { b.textContent = "Dashboard"; b.href = "/dashboard"; }); };
+  window.dashBtn = dashBtn; window.meReady.then(dashBtn);
   let next = null, nextUrl = null;
   const open = (mode, title, text) => {
     const pay = mode === "pay";
@@ -985,7 +988,7 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
       const j = await r.json();
       if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
       if (j.sent) { q("#suEyebrow").textContent = "Almost there"; q("#suTitle").textContent = "Check your inbox \u{1F4EC}"; q("#suText").textContent = \`We sent a sign-in link to \${email}. Tap it and you're in.\`; q("#suFields").hidden = true; q("#suBtn").hidden = true; q("#suGoogle").hidden = true; return; }
-      window.ME = j; try { localStorage.setItem("fan", email); } catch {}
+      window.ME = j; dashBtn(); try { localStorage.setItem("fan", email); } catch {}
       q("#suModal").hidden = true; const f = next; next = null; f && f();
     } catch { q("#suText").textContent = "Try again."; }
     finally { btn.disabled = false; btn.textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account"; }
@@ -1300,7 +1303,7 @@ $("#unlock").addEventListener("submit", async e => {
     const j = await r.json();
     if (!r.ok) { toast(j.error || "Try again"); $("#unlockBtn").disabled = false; $("#unlockBtn").textContent = "Show me"; return; }
     if (j.sent) { $("#unlock").innerHTML = \`<span class="eyebrow">Almost there</span><h2 class="display">Check your inbox \u{1F4EC}</h2><p class="gate-note">We sent a sign-in link to \${esc(email)}. Tap it and this result opens.</p>\`; return; }
-    window.ME = j;
+    window.ME = j; window.dashBtn && window.dashBtn();
   } catch { toast("Try again"); $("#unlockBtn").disabled = false; $("#unlockBtn").textContent = "Show me"; return; }
   store.set("fan", email);
   $("#unlock").hidden = true;
@@ -1806,7 +1809,7 @@ form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px
 html:not([data-me]) pre.out { filter: blur(5px); user-select: none; -webkit-user-select: none }
 [data-tool] { display: none }
 .tools-hero { padding-block: 56px 8px }
-.tools-hero h1 { font-size: clamp(52px, 9vw, 104px) }
+.tools-hero h1 { font-size: clamp(52px, 9vw, 104px) } .tools-hero h1 .r { color: var(--red) } .tools-hero h1 .b { color: var(--blue) }
 .tools-hero p { color: var(--muted); font-size: 18px; max-width: 620px; margin: 14px 0 0 }
 .crumbs { font: 500 13px/1 var(--f-mono); color: var(--muted); margin-bottom: 18px; display: flex; gap: 8px; flex-wrap: wrap } .crumbs a { text-decoration: none } .crumbs a:hover { color: var(--ink) }
 .hub { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px }
@@ -1994,6 +1997,9 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
   const q = s => document.querySelector(s);
   window.ME = null; window.AUTH = {};
   window.meReady = fetch("/api/me", { credentials: "same-origin" }).then(r => r.json()).then(j => { window.AUTH = (j && j.auth) || {}; return (window.ME = j && j.plan ? j : null); }).catch(() => null);
+  // Signed in: the header button goes to the dashboard instead of "Start a fight".
+  const dashBtn = () => { if (!window.ME) return; document.querySelectorAll("header.top .btn.sm").forEach(b => { b.textContent = "Dashboard"; b.href = "/dashboard"; }); };
+  window.dashBtn = dashBtn; window.meReady.then(dashBtn);
   let next = null, nextUrl = null;
   const open = (mode, title, text) => {
     const pay = mode === "pay";
@@ -2034,7 +2040,7 @@ About | https://crumbandco.ca/about | Our story and bakers</textarea><small>One 
       const j = await r.json();
       if (!r.ok) { q("#suText").textContent = j.error || "Try again."; return; }
       if (j.sent) { q("#suEyebrow").textContent = "Almost there"; q("#suTitle").textContent = "Check your inbox \u{1F4EC}"; q("#suText").textContent = \`We sent a sign-in link to \${email}. Tap it and you're in.\`; q("#suFields").hidden = true; q("#suBtn").hidden = true; q("#suGoogle").hidden = true; return; }
-      window.ME = j; try { localStorage.setItem("fan", email); } catch {}
+      window.ME = j; dashBtn(); try { localStorage.setItem("fan", email); } catch {}
       q("#suModal").hidden = true; const f = next; next = null; f && f();
     } catch { q("#suText").textContent = "Try again."; }
     finally { btn.disabled = false; btn.textContent = window.AUTH && window.AUTH.link ? "Email me a sign-in link" : "Create free account"; }
@@ -2428,8 +2434,167 @@ var ALTS = [
   body: `<div class="cards-list">${Object.entries(ALT_PAGES).map(([path, a]) => `<a class="panel post" href="${path}"><h3>${a.name} alternative</h3><p class="muted">Compare sites head to head, without the learning curve.</p></a>`).join("")}</div>${cta()}`
 };
 
+// src/mail.js
+var C = { bg: "#EEF0F3", ink: "#10131A", muted: "#5D6474", line: "#E1E4EC", red: "#E1232E", blue: "#1D4ED8", gold: "#E8B21C", arena: "#0F1B3D" }, FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif", DISPLAY = "Impact,'HelveticaNeue-CondensedBold','Helvetica Neue Condensed Bold','Arial Narrow Bold','Arial Narrow','Roboto Condensed','sans-serif-condensed','DejaVu Sans Condensed',Haettenschweiler,Arial,sans-serif", mailEsc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+function mailButton(text, href) {
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;margin:22px 0 6px"><tr>
+<td bgcolor="${C.red}" style="background:${C.red};border:2px solid ${C.ink};border-right-width:5px;border-bottom-width:5px;border-radius:10px">
+<a href="${mailEsc(href)}" target="_blank" style="display:inline-block;padding:14px 26px;font:700 20px/1 ${DISPLAY};font-synthesis:none;letter-spacing:1px;text-transform:uppercase;color:#ffffff;text-decoration:none">${mailEsc(text)}</a>
+</td></tr></table>`;
+}
+var mailP = (html2) => `<p style="margin:0 0 14px;font:400 16px/1.55 ${FONT};color:${C.ink}">${html2}</p>`, mailNote = (html2) => `<p style="margin:14px 0 0;font:400 13px/1.5 ${FONT};color:${C.muted}">${html2}</p>`, mailLink = (text, href) => `<a href="${mailEsc(href)}" style="color:${C.blue};text-decoration:underline">${mailEsc(text)}</a>`;
+function mailTable(rows, head2) {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:4px 0 16px">${head2 ? `<tr>${head2.map((h, i) => `<td style="padding:8px 10px;border-bottom:2px solid ${C.ink};font:700 11px/1 ${FONT};letter-spacing:1px;text-transform:uppercase;color:${C.muted};text-align:${i ? "center" : "left"}">${h}</td>`).join("")}</tr>` : ""}${rows.map((r) => `<tr>${r.map((c, i) => `<td style="padding:9px 10px;border-bottom:1px solid ${C.line};font:${i ? 600 : 400} 15px/1.4 ${FONT};color:${C.ink};text-align:${i && head2 ? "center" : "left"}">${c}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+function mailScore(a, as, b, bs) {
+  let cell = (host2, s, col, align) => `<td width="50%" style="padding:14px 16px;text-align:${align}"><div style="font:700 11px/1.2 ${FONT};letter-spacing:1px;text-transform:uppercase;color:${col}">${mailEsc(host2)}</div><div style="font:700 52px/1 ${DISPLAY};font-synthesis:none;color:${col};margin-top:6px">${mailEsc(s)}</div></td>`;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;margin:4px 0 18px;background:${C.bg};border:2px solid ${C.ink};border-radius:12px"><tr>${cell(a, as, C.red, "left")}${cell(b, bs, C.blue, "right")}</tr></table>`;
+}
+function mail({ title, body = "", button, footer, site = "https://seofights.com", preheader }) {
+  let host2 = site.replace(/^https?:\/\//, "").replace(/\/$/, ""), pre = preheader || "";
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"><title>${mailEsc(title)}</title></head>
+<body style="margin:0;padding:0;background:${C.bg};-webkit-text-size-adjust:100%">
+${pre ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${C.bg}">${mailEsc(pre)}</div>` : ""}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${C.bg}" style="background:${C.bg}"><tr><td align="center" style="padding:28px 12px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;border-collapse:separate">
+<tr><td style="background:${C.arena};border:2px solid ${C.ink};border-bottom:0;border-radius:14px 14px 0 0;padding:16px 24px">
+<a href="${mailEsc(site)}" style="text-decoration:none;font:700 26px/1 ${DISPLAY};font-synthesis:none;letter-spacing:1.5px;text-transform:uppercase;color:#ffffff"><span style="color:#ffffff">SEO</span> <span style="font-size:22px">\u{1F94A}</span> <span style="color:#ffffff">FIGHTS</span></a>
+</td></tr>
+<tr><td style="padding:0;border-left:2px solid ${C.ink};border-right:2px solid ${C.ink};font-size:0;line-height:0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="50%" height="5" bgcolor="${C.red}" style="background:${C.red};height:5px;font-size:0;line-height:0">&nbsp;</td><td width="50%" height="5" bgcolor="${C.blue}" style="background:${C.blue};height:5px;font-size:0;line-height:0">&nbsp;</td></tr></table></td></tr>
+<tr><td bgcolor="#ffffff" style="background:#ffffff;border:2px solid ${C.ink};border-top:0;border-radius:0 0 14px 14px;padding:28px 24px 26px">
+<h1 style="margin:0 0 14px;font:700 32px/1.05 ${DISPLAY};font-synthesis:none;letter-spacing:.5px;text-transform:uppercase;color:${C.ink}">${mailEsc(title)}</h1>
+${body}
+${button ? mailButton(button.text, button.href) : ""}
+</td></tr>
+<tr><td style="padding:18px 8px 0;font:400 12px/1.6 ${FONT};color:${C.muted};text-align:center">
+<b style="color:${C.ink}">SEO Fights</b> \xB7 <a href="${mailEsc(site)}" style="color:${C.muted};text-decoration:underline">${mailEsc(host2)}</a>${footer ? `<br>${footer}` : ""}
+</td></tr>
+</table></td></tr></table></body></html>`;
+}
+function toText(html2) {
+  return String(html2).replace(/<(head|style|title)[\s\S]*?<\/\1>/gi, "").replace(/<div style="display:none[\s\S]*?<\/div>/i, "").replace(/<a\s[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, (m, href, txt) => {
+    let t = txt.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim(), h = href.replace(/&amp;/g, "&");
+    return t && t !== h ? `${t} (${h})` : h;
+  }).replace(/<br\s*\/?>/gi, `
+`).replace(/<\/(p|h[1-6]|tr|li|div|table)>/gi, `
+`).replace(/<\/td>/gi, "  ").replace(/<li[^>]*>/gi, "- ").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&").split(`
+`).map((l) => l.replace(/[ \t]+/g, " ").trim()).join(`
+`).replace(/\n{3,}/g, `
+
+`).trim() + `
+`;
+}
+
+// src/autoblog.js
+var ROUNDS = [["onpage", "On-page"], ["content", "Content"], ["technical", "Technical"], ["ai", "AI-ready"], ["social", "Social"]], MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), monthYear = (t) => {
+  let d = new Date(t);
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}, brand = (h) => h.replace(/^www\./, "").split(".").slice(0, -1).join("-") || h, postSlug = (a, b) => `${brand(a)}-vs-${brand(b)}-seo`.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-"), postTitle = (d, at) => `${d.a.host} vs ${d.b.host} SEO: who wins and why (${monthYear(at)})`;
+function planFor(site) {
+  let total = site.checks.reduce((s, k) => s + k.weight, 0) || 1, order = { bad: 0, warn: 1 };
+  return site.checks.filter((x) => x.status !== "good").sort((x, y) => order[x.status] - order[y.status] || y.weight - x.weight).map((x) => ({ label: x.label, status: x.status, fix: x.fix, gain: Math.round((x.status === "bad" ? 1 : 0.5) * x.weight / total * 100) }));
+}
+var sides = (d) => {
+  let w = d.winner === "b" ? "b" : "a", l = w === "a" ? "b" : "a";
+  return { w, l, W: d[w], L: d[l] };
+};
+function factsFor(d) {
+  let { w, l, W: W2, L } = sides(d), diffs = (d.rows || []).filter((r) => r.edge && r.b).map((r) => ({ round: ROUNDS.find(([k]) => k === r.cat)?.[1] || r.cat, check: r.label, [d.a.host]: `${r.a.value} (${r.a.status})`, [d.b.host]: `${r.b.value} (${r.b.status})`, better: d[r.edge].host })), loserPlan = (L.checks ? planFor(L) : d.plan || []).slice(0, 5).map((p) => ({ fix: p.label, how: p.fix, points: p.gain, severity: p.status === "bad" ? "critical" : "improve" }));
+  return {
+    checked: new Date(d.at || Date.now()).toISOString().slice(0, 10),
+    total_checks: (d.rows || []).length,
+    rounds_count: 5,
+    result: d.winner ? { winner: W2.host, winner_score: W2.score, loser: L.host, loser_score: L.score, margin: W2.score - L.score } : { tie: !0, score: d.a.score },
+    rounds: ROUNDS.map(([k, n]) => ({ round: n, [d.a.host]: d.a.scores[k], [d.b.host]: d.b.scores[k] })),
+    checks_won: { [d.a.host]: d.winsA ?? 0, [d.b.host]: d.winsB ?? 0 },
+    top_differences: diffs.slice(0, 10),
+    loser_fix_first: loserPlan,
+    w,
+    l
+  };
+}
+function prompt(d) {
+  let f = factsFor(d), { W: W2, L } = sides(d);
+  return [
+    { role: "system", content: "You write short, genuinely useful SEO articles for small business owners. Plain, simple English. Short sentences. No hype, no jargon without a quick explanation, no emojis. Use ONLY facts and numbers from the data you are given. Never invent numbers, rankings, traffic, revenue or dates. If something is not in the data, do not say it. Output Markdown with '## ' headings, short paragraphs and '- ' bullet lists. Do not write a title." },
+    { role: "user", content: `Write a 500 to 700 word article about this real SEO fight between ${d.a.host} and ${d.b.host}, run by SEO Fights on ${f.checked} with ${f.total_checks} live checks in 5 rounds.
+
+DATA (JSON):
+${JSON.stringify({ ...f, w: void 0, l: void 0 })}
+
+Use exactly these sections, as '## ' headings, in this order:
+## The result
+## Round by round
+## What ${W2.host} does better
+## What ${L.host} should fix first
+## What a small business can copy
+
+In "What ${L.host} should fix first", use the items in loser_fix_first, in that order, as a bullet list. In "Round by round", cover all 5 rounds and copy each round's two scores exactly from "rounds". In the last section, give 3 to 5 practical steps any small business site can do this week, based on the checks in the data.` }
+  ];
+}
+function mdToHtml(md) {
+  let inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/__(.+?)__/g, "<b>$1</b>").replace(/(^|\W)[*_]([^*_\n]+)[*_](?=\W|$)/g, "$1$2").replace(/`([^`]+)`/g, "$1").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1"), out = [], list = null, para = [], flushP = () => {
+    para.length && (out.push(`<p>${inline(para.join(" "))}</p>`), para = []);
+  }, flushL = () => {
+    list && (out.push(`<ul>${list.map((x) => `<li>${inline(x)}</li>`).join("")}</ul>`), list = null);
+  };
+  for (let raw of String(md || "").replace(/\r/g, "").split(`
+`)) {
+    let line = raw.trim();
+    if (!line) {
+      flushP(), flushL();
+      continue;
+    }
+    let m;
+    if ((m = line.match(/^#{1,6}\s+(.+?)\s*#*$/)) || (m = line.match(/^\*\*([^*]{3,80})\*\*:?$/))) {
+      flushP(), flushL(), out.push(`<h3>${inline(m[1].replace(/\*\*/g, ""))}</h3>`);
+      continue;
+    }
+    if (m = line.match(/^(?:[-*•+]|\d+[.)])\s+(.+)$/)) {
+      flushP(), (list ||= []).push(m[1]);
+      continue;
+    }
+    if (/^(-{3,}|\*{3,}|_{3,})$/.test(line)) {
+      flushP(), flushL();
+      continue;
+    }
+    flushL(), para.push(line);
+  }
+  return flushP(), flushL(), out.join(`
+`);
+}
+function inventedNumbers(md, d) {
+  let allowed = new Set(JSON.stringify(factsFor(d)).match(/\d+(?:\.\d+)?/g) || []), year = new Date(d.at || Date.now()).getUTCFullYear();
+  ["500", "700", String(year), String(year - 1), "1200", "630"].forEach((x) => allowed.add(x));
+  let words = String(md).replace(/\b[a-z0-9-]+\.[a-z]{2,}\b/gi, " ");
+  return [...new Set(words.match(/\d+(?:\.\d+)?/g) || [])].filter((n) => !allowed.has(n) && !(Number(n) <= 10));
+}
+var ROUND_RE = { onpage: /\bon[- ]?page\b/i, content: /\bcontent\b/i, technical: /\btechnical\b/i, ai: /\bai[- ]?ready\b/i, social: /\bsocial\b/i };
+function wrongRoundScores(md, d) {
+  let bad = [];
+  for (let seg of String(md).replace(/\b[a-z0-9-]+\.[a-z]{2,}\b/gi, " ").split(/\n|(?<=[.!?])\s+/)) {
+    let hit = Object.keys(ROUND_RE).filter((k2) => ROUND_RE[k2].test(seg));
+    if (hit.length !== 1) continue;
+    let k = hit[0], ok = new Set([d.a.scores[k], d.b.scores[k], d.a.score, d.b.score, (d.rows || []).length, Math.abs(d.a.scores[k] - d.b.scores[k]), Math.abs(d.a.score - d.b.score)].map(String));
+    for (let r of d.rows || []) if (r.cat === k) for (let v of [r.a?.value, r.b?.value]) for (let n of String(v ?? "").match(/\d+(?:\.\d+)?/g) || []) ok.add(n);
+    for (let n of seg.match(/\d+(?:\.\d+)?/g) || []) Number(n) > 10 && !ok.has(n) && bad.push(n);
+  }
+  return bad;
+}
+function factsHtml(d, site) {
+  let { W: W2, L } = sides(d), head2 = d.winner ? `<b>${esc(W2.host)}</b> wins ${W2.score} to ${L.score}.` : `It's a tie at ${d.a.score} points each.`;
+  return `<div class="tbl-wrap"><table class="post-score"><thead><tr><th>Round</th><th>${esc(d.a.host)}</th><th>${esc(d.b.host)}</th></tr></thead><tbody>
+${ROUNDS.map(([k, n]) => `<tr><td>${n}</td><td class="v${d.a.scores[k] > d.b.scores[k] ? " won-a" : ""}">${d.a.scores[k]}</td><td class="v${d.b.scores[k] > d.a.scores[k] ? " won-b" : ""}">${d.b.scores[k]}</td></tr>`).join("")}
+<tr class="total"><td><b>Total</b></td><td class="v"><b>${d.a.score}</b></td><td class="v"><b>${d.b.score}</b></td></tr></tbody></table></div>
+<p class="post-facts">${head2} ${(d.rows || []).length} live checks, run on ${new Date(d.at || Date.now()).toISOString().slice(0, 10)}. <a href="${site}/fight/${encodeURIComponent(d.slug)}">See every check in the full fight</a>.</p>`;
+}
+function postDesc(d) {
+  let { W: W2, L } = sides(d);
+  return d.winner ? `${W2.host} beats ${L.host} ${W2.score} to ${L.score} on ${(d.rows || []).length} live SEO checks. Round by round, what the winner does better, and what ${L.host} should fix first.` : `${d.a.host} and ${d.b.host} tie at ${d.a.score} on ${(d.rows || []).length} live SEO checks. Round by round results and what each should fix first.`;
+}
+
 // src/worker.js
-var SITE = "https://seofights.com", UA = "Mozilla/5.0 (compatible; SEOFightsBot/1.0; +https://seofight.dailygym.workers.dev/llms.txt)", esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
+var SITE = "https://seofights.com", UA = "Mozilla/5.0 (compatible; SEOFightsBot/1.0; +https://seofights.com/llms.txt)", esc2 = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), unsafeHost = (h) => /^(\d{1,3}\.){3}\d{1,3}$/.test(h) || h.includes(":") || /(^|\.)(localhost|local|internal|intranet|lan|home|corp|test|invalid|example)$/i.test(h) || !/\.[a-z][a-z0-9-]{1,62}$/i.test(h), norm = (s) => {
   s = (s || "").trim(), /^https?:\/\//i.test(s) || (s = "https://" + s);
   let u = new URL(s);
   if (unsafeHost(u.hostname) || u.port) throw 0;
@@ -2496,6 +2661,23 @@ async function refreshLife(env) {
 function lifeTier(env) {
   let i = LADDER.findIndex(([cap2]) => LIFE_SOLD < cap2), [cap, price, key] = LADDER[i], left = cap === 1 / 0 ? null : cap - LIFE_SOLD;
   return { price, left, link: env[key] || env.STRIPE_LIFETIME_LINK || "#pricing", label: left === null ? "Final price" : `${left} of ${cap - (i ? LADDER[i - 1][0] : 0)} left at $${price}, then $${LADDER[i + 1][1]}` };
+}
+var NEW_TABLES = [
+  "CREATE TABLE IF NOT EXISTS member_fights (member_key TEXT NOT NULL, slug TEXT NOT NULL, at INTEGER, PRIMARY KEY (member_key, slug))",
+  "CREATE INDEX IF NOT EXISTS member_fights_at ON member_fights (member_key, at DESC)",
+  "CREATE TABLE IF NOT EXISTS hunts (id INTEGER PRIMARY KEY AUTOINCREMENT, member_key TEXT, industry TEXT, city TEXT, result TEXT, at INTEGER)",
+  "CREATE INDEX IF NOT EXISTS hunts_member ON hunts (member_key, at DESC)",
+  "CREATE TABLE IF NOT EXISTS posts (slug TEXT PRIMARY KEY, title TEXT, desc TEXT, body TEXT, fight TEXT, at INTEGER)",
+  "CREATE INDEX IF NOT EXISTS posts_at ON posts (at DESC)"
+], TABLES_OK = null;
+function tables(env) {
+  return env.DB ? TABLES_OK ||= env.DB.batch(NEW_TABLES.map((s) => env.DB.prepare(s))).then(() => !0, () => (TABLES_OK = null, !1)) : Promise.resolve(!1);
+}
+async function logFight(env, key, slug) {
+  try {
+    await tables(env), await env.DB.prepare("INSERT INTO member_fights (member_key, slug, at) VALUES (?1, ?2, ?3) ON CONFLICT(member_key, slug) DO UPDATE SET at=?3").bind(key, slug, Date.now()).run();
+  } catch {
+  }
 }
 async function member(req, env) {
   let key = cookie(req, "rf_key");
@@ -2679,7 +2861,7 @@ function badgeSvg(d) {
 var FAVICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 0 64 40"><defs><symbol id="g" viewBox="0 0 40 40"><path d="M9 15.5C9 9 13.6 5 20.2 5h3.6C31 5 36 9.6 36 16.4v3.4c0 4.8-3.2 8.3-7.7 9.1L27 29v3.2H11.6v-4.6C9.9 26.1 9 23.8 9 21.2z"/><rect x="10.6" y="31" width="17.4" height="6" rx="2"/></symbol></defs><g transform="rotate(-14 24 22)"><use href="#g" width="40" height="40" fill="#E1232E"/></g><g transform="rotate(14 48 22)"><use href="#g" x="-72" width="40" height="40" fill="#1D4ED8" transform="scale(-1,1)"/></g></svg>';
 function head(o) {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="canonical" href="${SITE}${o.path || "/"}"><meta property="og:title" content="${esc(o.title)}"><meta property="og:description" content="${esc(o.desc)}"><meta property="og:url" content="${SITE}${o.path || "/"}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
+${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="canonical" href="${SITE}${o.path || "/"}"><meta property="og:title" content="${esc2(o.title)}"><meta property="og:description" content="${esc2(o.desc)}"><meta property="og:url" content="${SITE}${o.path || "/"}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script type="application/ld+json">${JSON.stringify(o.ld || { "@context": "https://schema.org", "@graph": [{ "@type": "WebSite", name: "SEO Fights", url: SITE }, { "@type": "SoftwareApplication", name: "SEO Fights", applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }] }).replace(/</g, "\\u003c")}</script>
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
@@ -2688,23 +2870,23 @@ ${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="ca
 var html = (body, o) => new Response(body, { status: o.status || 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": o.cache || "public, max-age=300" } });
 function page(env, o) {
   let d = o.data || demo_default, fill = {
-    __TITLE__: esc(o.title),
-    __DESC__: esc(o.desc),
+    __TITLE__: esc2(o.title),
+    __DESC__: esc2(o.desc),
     __H1__: o.h1,
     __LEDE__: o.lede,
-    __A__: esc(o.a ?? d.a.host),
-    __B__: esc(o.b ?? d.b.host),
-    __MODE__: esc(o.mode),
-    __PRO__: esc(env.STRIPE_PRO_LINK || "#pricing"),
-    __LIFE__: esc(lifeTier(env).link),
+    __A__: esc2(o.a ?? d.a.host),
+    __B__: esc2(o.b ?? d.b.host),
+    __MODE__: esc2(o.mode),
+    __PRO__: esc2(env.STRIPE_PRO_LINK || "#pricing"),
+    __LIFE__: esc2(lifeTier(env).link),
     __LIFEPRICE__: String(lifeTier(env).price),
-    __LIFELEFT__: esc(lifeTier(env).label),
+    __LIFELEFT__: esc2(lifeTier(env).label),
     __LIFEN__: lifeTier(env).left === null ? "Final price" : `Only ${lifeTier(env).left} left`,
-    __AGENCY__: esc(env.STRIPE_AGENCY_LINK || "#pricing"),
+    __AGENCY__: esc2(env.STRIPE_AGENCY_LINK || "#pricing"),
     __VIEW__: o.view || "home",
     __CARDS__: JSON.stringify(o.cards || []).replace(/</g, "\\u003c"),
     __SUMMARY__: o.summary || "",
-    __FOTN__: esc(FOTN),
+    __FOTN__: esc2(FOTN),
     __NIGHT__: JSON.stringify(o.night || null).replace(/</g, "\\u003c"),
     __DATA__: JSON.stringify(d.locked ? d : withReport(d, !!o.paid)).replace(/</g, "\\u003c"),
     __LIVE__: o.live ? "true" : "false"
@@ -2719,10 +2901,10 @@ var HOME = {
   mode: "Example fight"
 };
 function fightPage(env, d, path, locked, isPaid) {
-  let w = d.winner ? d[d.winner].host : null, hi = Math.max(d.a.score, d.b.score), lo = Math.min(d.a.score, d.b.score), loser = d.winner === "a" ? d.b : d.a, title = `${d.a.host} vs ${d.b.host}: who wins the SEO fight?`, rounds = [["onpage", "On-page"], ["content", "Content"], ["technical", "Technical"], ["ai", "AI-ready"], ["social", "Social"]], summary = locked ? `<section class="wrap seo-sum" aria-label="Fight summary"><h2>${esc(d.a.host)} vs ${esc(d.b.host)}: SEO fight</h2><p>${esc(d.a.host)} and ${esc(d.b.host)} go head to head on 31 live checks across 5 rounds: on-page, content, technical, AI-ready and social. Sign up free to see who wins and every round.</p></section>` : `<section class="wrap seo-sum" aria-label="Fight summary"><h2>${esc(d.a.host)} vs ${esc(d.b.host)}: the result</h2>
-<p>${w ? `<b>${esc(w)}</b> wins the SEO fight with ${hi} points against ${lo}.` : `It's a tie at ${d.a.score} points each.`}
+  let w = d.winner ? d[d.winner].host : null, hi = Math.max(d.a.score, d.b.score), lo = Math.min(d.a.score, d.b.score), loser = d.winner === "a" ? d.b : d.a, title = `${d.a.host} vs ${d.b.host}: who wins the SEO fight?`, rounds = [["onpage", "On-page"], ["content", "Content"], ["technical", "Technical"], ["ai", "AI-ready"], ["social", "Social"]], summary = locked ? `<section class="wrap seo-sum" aria-label="Fight summary"><h2>${esc2(d.a.host)} vs ${esc2(d.b.host)}: SEO fight</h2><p>${esc2(d.a.host)} and ${esc2(d.b.host)} go head to head on 31 live checks across 5 rounds: on-page, content, technical, AI-ready and social. Sign up free to see who wins and every round.</p></section>` : `<section class="wrap seo-sum" aria-label="Fight summary"><h2>${esc2(d.a.host)} vs ${esc2(d.b.host)}: the result</h2>
+<p>${w ? `<b>${esc2(w)}</b> wins the SEO fight with ${hi} points against ${lo}.` : `It's a tie at ${d.a.score} points each.`}
 Round scores: ${rounds.map(([k, n]) => `${n} ${d.a.scores[k]}\u2013${d.b.scores[k]}`).join(", ")}.
-${d.plan.length ? `To win, ${esc(d.a.host)} should start with: ${d.plan.slice(0, 3).map((p) => esc(p.label.toLowerCase())).join(", ")}.` : ""}
+${d.plan.length ? `To win, ${esc2(d.a.host)} should start with: ${d.plan.slice(0, 3).map((p) => esc2(p.label.toLowerCase())).join(", ")}.` : ""}
 Checked ${new Date(d.at || Date.now()).toISOString().slice(0, 10)}.</p></section>`;
   return page(env, {
     path,
@@ -2734,7 +2916,7 @@ Checked ${new Date(d.at || Date.now()).toISOString().slice(0, 10)}.</p></section
     title,
     summary,
     desc: `${d.a.host} vs ${d.b.host}: who wins the SEO fight? 31 live checks on Google and AI readiness. Pick your champion and see every round.`,
-    h1: `<span class="r">${esc(d.a.host)}</span><br>vs <span class="b">${esc(d.b.host)}</span>`,
+    h1: `<span class="r">${esc2(d.a.host)}</span><br>vs <span class="b">${esc2(d.b.host)}</span>`,
     noindex: !(d.category || (d.votes_a || 0) + (d.votes_b || 0) >= 5),
     view: "fight",
     lede: "31 checks. 5 rounds. One winner. Pick your champion below, then see who really wins.",
@@ -2825,25 +3007,25 @@ var TOOL_PAGES = {
 };
 function toolPage(env, path, url) {
   let t = TOOL_PAGES[path], crumbs = [["Home", "/"], ...t.crumbs].map(([n, h]) => `<a href="${h}">${n}</a><span>/</span>`).join("") + `<span>${t.h1.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()}</span>`, fill = {
-    __TITLE__: esc(t.title),
-    __DESC__: esc(t.desc),
+    __TITLE__: esc2(t.title),
+    __DESC__: esc2(t.desc),
     __H1__: t.h1,
-    __LEDE__: esc(t.lede),
+    __LEDE__: esc2(t.lede),
     __CRUMBS__: crumbs,
     __SHOW__: `[data-tool="${t.show}"]{display:block}`,
     __ABOUT__: t.about,
-    __KBA__: esc(url.searchParams.get("a") || ""),
-    __KBB__: esc(url.searchParams.get("b") || "")
+    __KBA__: esc2(url.searchParams.get("a") || ""),
+    __KBB__: esc2(url.searchParams.get("b") || "")
   }, ld = { "@context": "https://schema.org", "@type": "WebApplication", name: t.title.split(" \xB7 ")[0], url: SITE + path, applicationCategory: "BusinessApplication", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } };
   return html(head({ ...t, path, ld }) + tools_default.replace(/__(TITLE|DESC|H1|LEDE|CRUMBS|SHOW|ABOUT|KBA|KBB)__/g, (m) => fill[m]), {});
 }
 function infoPage(env, o) {
-  let fill = { __TITLE__: esc(o.title), __DESC__: esc(o.desc || o.title), __H1__: o.h1, __LEDE__: o.lede || "", __CRUMBS__: "", __SHOW__: "", __ABOUT__: o.body, __KBA__: "", __KBB__: "" };
+  let fill = { __TITLE__: esc2(o.title), __DESC__: esc2(o.desc || o.title), __H1__: o.h1, __LEDE__: o.lede || "", __CRUMBS__: "", __SHOW__: "", __ABOUT__: o.body, __KBA__: "", __KBB__: "" };
   return html(head({ ...o, desc: o.desc || o.title }) + tools_default.replace(/__(TITLE|DESC|H1|LEDE|CRUMBS|SHOW|ABOUT|KBA|KBB)__/g, (k) => fill[k]), { status: o.status, cache: o.cache || "public, max-age=300" });
 }
 var WELCOME_HTML = `<div class="panel" id="wbox"><h3>One second\u2026</h3><p class="muted">Confirming your payment with Stripe.</p></div>
 <script>(async()=>{const sid=new URLSearchParams(location.search).get("session_id");const box=document.getElementById("wbox");if(!sid){box.innerHTML='<h3>No payment found</h3><p class="muted">If you just paid, check your email for your access link.</p><p><a class="btn" href="/account">Your account</a></p>';return;}
-for(let i=0;i<20;i++){try{const r=await fetch("/api/welcome?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.ready){box.innerHTML='<h3>'+j.plan+' is on \u{1F94A}</h3><p class="muted">Signed in as '+j.email.replace(/[<>&]/g,"")+'.</p><p><a class="btn fight" href="/">Start fighting</a> <a class="btn ghost" href="/account">Your account</a></p>';return;}}catch(e){}await new Promise(r=>setTimeout(r,1500));}
+for(let i=0;i<20;i++){try{const r=await fetch("/api/welcome?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.ready){box.innerHTML='<h3>'+j.plan+' is on \u{1F94A}</h3><p class="muted">Signed in as '+j.email.replace(/[<>&]/g,"")+'.</p><p><a class="btn fight" href="/">Start fighting</a> <a class="btn ghost" href="/dashboard">Your dashboard</a></p>';return;}}catch(e){}await new Promise(r=>setTimeout(r,1500));}
 box.innerHTML='<h3>Payment received</h3><p class="muted">It is taking a moment to set up. Check your email for your access link, or refresh this page.</p>';})();</script>`, RESTORE_HTML = `<form class="panel waitbox" id="restore" novalidate><h3>Get your access link</h3><p class="muted">Enter the email you paid with. If you have an active plan, we'll email you a link that signs you in on this browser.</p><div class="wrow"><input id="rEmail" type="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email"><button class="btn" type="submit">Email me a link</button></div><p class="muted" id="rMsg"></p></form>
 <p style="margin-top:16px"><a class="btn ghost" href="/#pricing">See plans</a></p>
 <script>document.getElementById("restore").addEventListener("submit",async e=>{e.preventDefault();const email=document.getElementById("rEmail").value.trim();const m=document.getElementById("rMsg");try{const r=await fetch("/api/restore",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email})});const j=await r.json();m.textContent=r.ok?(j.email===false?"Email sign-in links are being set up. Use the contact page and we'll switch your plan on by hand.":"If that email has a plan, your link is on its way."):(j.error||"Try again.");}catch{m.textContent="Try again.";}});</script>`, TERMS_HTML = `<div class="panel terms">
@@ -2860,13 +3042,67 @@ box.innerHTML='<h3>Payment received</h3><p class="muted">It is taking a moment t
 <h3>Who helps us run it</h3><p>Cloudflare hosts the site and stores data. Stripe handles payments. Google search results come through Serper. Emails are sent with Resend. AI features run on Cloudflare Workers AI. Fonts load from Google Fonts. Each only gets what it needs to do its job.</p>
 <h3>What we don't do</h3><p>We don't sell your data. No ads, no ad trackers, no analytics cookies.</p>
 <h3>Your data, your call</h3><p>Ask us to see or delete your data through the <a href="/contact">contact page</a> and we'll do it within 30 days. Paid plans: cancel first from your account.</p></div>`;
-async function sendEmail(env, to, subject, body) {
-  return env.RESEND_KEY ? (await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { authorization: `Bearer ${env.RESEND_KEY}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: env.FROM_EMAIL || "SEO Fights <fights@seofights.com>", to, subject, html: body })
-  })).ok : !1;
+async function sendEmail(env, to, subject, body, opts = {}) {
+  if (!env.RESEND_KEY) return !1;
+  let msg = { from: env.FROM_EMAIL || "SEO Fights <fights@seofights.com>", to, subject, html: body, text: opts.text || toText(body) };
+  opts.replyTo && (msg.reply_to = opts.replyTo);
+  try {
+    return (await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { authorization: `Bearer ${env.RESEND_KEY}`, "content-type": "application/json" },
+      body: JSON.stringify(msg)
+    })).ok;
+  } catch {
+    return !1;
+  }
 }
+var M = (o) => mail({ site: SITE, ...o }), portalFor = (env, email) => env.STRIPE_PORTAL_LINK ? `${env.STRIPE_PORTAL_LINK}${env.STRIPE_PORTAL_LINK.includes("?") ? "&" : "?"}prefilled_email=${encodeURIComponent(email)}` : null, EMAIL = {
+  signIn: (link) => M({
+    title: "Sign in",
+    preheader: "Your one-time sign-in link for SEO Fights.",
+    body: mailP("Tap the button to sign in to SEO Fights. No password needed."),
+    button: { text: "Sign in", href: link },
+    footer: "This link works once and expires in 30 minutes. If you didn't ask for it, ignore this email."
+  }),
+  access: (link, planName) => M({
+    title: "Your access link",
+    preheader: `Use ${planName} on this device.`,
+    body: mailP(`Tap the button to use your <b>${mailEsc(planName)}</b> plan on this device.`) + mailNote("Keep this email. The link signs you in on any device you open it on, so don't forward it."),
+    button: { text: "Sign me in", href: link },
+    footer: "You got this because someone asked for an access link for this email on SEO Fights."
+  }),
+  welcome: (env, plan, email, key) => {
+    let portal = portalFor(env, email), manage = plan === "pro" || plan === "agency" ? portal ? `Manage your card, see invoices or cancel any time from ${mailLink("billing", portal)} or ${mailLink("your dashboard", `${SITE}/dashboard#billing`)}. If you cancel, you keep access until the end of the period you paid for.` : `Manage or cancel any time from ${mailLink("your dashboard", `${SITE}/dashboard#billing`)}.` : "Lifetime is a single payment. There is nothing to cancel.";
+    return M({
+      title: `Thanks, you're ${PLAN_NAMES[plan]}`,
+      preheader: `Your ${PLAN_NAMES[plan]} plan is on.`,
+      body: mailP(`Thanks for buying SEO Fights. Your <b>${PLAN_NAMES[plan]}</b> plan is on for <b>${mailEsc(email)}</b>.`) + mailTable([["Fights", `${LIMITS[plan].fights[0]} a month`], ["Keyword Battles", LIMITS[plan].battles[0] ? `${LIMITS[plan].battles[0]} a month` : "Not included"], ["AI strategies", LIMITS[plan].strategy[0] ? `${LIMITS[plan].strategy[0]} a month` : "Not included"], ...LIMITS[plan].hunts[0] ? [["Prospect hunts", `${LIMITS[plan].hunts[0]} a month`]] : []]) + mailP(manage) + mailP("<b>All payments are final.</b>") + mailNote(`On another device? ${mailLink(`Use ${PLAN_NAMES[plan]} there`, `${SITE}/activate?key=${key}`)}. Keep this email for that link.`),
+      button: { text: "Start fighting", href: SITE },
+      footer: `You got this because you bought ${PLAN_NAMES[plan]} on SEO Fights.`
+    });
+  },
+  owner: (title, rows) => M({ title, body: mailTable(rows.map(([k, v]) => [`<b>${mailEsc(k)}</b>`, mailEsc(v)])), footer: "Owner alert. You get this because OWNER_EMAIL is set." }),
+  fightReport: (w, d) => {
+    let passed = w.last_a >= w.last_b && d.b.score > d.a.score, arrow = (x, y) => `${x} \u2192 <b>${y}</b>`;
+    return M({
+      title: passed ? `${d.b.host} just passed you` : "This week's fight",
+      preheader: `${d.a.host} ${d.a.score} vs ${d.b.host} ${d.b.score}`,
+      body: mailScore(d.a.host, d.a.score, d.b.host, d.b.score) + mailTable([[mailEsc(d.a.host), arrow(w.last_a, d.a.score)], [mailEsc(d.b.host), arrow(w.last_b, d.b.score)]], ["Site", "Last week \u2192 now"]) + mailP(d.plan[0] ? `<b>Top fix for ${mailEsc(d.a.host)}:</b> ${mailEsc(d.plan[0].label)}. ${mailEsc(d.plan[0].fix || "")}` : "No fixes left. Your site is clean."),
+      button: { text: "See the full fight", href: `${SITE}/fight/${encodeURIComponent(d.slug)}` },
+      footer: `You get this every Monday because you watch this fight on SEO Fights. ${mailLink("Stop these emails", `${SITE}/api/unwatch?id=${w.id}&t=${w.token}`)}`
+    });
+  },
+  keywordReport: (bt, moves, prev) => {
+    let f = (v) => v ? "#" + v : "100+";
+    return M({
+      title: `${moves.length} keyword${moves.length > 1 ? "s" : ""} moved`,
+      preheader: `${bt.a} vs ${bt.b} this week`,
+      body: mailP(`Google positions changed this week in <b style="color:#E1232E">${mailEsc(bt.a)}</b> vs <b style="color:#1D4ED8">${mailEsc(bt.b)}</b>.`) + mailTable(moves.map((r) => [mailEsc(r.keyword), `${f(prev[r.keyword].a)} \u2192 <b>${f(r.a)}</b>`, `${f(prev[r.keyword].b)} \u2192 <b>${f(r.b)}</b>`]), ["Keyword", "You", "Rival"]),
+      button: { text: "Open Keyword Battle", href: `${SITE}/keywords-battle?a=${encodeURIComponent(bt.a)}&b=${encodeURIComponent(bt.b)}` },
+      footer: `You get this because you track this battle on SEO Fights. Manage it from ${mailLink("your dashboard", `${SITE}/dashboard#battles`)}.`
+    });
+  }
+};
 function planFromSession(o) {
   let meta = o.metadata && o.metadata.plan || "";
   if (["pro", "agency", "lifetime"].includes(meta)) return meta;
@@ -3011,12 +3247,7 @@ async function weekly(env) {
       let d = await runFight(norm(w.a), norm(w.b), env);
       if (await saveFight(env, d), d.a.score !== w.last_a || d.b.score !== w.last_b) {
         let passed = w.last_a >= w.last_b && d.b.score > d.a.score;
-        await sendEmail(
-          env,
-          w.email,
-          passed ? `\u{1F6A8} ${d.b.host} just passed you (${d.b.score} vs ${d.a.score})` : `This week: ${d.a.host} ${d.a.score} vs ${d.b.host} ${d.b.score}`,
-          `<p><b>${esc(d.a.host)}</b>: ${w.last_a} \u2192 ${d.a.score}<br><b>${esc(d.b.host)}</b>: ${w.last_b} \u2192 ${d.b.score}</p><p>Top fix: ${esc(d.plan[0]?.label || "none, you're clean")}</p><p><a href="${SITE}/fight/${encodeURIComponent(d.slug)}">See the full fight</a></p><p style="color:#888;font-size:12px"><a href="${SITE}/api/unwatch?id=${w.id}&t=${w.token}">Stop these emails</a></p>`
-        );
+        await sendEmail(env, w.email, passed ? `\u{1F6A8} ${d.b.host} just passed you (${d.b.score} vs ${d.a.score})` : `This week: ${d.a.host} ${d.a.score} vs ${d.b.host} ${d.b.score}`, EMAIL.fightReport(w, d));
       }
       await env.DB.prepare("UPDATE watches SET last_a=?1, last_b=?2, checked_at=?3 WHERE id=?4").bind(d.a.score, d.b.score, Date.now(), w.id).run();
     } catch {
@@ -3025,18 +3256,186 @@ async function weekly(env) {
   for (let bt of battles)
     try {
       let res = await battle(env, bt.a, bt.b, JSON.parse(bt.keywords), bt.gl), prev = Object.fromEntries(JSON.parse(bt.last || "[]").map((r) => [r.keyword, r])), moves = res.rows.filter((r) => prev[r.keyword] && (prev[r.keyword].a !== r.a || prev[r.keyword].b !== r.b));
-      if (moves.length) {
-        let f = (v) => v ? "#" + v : "100+";
-        await sendEmail(
-          env,
-          bt.email,
-          `${moves.length} keyword${moves.length > 1 ? "s" : ""} moved: ${bt.a} vs ${bt.b}`,
-          `<table cellpadding="6"><tr><th align="left">Keyword</th><th>You</th><th>Rival</th></tr>${moves.map((r) => `<tr><td>${esc(r.keyword)}</td><td>${f(prev[r.keyword].a)} \u2192 ${f(r.a)}</td><td>${f(prev[r.keyword].b)} \u2192 ${f(r.b)}</td></tr>`).join("")}</table><p><a href="${SITE}/keywords-battle?a=${encodeURIComponent(bt.a)}&b=${encodeURIComponent(bt.b)}">Open Keyword Battle</a></p><p style="color:#888;font-size:12px">You get this because you track this battle on SEO Fights Pro. Cancel any time from <a href="${SITE}/account">your account</a>.</p>`
-        );
-      }
-      await env.DB.prepare("UPDATE battles SET last=?1, checked_at=?2 WHERE id=?3").bind(JSON.stringify(res.rows), Date.now(), bt.id).run();
+      moves.length && await sendEmail(env, bt.email, `${moves.length} keyword${moves.length > 1 ? "s" : ""} moved: ${bt.a} vs ${bt.b}`, EMAIL.keywordReport(bt, moves, prev)), await env.DB.prepare("UPDATE battles SET last=?1, checked_at=?2 WHERE id=?3").bind(JSON.stringify(res.rows), Date.now(), bt.id).run();
     } catch {
     }
+}
+var USAGE = [
+  ["fights", "fights", "Fights"],
+  ["battles", "battles", "Keyword Battles"],
+  ["strategy", "strategy", "AI strategies"],
+  ["rivals", "rivals", "Rival finder"],
+  ["links", "links", "Broken link checks"],
+  ["gen:robots", "gen", "Robots.txt generator"],
+  ["gen:schema", "gen", "Schema generator"],
+  ["gen:llms", "gen", "llms.txt generator"],
+  ["hunts", "hunts", "Prospect hunts"]
+], COUNTRY = { us: "United States", ca: "Canada", gb: "United Kingdom", au: "Australia", nz: "New Zealand", ie: "Ireland" };
+async function dashboardData(env, m) {
+  let plan = planOf(m), L = LIMITS[plan];
+  await tables(env);
+  let all = async (sql, ...args) => {
+    try {
+      return (await env.DB.prepare(sql).bind(...args).all()).results || [];
+    } catch {
+      return [];
+    }
+  }, usage = await Promise.all(USAGE.map(async ([what, key, label]) => {
+    let [max, per] = L[key], used = env.LIMITS && max ? parseInt(await env.LIMITS.get(`u:${what}:${period(per)}:${m.key}`) || "0", 10) : 0;
+    return { what, label, used: Math.min(used, max), max, per, reset: per === "week" ? "Resets Monday" : "Resets on the 1st" };
+  })), [fights, battles, hunts, watches] = await Promise.all([
+    all("SELECT mf.slug, mf.at, f.a, f.b, f.a_score, f.b_score, f.winner FROM member_fights mf LEFT JOIN fights f ON f.slug = mf.slug WHERE mf.member_key = ?1 ORDER BY mf.at DESC LIMIT 100", m.key),
+    paid(m) ? all("SELECT id, a, b, gl, keywords, last, created_at, checked_at FROM battles WHERE member_key = ?1 ORDER BY COALESCE(checked_at, created_at) DESC LIMIT 50", m.key) : [],
+    L.hunts[0] ? all("SELECT id, industry, city, result, at FROM hunts WHERE member_key = ?1 ORDER BY at DESC LIMIT 30", m.key) : [],
+    all("SELECT id, a, b, last_a, last_b, token, created_at, checked_at FROM watches WHERE email = ?1 AND active = 1 ORDER BY created_at DESC LIMIT 100", m.email)
+  ]), parse = (s, d) => {
+    try {
+      return JSON.parse(s);
+    } catch {
+      return d;
+    }
+  }, lp = lifeTier(env).price, upgrades = plan === "free" ? [["/go/pro", "Go Pro \xB7 $19/month", "fight"], ["/go/lifetime", `Lifetime \xB7 $${lp} once`, "ghost"], ["/go/agency", "Agency \xB7 $99/month", "ghost"]] : plan === "pro" ? [["/go/agency", "Go Agency \xB7 $99/month", "fight"]] : plan === "lifetime" ? [["/go/agency", "Agency \xB7 $99/month", "ghost"]] : [];
+  return {
+    email: m.email,
+    plan,
+    name: PLAN_NAMES[plan],
+    since: m.created_at || null,
+    paid: paid(m),
+    usage,
+    upgrades,
+    fights: fights.filter((f) => f.a).map((f) => ({ slug: f.slug, at: f.at, a: f.a, b: f.b, a_score: f.a_score, b_score: f.b_score, winner: f.winner === "a" ? f.a : f.winner === "b" ? f.b : null })),
+    battles: { allowed: paid(m) && !!L.battles[0], list: battles.map((b) => {
+      let rows = parse(b.last, []), kws = parse(b.keywords, []);
+      return { id: b.id, a: b.a, b: b.b, gl: b.gl, keywords: kws.length, winsA: rows.filter((r) => r.edge === "a").length, winsB: rows.filter((r) => r.edge === "b").length, checked: b.checked_at || b.created_at, link: `/keywords-battle?a=${encodeURIComponent(b.a)}&b=${encodeURIComponent(b.b)}` };
+    }) },
+    hunts: { allowed: !!L.hunts[0], list: hunts.map((h) => ({ id: h.id, industry: h.industry, city: h.city, at: h.at, ...parse(h.result, { leader: null, prospects: [] }) })) },
+    watches: watches.map((w) => ({ id: w.id, a: w.a, b: w.b, last_a: w.last_a, last_b: w.last_b, token: w.token, checked: w.checked_at || null, slug: slugOf(w.a, w.b) })),
+    billing: { kind: plan === "free" ? "free" : plan === "lifetime" || plan === "owner" ? plan : "sub", portal: plan === "pro" || plan === "agency" ? portalFor(env, m.email) : null, lifePrice: lp }
+  };
+}
+var DASH_TABS = [["overview", "Overview"], ["fights", "My fights"], ["battles", "Keyword Battles"], ["hunts", "Prospect Hunts"], ["watching", "Watching"], ["billing", "Billing"]], DASH_CSS = `<style>
+.seo-sum:has(.dash) { max-width: none; color: var(--ink); padding-top: 8px }
+.tools-hero:has(~ .seo-sum .dash) { padding-block: 40px 0 } .tools-hero:has(~ .seo-sum .dash) h1 { font-size: clamp(48px, 8vw, 88px) }
+.dash { display: grid; gap: 18px } .dash h3 { margin-bottom: 6px } .dash .muted { margin: 0 }
+.dtabs { display: flex; gap: 8px; margin-top: 6px !important; overflow-x: auto; padding: 2px 6px 8px 2px; margin: 0 -16px 0 0; scrollbar-width: none; -webkit-overflow-scrolling: touch } .dtabs::-webkit-scrollbar { display: none }
+.dtab { flex: none; appearance: none; cursor: pointer; border: 2px solid var(--ink); background: var(--surface); color: var(--ink); font: 600 14px/1 var(--f-body); padding: 10px 15px; border-radius: 999px; text-decoration: none; display: inline-flex; gap: 7px; align-items: center }
+.dtab[aria-selected="true"] { background: var(--ink); color: var(--bg); box-shadow: 3px 3px 0 var(--red) }
+.dtab .n { font: 600 11px/1 var(--f-mono); padding: 3px 6px; border-radius: 99px; background: var(--bg); color: var(--muted) } .dtab[aria-selected="true"] .n { background: color-mix(in srgb, var(--bg) 18%, transparent); color: var(--bg) }
+.dpane[hidden] { display: none !important } .dpane { display: grid; gap: 16px }
+.dash .panel.punch { border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink) }
+.dgrid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px; align-items: start } @media (max-width: 820px) { .dgrid { grid-template-columns: 1fr } }
+.plancard { background: radial-gradient(120% 90% at 100% 0%, var(--arena-2), var(--arena) 70%); color: #fff; border-radius: 22px; padding: 22px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); display: grid; gap: 10px; align-content: start }
+.plancard .eyebrow { color: var(--gold) } .plancard .pname { font: 900 clamp(48px, 9vw, 72px)/.9 var(--f-display); text-transform: uppercase } .plancard .pname.free { color: #fff } .plancard .pmeta { color: rgba(255,255,255,.72); font-size: 14px; overflow-wrap: anywhere }
+.plancard .belt { justify-self: start; margin: 0; background: color-mix(in srgb, var(--gold) 22%, transparent); color: var(--gold) }
+.plancard .acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px } .plancard .btn.ghost { color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35) } .plancard .fight { border-color: #fff; box-shadow: 4px 4px 0 #fff }
+.dash .btn.fight { grid-column: auto; font-size: 20px; padding: 13px 20px }
+.meters { display: grid; gap: 16px 32px; margin-top: 12px } @media (min-width: 821px) { .meters { grid-template-columns: 1fr 1fr } }
+.meter { display: grid; gap: 6px } .meter .top { display: flex; justify-content: space-between; gap: 10px; font-size: 15px } .meter .top b { font-weight: 600 } .meter .x { font: 600 13px/1.2 var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap }
+.meter .track { height: 12px; border-radius: 99px; border: 2px solid var(--ink); background: var(--bg); overflow: hidden } .meter .track i { display: block; height: 100%; background: var(--blue); border-radius: 99px } .meter.full .track i { background: var(--red) } .meter.hot .track i { background: var(--gold) }
+.meter small { color: var(--muted); font: 500 12px/1 var(--f-mono) } .meter.off { opacity: .55 } .meter.off .track { border-style: dashed }
+.dlist { display: grid; gap: 10px }
+.frow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px 12px; align-items: center; padding: 14px 18px; border-radius: 16px; background: var(--surface); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); text-decoration: none; color: inherit; transition: transform .1s }
+a.frow:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink) }
+.frow .h { font-weight: 600; overflow-wrap: anywhere; min-width: 0 } .frow .h.b { text-align: right } .frow .h.w::after { content: " \u2605"; color: var(--gold) }
+.frow .s { font: 900 30px/1 var(--f-display); font-variant-numeric: tabular-nums; display: flex; gap: 8px; align-items: center } .frow .s .ra { color: var(--red) } .frow .s .rb { color: var(--blue) } .frow .s i { font: 900 16px/1 var(--f-display); font-style: normal; color: var(--muted) }
+.frow .meta { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font: 500 12px/1.3 var(--f-mono); color: var(--muted); border-top: 1px dashed var(--line); padding-top: 8px }
+.frow .meta .go { color: var(--ink); font-weight: 600 }
+.empty { text-align: center; display: grid; gap: 10px; justify-items: center; padding: 30px 20px } .empty p { max-width: 46ch }
+.upsell-box { background: linear-gradient(120deg, var(--red-soft), var(--blue-soft)); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink) }
+details.hunt { padding: 0; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink) } details.hunt > summary { padding: 16px 18px; align-items: center } details.hunt > summary span { display: grid; gap: 4px } details.hunt > summary small { color: var(--muted); font: 500 12px/1.2 var(--f-mono); font-weight: 500 }
+details.hunt .prospects { padding: 0 14px 14px; margin-top: 0 }
+.dash .prospect { border-width: 1.5px }
+.wrowd { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); flex-wrap: wrap }
+.wrowd .who { display: grid; gap: 4px; min-width: 0 } .wrowd .who b { overflow-wrap: anywhere } .wrowd .who small { color: var(--muted); font: 500 12px/1.3 var(--f-mono) } .wrowd .acts { display: flex; gap: 8px }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 10px 0 0; font-size: 15px } .kv dt { color: var(--muted); font: 600 12px/1.6 var(--f-mono); text-transform: uppercase; letter-spacing: .08em } .kv dd { margin: 0; overflow-wrap: anywhere }
+.dfoot { display: flex; gap: 10px; flex-wrap: wrap }
+@media (max-width: 560px) { .frow { padding: 12px 14px } .frow .s { font-size: 26px } .frow .h { font-size: 14px } }
+</style>`;
+function dashboardHtml(D) {
+  let e = esc2, day = (t) => t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : "", btn = ([h, t, k]) => `<a class="btn ${k === "fight" ? "fight" : k}" href="${h}">${e(t)}</a>`, count = { fights: D.fights.length, battles: D.battles.list.length, hunts: D.hunts.list.length, watching: D.watches.length }, tabs = `<div class="dtabs" role="tablist" aria-label="Dashboard">${DASH_TABS.map(([k, n], i) => `<a class="dtab" role="tab" id="t-${k}" href="#${k}" data-tab="${k}" aria-controls="p-${k}" aria-selected="${i === 0}">${n}${count[k] ? `<span class="n">${count[k]}</span>` : ""}</a>`).join("")}</div>`, empty = (title, text, cta2) => `<div class="panel punch empty"><h3>${title}</h3><p class="muted">${text}</p>${cta2 || ""}</div>`, meters = D.usage.map((u) => {
+    if (!u.max) return `<div class="meter off"><div class="top"><b>${u.label}</b><span class="x">Not in ${e(D.name)}</span></div><div class="track"><i style="width:0"></i></div></div>`;
+    let pct = Math.min(100, Math.round(u.used / u.max * 100));
+    return `<div class="meter${pct >= 100 ? " full" : pct >= 80 ? " hot" : ""}"><div class="top"><b>${u.label}</b><span class="x">${u.used} of ${u.max}</span></div><div class="track" role="progressbar" aria-label="${u.label}" aria-valuemin="0" aria-valuemax="${u.max}" aria-valuenow="${u.used}"><i style="width:${pct}%"></i></div><small>${u.per === "week" ? "This week" : "This month"} \xB7 ${u.reset}</small></div>`;
+  }).join(""), blurb = { free: "1 fight and 1 try of each tool every week.", pro: "40 fights a month, every tool, AI strategy and Keyword Battles.", agency: "200 fights a month, Prospect Hunter and every tool.", lifetime: "40 fights a month and every free tool, paid once.", owner: "Owner access. Everything is on." }[D.plan], overview = `<div class="dgrid"><div class="plancard"><span class="eyebrow">Your plan</span><div class="pname">${e(D.name)}</div><p class="pmeta">${blurb}</p>
+<dl class="kv" style="color:#fff"><dt style="color:rgba(255,255,255,.55)">Email</dt><dd>${e(D.email)}</dd>${D.since ? `<dt style="color:rgba(255,255,255,.55)">Since</dt><dd>${day(D.since)}</dd>` : ""}</dl>
+<div class="acts">${D.upgrades.length ? D.upgrades.map(btn).join("") : '<a class="btn fight" href="/">Start a fight</a>'}</div></div>
+<div class="panel punch"><h3>Quick start</h3><p class="muted">Jump back in.</p><div class="dlist" style="margin-top:12px">
+<a class="btn ghost" href="/">Start a fight</a><a class="btn ghost" href="/keywords-battle">Keyword Battle</a><a class="btn ghost" href="/tools">Free SEO tools</a>${D.hunts.allowed ? '<a class="btn ghost" href="/agency">Prospect Hunter</a>' : ""}</div></div></div>
+<div class="panel punch"><h3>Your usage</h3><p class="muted">What you've used so far this period.</p><div class="meters">${meters}</div></div>`, fights = D.fights.length ? `<div class="dlist">${D.fights.map((f) => `<a class="frow" href="/fight/${encodeURIComponent(f.slug)}"><span class="h${f.winner === f.a ? " w" : ""}">${e(f.a)}</span><span class="s"><span class="ra">${f.a_score ?? "\u2013"}</span><i>vs</i><span class="rb">${f.b_score ?? "\u2013"}</span></span><span class="h b${f.winner === f.b ? " w" : ""}">${e(f.b)}</span><span class="meta"><span>${day(f.at)} \xB7 ${f.winner ? `${e(f.winner)} won` : "Tie"}</span><span class="go">Open fight \u2192</span></span></a>`).join("")}</div>` : empty("No fights yet", "Put your site in the ring with a rival. Every fight you run shows up here.", '<a class="btn fight" href="/">Start a fight</a>'), battles = D.battles.allowed ? D.battles.list.length ? `<div class="dlist">${D.battles.list.map((b) => `<a class="frow" href="${e(b.link)}"><span class="h${b.winsA > b.winsB ? " w" : ""}">${e(b.a)}</span><span class="s"><span class="ra">${b.winsA}</span><i>vs</i><span class="rb">${b.winsB}</span></span><span class="h b${b.winsB > b.winsA ? " w" : ""}">${e(b.b)}</span><span class="meta"><span>${b.keywords} keywords \xB7 ${e(COUNTRY[b.gl] || String(b.gl || "us").toUpperCase())} \xB7 checked ${day(b.checked)}</span><span class="go">Open battle \u2192</span></span></a>`).join("")}</div><p class="muted" style="font-size:14px">Scores are keywords won. Saved battles re-run every Monday and email you when positions move.</p>` : empty("No Keyword Battles yet", "Pick 10 keywords and a rival. We check who ranks higher on Google, then re-check every Monday.", '<a class="btn fight" href="/keywords-battle">Start a Keyword Battle</a>') : '<div class="panel upsell-box"><h3>Keyword Battle is part of Pro</h3><p>See who ranks higher on Google for 10 keywords, in any country, with a Monday email when positions move.</p><p style="margin-top:12px"><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/keywords-battle">Try it free</a></p></div>', hunts = D.hunts.allowed ? D.hunts.list.length ? `<div class="dlist">${D.hunts.list.map((h, i) => `<details class="hunt"${i === 0 ? " open" : ""}><summary><span><b>${e(h.industry)} in ${e(h.city)}</b><small>${day(h.at)} \xB7 ${(h.prospects || []).length} prospects${h.leader ? ` \xB7 leader ${e(h.leader.host)}` : ""}</small></span></summary><div class="prospects">${(h.prospects || []).map((x, k) => `<div class="prospect"><div class="pr-top"><b>${e(x.host)}</b><span class="pr-score"><i class="r">${x.score}</i> vs <i class="b">${x.rivalScore}</i></span></div>
+<p class="muted">Google rank #${e(x.rank)}. Losing by ${e(x.gap)} points to ${e(x.rival)}. Top gaps: ${(x.fixes || []).map(e).join(", ") || "polish"}.</p>
+<pre class="out pitch" id="hp${h.id}-${k}">${e(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
+<div class="pr-act"><button class="btn sm" type="button" data-dcopy="hp${h.id}-${k}">Copy pitch</button><a class="btn ghost sm" href="${e(x.fight)}" target="_blank" rel="noopener">Open the fight</a></div></div>`).join("")}</div></details>`).join("")}</div>` : empty("No hunts yet", "Pick an industry and a city. Every hunt you run is saved here with its prospects and pitches.", '<a class="btn fight" href="/agency">Hunt prospects</a>') : '<div class="panel upsell-box"><h3>Prospect Hunter is part of Agency</h3><p>Pick an industry and a city. We find local businesses losing to their top competitor, fight each one, and write the pitch. 30 hunts a month.</p><p style="margin-top:12px"><a class="btn fight" href="/go/agency">Go Agency \xB7 $99/month</a> <a class="btn ghost" href="/agency">How it works</a></p></div>', watching = D.watches.length ? `${D.paid ? "" : '<div class="panel upsell-box"><p><b>Monday reports are paused.</b> They need a paid plan. <a href="/go/pro">Go Pro</a> to switch them back on.</p></div>'}<div class="dlist" id="wlist">${D.watches.map((w) => `<div class="wrowd" data-w="${w.id}"><div class="who"><b><span style="color:var(--red)">${e(w.a)}</span> vs <span style="color:var(--blue)">${e(w.b)}</span></b><small>Last scores ${w.last_a} vs ${w.last_b}${w.checked ? ` \xB7 checked ${day(w.checked)}` : ""}</small></div><div class="acts"><a class="btn ghost sm" href="/fight/${encodeURIComponent(w.slug)}">Open</a><button class="btn sm" type="button" data-stop="${w.id}" data-t="${e(w.token)}">Stop</button></div></div>`).join("")}</div><p class="muted" style="font-size:14px">We re-run each fight every Monday and email ${e(D.email)} when a score moves.</p>` : empty("Not watching anything", D.paid ? "Open any fight and tap \u201CWatch\u201D to get a Monday email when the scores move." : "Monday email reports are part of Pro. Watch a fight and we email you when the scores move.", D.paid ? '<a class="btn fight" href="/">Start a fight</a>' : '<a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a>'), B2 = D.billing, billing = `<div class="panel punch"><h3>${B2.kind === "free" ? "Upgrade" : "Billing"}</h3>${B2.kind === "free" ? `<p class="muted">Free: 1 fight and 1 try of each tool a week. Pro: 40 fights a month, every tool, AI strategy and Keyword Battles.</p><p style="margin-top:14px"><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/go/lifetime">Lifetime \xB7 $${B2.lifePrice} once</a> <a class="btn ghost" href="/go/agency">Agency \xB7 $99/month</a></p>` : B2.kind === "lifetime" || B2.kind === "owner" ? `<p class="muted">${B2.kind === "owner" ? "Owner access." : "Lifetime: paid once, nothing to cancel."}</p>` : B2.portal ? `<p class="muted">Change card, see invoices or cancel. If you cancel, you keep access until the end of the period you paid for. All payments are final.</p><p style="margin-top:14px"><a class="btn" href="${e(B2.portal)}" target="_blank" rel="noopener">Manage billing or cancel</a></p>` : '<p class="muted">Billing management is being set up.</p>'}
+<dl class="kv"><dt>Plan</dt><dd>${e(D.name)}</dd><dt>Email</dt><dd>${e(D.email)}</dd></dl></div>
+<div class="dfoot"><a class="btn ghost" href="/terms">Terms</a><a class="btn ghost" href="/contact">Help</a><a class="btn ghost" href="/signout">Sign out</a></div>`, panes = { overview, fights, battles, hunts, watching, billing };
+  return `${DASH_CSS}<div class="dash">${tabs}${DASH_TABS.map(([k], i) => `<div class="dpane" role="tabpanel" id="p-${k}" aria-labelledby="t-${k}"${i ? " hidden" : ""}>${panes[k]}</div>`).join("")}</div>
+<script>(()=>{const tabs=[...document.querySelectorAll(".dtab")],ok=tabs.map(t=>t.dataset.tab);
+function show(k,push){if(!ok.includes(k))k="overview";tabs.forEach(t=>{const on=t.dataset.tab===k;t.setAttribute("aria-selected",on);if(on){const bar=t.parentNode;bar.scrollLeft=Math.max(0,t.offsetLeft-bar.offsetLeft-24);}});document.querySelectorAll(".dpane").forEach(p=>p.hidden=p.id!=="p-"+k);if(push)history.replaceState(null,"","/dashboard#"+k);}
+tabs.forEach(t=>t.addEventListener("click",e=>{e.preventDefault();show(t.dataset.tab,true);}));
+show(location.hash.slice(1)||new URLSearchParams(location.search).get("tab")||"overview");addEventListener("hashchange",()=>show(location.hash.slice(1)));
+document.querySelectorAll("[data-dcopy]").forEach(b=>b.addEventListener("click",async()=>{const t=document.getElementById(b.dataset.dcopy).textContent;try{await navigator.clipboard.writeText(t);b.textContent="Copied";}catch(e){b.textContent="Select and copy";}setTimeout(()=>b.textContent="Copy pitch",1800);}));
+document.querySelectorAll("[data-stop]").forEach(b=>b.addEventListener("click",async()=>{b.disabled=true;b.textContent="Stopping\u2026";try{const r=await fetch("/api/unwatch?id="+encodeURIComponent(b.dataset.stop)+"&t="+encodeURIComponent(b.dataset.t));if(!r.ok)throw 0;const row=b.closest(".wrowd");row.innerHTML='<div class="who"><b>Stopped</b><small>No more Monday emails for this fight.</small></div>';}catch(e){b.disabled=false;b.textContent="Try again";}}));})();</script>`;
+}
+var DASH_SIGNIN = `<div class="panel punch empty" style="border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)"><span class="eyebrow">Members</span><h3>Sign in to see your dashboard</h3><p class="muted">Your fights, Keyword Battles, usage and billing, in one place. Free account, no password.</p>
+<p style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn fight" type="button" id="dSign" style="grid-column:auto;font-size:20px;padding:13px 22px">Sign in or sign up</button><a class="btn ghost" href="/account">Already paid? Get your access link</a></p></div>
+<style>.seo-sum:has(#dSign){max-width:640px;margin-inline:auto;color:var(--ink)}.empty{text-align:center;display:grid;gap:10px;justify-items:center;padding:30px 20px}</style>
+<script>document.getElementById("dSign").addEventListener("click",()=>withAccount(()=>location.reload(),"Sign in to SEO Fights","Enter your email. Free accounts get 1 fight a week and 1 try of each tool.","/dashboard"));</script>`;
+async function autoBlog(env, { force = !1, slug = null } = {}) {
+  if (!env.DB) return { error: "No database." };
+  if (!env.AI) return { error: "Workers AI isn't connected." };
+  await tables(env);
+  let today = /* @__PURE__ */ new Date();
+  if (today.setUTCHours(0, 0, 0, 0), !force && (await env.DB.prepare("SELECT COUNT(*) AS n FROM posts WHERE at >= ?1").bind(+today).first()).n) return { skipped: "Already posted today." };
+  let pick = slug;
+  if (pick) {
+    if (await env.DB.prepare("SELECT slug FROM posts WHERE fight = ?1").bind(pick).first()) return { skipped: "That fight already has a post." };
+  } else {
+    let free = (await env.DB.prepare("SELECT f.slug FROM fights f LEFT JOIN posts p ON p.fight = f.slug WHERE f.category IS NOT NULL AND p.slug IS NULL AND f.data IS NOT NULL ORDER BY f.views DESC LIMIT 200").all()).results.map((r) => r.slug);
+    if (!free.length) return { skipped: "Every categorized fight already has a post." };
+    let heads = HEADLINERS.filter((h) => free.includes(h)), pool = (heads.length ? heads : free).slice(0, 3);
+    pick = pool[Math.floor(Math.random() * pool.length)];
+  }
+  let f = await storedFight(env, pick);
+  if (!f || !f.d.a?.checks) return { error: "Fight not found." };
+  let d = f.d, at = Date.now(), md = "";
+  try {
+    md = String((await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages: prompt(d), max_tokens: 1400, temperature: 0.2 }))?.response || "");
+  } catch {
+    return { error: "The AI didn't answer." };
+  }
+  let words = md.split(/\s+/).filter(Boolean).length, bad = inventedNumbers(md, d);
+  if (words < 300) return { error: `Too short (${words} words), skipped.` };
+  if (bad.length > 3) return { error: `Numbers not in the data (${bad.slice(0, 6).join(", ")}), skipped.` };
+  let wrong = wrongRoundScores(md, d);
+  if (wrong.length) return { error: `Wrong round scores (${wrong.slice(0, 6).join(", ")}), skipped.` };
+  let ps = postSlug(d.a.host, d.b.host);
+  (POSTS.some((x) => x.slug === ps) || await env.DB.prepare("SELECT slug FROM posts WHERE slug = ?1").bind(ps).first()) && (ps += "-" + new Date(at).toISOString().slice(0, 7));
+  let body = factsHtml(d, SITE) + `
+` + mdToHtml(md);
+  return await env.DB.prepare("INSERT OR IGNORE INTO posts (slug, title, desc, body, fight, at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)").bind(ps, postTitle(d, at), postDesc(d), body, d.slug, at).run(), { ok: !0, slug: ps, fight: d.slug, words };
+}
+var POST_CSS = "<style>.tools-hero h1{font-size:clamp(38px,6.4vw,76px);max-width:22ch}.post-score{min-width:0;margin:0 0 6px}.post-score th:not(:first-child),.post-score td:not(:first-child){text-align:center}.post-score .won-a{color:var(--red);font-weight:700}.post-score .won-b{color:var(--blue);font-weight:700}.post-score tr.total td{border-bottom:0}.post-facts{margin:8px 0 6px!important}</style>";
+async function blogIndex(env, page2) {
+  await tables(env);
+  let per = 30, off = (page2 - 1) * per, rows = [];
+  try {
+    rows = (await env.DB.prepare("SELECT slug, title, desc, at FROM posts ORDER BY at DESC LIMIT ?1 OFFSET ?2").bind(per + 1, off).all()).results;
+  } catch {
+  }
+  let more = rows.length > per;
+  rows = rows.slice(0, per);
+  let monthOf = (t) => new Date(t).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" }), auto = rows.map((p) => `<a class="panel post" href="/blog/${encodeURIComponent(p.slug)}"><span class="muted">Fight report \xB7 ${monthOf(p.at)}</span><h3>${esc2(p.title)}</h3><p class="muted">${esc2(p.desc)}</p></a>`).join(""), nav = `<p style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">${page2 > 1 ? `<a class="btn ghost" href="${page2 === 2 ? "/blog" : `/blog?page=${page2 - 1}`}">\u2190 Newer posts</a>` : ""}${more ? `<a class="btn ghost" href="/blog?page=${page2 + 1}">More posts \u2192</a>` : ""}<a class="btn fight" href="/" style="grid-column:auto;font-size:20px;padding:13px 22px">Fight your own site</a></p>`;
+  if (page2 === 1) {
+    let staticCards = BLOG_INDEX.body.match(/<div class="cards-list">([\s\S]*?)<\/div>/)[1];
+    return { ...BLOG_INDEX, body: `<div class="cards-list">${staticCards}${auto}</div>${nav}` };
+  }
+  return rows.length ? { ...BLOG_INDEX, title: `Blog, page ${page2} \xB7 SEO Fights`, lede: "Fight reports built on real SEO fights.", body: `<div class="cards-list">${auto}</div>${nav}`, noindex: !1 } : null;
+}
+async function autoPost(env, slug) {
+  try {
+    return await tables(env), await env.DB.prepare("SELECT * FROM posts WHERE slug = ?1").bind(slug).first();
+  } catch {
+    return null;
+  }
 }
 var worker_default = {
   async fetch(req, env, ctx) {
@@ -3057,13 +3456,13 @@ var worker_default = {
       if (!m) return NEED_ACCOUNT();
       let slug = slugOf(hostOf(a), hostOf(b)), old = await storedFight(env, slug);
       if (old && old.age < 36e5)
-        return ctx.waitUntil(env.DB.prepare("UPDATE fights SET views=views+1 WHERE slug=?1").bind(slug).run()), json(withReport(old.d, paid(m)));
+        return ctx.waitUntil(Promise.all([env.DB.prepare("UPDATE fights SET views=views+1 WHERE slug=?1").bind(slug).run(), logFight(env, m.key, slug)])), json(withReport(old.d, paid(m)));
       let who = m.key, plan = planOf(m);
       if (!await canUse(env, who, "fights", plan))
         return json({ error: paid(m) ? `You've used your ${LIMITS[plan].fights[0]} fights this month. They reset on the 1st.` : "You've used your free fight this week. Go Pro for 40 fights a month." }, 429);
       try {
         let d = await runFight(a, b, env);
-        return ctx.waitUntil(Promise.all([saveFight(env, d), spend(env, who, "fights", plan)])), json(withReport(d, paid(m)));
+        return ctx.waitUntil(Promise.all([saveFight(env, d), spend(env, who, "fights", plan), logFight(env, who, d.slug)])), json(withReport(d, paid(m)));
       } catch (e) {
         return e instanceof Blocked && env.DB && ctx.waitUntil(env.DB.prepare("INSERT OR REPLACE INTO blocked (slug, reason, at) VALUES (?1, 'blocked', ?2)").bind(slug, Date.now()).run()), json({ error: e instanceof Blocked ? e.message : "Couldn't reach one of the sites. Check the address and try again." }, e instanceof Blocked ? 422 : 502);
       }
@@ -3235,7 +3634,17 @@ var worker_default = {
       if (n > 20) return json({ error: "Too many sign-ups today." }, 429);
       env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
       let info = JSON.stringify({ site: String(body.site || "").slice(0, 200), fight: String(body.fight || "").slice(0, 200), ...typeof body.info == "object" ? body.info : {} }).slice(0, 2e3);
-      return await env.DB.prepare("INSERT INTO leads (email, plan, info, created_at) VALUES (?1, ?2, ?3, ?4)").bind(email, String(body.plan || "pro").slice(0, 30), info, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New ${body.plan || "pro"} sign-up: ${email}`, `<pre>${esc(info)}</pre>`)), json({ ok: !0 });
+      if (await env.DB.prepare("INSERT INTO leads (email, plan, info, created_at) VALUES (?1, ?2, ?3, ?4)").bind(email, String(body.plan || "pro").slice(0, 30), info, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL) {
+        let isContact = body.plan === "contact", parsed = JSON.parse(info), rows = [["Email", email], ["Type", String(body.plan || "pro")], ...Object.entries(parsed).filter(([, v]) => v !== "" && v != null).map(([k2, v]) => [k2[0].toUpperCase() + k2.slice(1), typeof v == "object" ? JSON.stringify(v) : String(v)])];
+        ctx.waitUntil(sendEmail(
+          env,
+          env.OWNER_EMAIL,
+          isContact ? `Contact: ${parsed.subject || "message"} from ${email}` : `New ${body.plan || "pro"} sign-up: ${email}`,
+          EMAIL.owner(isContact ? "New message" : `New ${String(body.plan || "pro")} lead`, rows),
+          { replyTo: email }
+        ));
+      }
+      return json({ ok: !0 });
     }
     if (p === "/api/prospects" && req.method === "POST") {
       let m = await member(req, env);
@@ -3254,10 +3663,22 @@ var worker_default = {
       if (!await canUse(env, m.key, "hunts", plan)) return OUT(plan, "prospect hunt");
       try {
         let res = await prospectHunt(env, industry, city, String(body.country || "us").slice(0, 2));
-        return ctx.waitUntil(spend(env, m.key, "hunts", plan)), json({ industry, city, ...res });
+        return ctx.waitUntil(spend(env, m.key, "hunts", plan)), res.prospects.length && ctx.waitUntil(tables(env).then(() => env.DB.prepare("INSERT INTO hunts (member_key, industry, city, result, at) VALUES (?1, ?2, ?3, ?4, ?5)").bind(m.key, industry, city, JSON.stringify(res), Date.now()).run()).catch(() => {
+        })), json({ industry, city, ...res });
       } catch {
         return json({ error: "Google search didn't answer. Try again in a minute." }, 502);
       }
+    }
+    if (p === "/api/admin/autoblog" && req.method === "POST") {
+      let m = await member(req, env);
+      if (!m || m.plan !== "owner") return json({ error: "Owner only." }, 403);
+      let body = {};
+      try {
+        body = await req.json();
+      } catch {
+      }
+      let r = await autoBlog(env, { force: !0, slug: body.fight ? String(body.fight).toLowerCase().slice(0, 200) : null });
+      return json(r, r.error ? 503 : 200);
     }
     if (p === "/api/me") {
       let m = await member(req, env), auth = { google: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET), link: !!env.RESEND_KEY };
@@ -3278,7 +3699,7 @@ var worker_default = {
         if (n >= 20) return json({ error: "Too many tries from here today." }, 429);
         ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
         let t = rand();
-        return await env.LIMITS.put(`login:${t}`, JSON.stringify({ email, next: safeNext(body.next) }), { expirationTtl: 1800 }), await sendEmail(env, email, "Your SEO Fights sign-in link \u{1F94A}", `<div style="font-family:system-ui,sans-serif;max-width:480px"><h2 style="margin:0 0 12px">Tap to sign in</h2><p><a href="${SITE}/auth/email?t=${t}" style="display:inline-block;background:#e0263a;color:#fff;padding:14px 22px;border-radius:12px;text-decoration:none;font-weight:700">Sign in to SEO Fights</a></p><p style="color:#666;font-size:13px">This link works once and expires in 30 minutes. If you didn't ask for it, ignore this email.</p></div>`) ? json({ sent: !0, email }) : json({ error: "Couldn't send the email. Try again." }, 502);
+        return await env.LIMITS.put(`login:${t}`, JSON.stringify({ email, next: safeNext(body.next) }), { expirationTtl: 1800 }), await sendEmail(env, email, "Your SEO Fights sign-in link", EMAIL.signIn(`${SITE}/auth/email?t=${t}`)) ? json({ sent: !0, email }) : json({ error: "Couldn't send the email. Try again." }, 502);
       }
       let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
       if (!(old && old.plan === "free")) {
@@ -3287,7 +3708,7 @@ var worker_default = {
       }
       if (old && old.plan !== "free" && old.active) return json({ error: "This email has a paid plan. Get your access link on the Account page." }, 409);
       let key = old && old.plan === "free" ? old.key : null;
-      return key || (key = rand(), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, `<p>${esc(email)}</p>`))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
+      return key || (key = rand(), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, EMAIL.owner("New free sign-up", [["Email", email], ["Plan", "Free"]])))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
     }
     if (p === "/api/restore" && req.method === "POST") {
       let body;
@@ -3300,7 +3721,7 @@ var worker_default = {
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "Enter a valid email." }, 400);
       if (!await toolUse(env, req, "rivals")) return json({ error: "Too many tries today." }, 429);
       let m = env.DB && await env.DB.prepare("SELECT key, plan FROM members WHERE email=?1 AND active=1").bind(email).first();
-      return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fights access link", `<p><a href="${SITE}/activate?key=${m.key}">Tap to use ${PLAN_NAMES[m.plan] || "Pro"} on this device</a></p>`)), json({ ok: !0, email: !!env.RESEND_KEY });
+      return m && ctx.waitUntil(sendEmail(env, email, "Your SEO Fights access link", EMAIL.access(`${SITE}/activate?key=${m.key}`, PLAN_NAMES[m.plan] || "Pro"))), json({ ok: !0, email: !!env.RESEND_KEY });
     }
     if (p === "/auth/email") {
       let t = u.searchParams.get("t") || "", raw = env.LIMITS && t ? await env.LIMITS.get(`login:${t}`) : null;
@@ -3334,25 +3755,18 @@ var worker_default = {
       let key = u.searchParams.get("key") || "", m = env.DB && await env.DB.prepare("SELECT key FROM members WHERE key=?1 AND active=1").bind(key).first();
       return m ? new Response(null, { status: 302, headers: { location: "/account?welcome=1", "set-cookie": cookieFor(m.key) } }) : infoPage(env, { path: p, noindex: !0, status: 400, title: "Link not valid \xB7 SEO Fights", h1: "Link not valid", lede: "This access link is old or the plan isn't active.", body: '<p><a class="btn" href="/account">Go to your account</a></p>' });
     }
-    if (p === "/account") {
+    if (p === "/dashboard" || p === "/account") {
       let m = await member(req, env);
-      if (!m) return infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fights", h1: 'Your <span class="b">account</span>', lede: "Already paid? Get your access link by email.", body: RESTORE_HTML });
-      let plan = planOf(m), L = LIMITS[plan], used = async (what) => {
-        if (!env.LIMITS) return 0;
-        let per = L[what][1];
-        return parseInt(await env.LIMITS.get(`u:${what}:${period(per)}:${m.key}`) || "0", 10);
-      }, [f, kb, ai] = await Promise.all([used("fights"), used("battles"), used("strategy")]), portal = env.STRIPE_PORTAL_LINK ? `${env.STRIPE_PORTAL_LINK}${env.STRIPE_PORTAL_LINK.includes("?") ? "&" : "?"}prefilled_email=${encodeURIComponent(m.email)}` : null, row = (n, a, b) => `<tr><td>${n}</td><td class="v">${b ? `${a} / ${b}` : "Not included"}</td></tr>`;
-      return infoPage(env, {
-        path: p,
-        noindex: !0,
-        cache: "no-store",
-        title: "Your account \xB7 SEO Fights",
-        h1: `<span class="r">${esc(PLAN_NAMES[plan] || "Pro")}</span> account`,
-        lede: esc(m.email),
-        body: `<div class="panel"><h3>This month</h3><div class="tbl-wrap"><table><tbody>${row("Fights", f, L.fights[0])}${row("Keyword Battles", kb, L.battles[0])}${row("AI strategies", ai, L.strategy[0])}</tbody></table></div></div>
-<div class="panel" style="margin-top:16px"><h3>${plan === "free" ? "Upgrade" : "Billing"}</h3>${plan === "free" ? `<p class="muted">Free: 1 fight and 1 try of each tool a week. Pro: 40 fights a month, every tool, AI strategy and Keyword Battles.</p><p><a class="btn fight" href="/go/pro">Go Pro \xB7 $19/month</a> <a class="btn ghost" href="/go/lifetime">Lifetime \xB7 $${lifeTier(env).price} once</a></p>` : plan === "lifetime" || plan === "owner" ? `<p class="muted">${plan === "owner" ? "Owner access." : "Lifetime: paid once, nothing to cancel."}</p>` : portal ? `<p class="muted">Change card, see invoices or cancel. If you cancel, you keep access until the end of the period you paid for. All payments are final.</p><p><a class="btn" href="${esc(portal)}" target="_blank" rel="noopener">Manage billing or cancel</a></p>` : '<p class="muted">Billing management is being set up.</p>'}</div>
-<p style="margin-top:16px"><a class="btn ghost" href="/">Start a fight</a> <a class="btn ghost" href="/signout">Sign out</a></p>`
-      });
+      if (!m && p === "/account") return infoPage(env, { path: p, noindex: !0, cache: "no-store", title: "Your account \xB7 SEO Fights", h1: 'Your <span class="b">account</span>', lede: "Already paid? Get your access link by email.", body: RESTORE_HTML });
+      if (!m) return infoPage(env, { path: "/dashboard", noindex: !0, cache: "no-store", title: "Dashboard \xB7 SEO Fights", h1: 'Your <span class="r">dash</span><span class="b">board</span>', lede: "Sign in to see your fights, battles and billing.", body: DASH_SIGNIN });
+      let D = await dashboardData(env, m);
+      return infoPage(env, { path: "/dashboard", noindex: !0, cache: "no-store", title: "Dashboard \xB7 SEO Fights", h1: 'Your <span class="r">dash</span><span class="b">board</span>', lede: `Signed in as ${esc2(m.email)} \xB7 ${esc2(D.name)} plan`, body: dashboardHtml(D) });
+    }
+    if (p === "/api/dashboard") {
+      let m = await member(req, env);
+      if (!m) return NEED_ACCOUNT();
+      let D = await dashboardData(env, m);
+      return json(D, 200, { "cache-control": "no-store" });
     }
     if (p.startsWith("/go/")) {
       let to = { pro: env.STRIPE_PRO_LINK, agency: env.STRIPE_AGENCY_LINK, lifetime: lifeTier(env).link }[p.slice(4)], m = await member(req, env), dest = to && !to.startsWith("#") ? to + (m ? (to.includes("?") ? "&" : "?") + "prefilled_email=" + encodeURIComponent(m.email) : "") : "/#pricing";
@@ -3370,12 +3784,12 @@ var worker_default = {
         await env.DB.prepare(`INSERT INTO members (key, email, plan, customer, subscription, session_id, active, created_at) VALUES (?1,?2,?3,?4,?5,?6,1,?7)
           ON CONFLICT(email) DO UPDATE SET plan=?3, customer=?4, subscription=COALESCE(?5, subscription), session_id=?6, active=1`).bind(crypto.randomUUID().replace(/-/g, ""), email, plan, o.customer || "", o.subscription || null, o.id, Date.now()).run();
         let row = await env.DB.prepare("SELECT key FROM members WHERE email=?1").bind(email).first();
-        ctx.waitUntil(sendEmail(
+        ctx.waitUntil(sendEmail(env, email, `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`, EMAIL.welcome(env, plan, email, row.key))), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(
           env,
-          email,
-          `You're ${PLAN_NAMES[plan]} on SEO Fights \u{1F94A}`,
-          `<p>Welcome to the main card.</p><p><a href="${SITE}/activate?key=${row.key}">Use ${PLAN_NAMES[plan]} on another device</a> (keep this email).</p><p>Manage or cancel any time from <a href="${SITE}/account">your account</a>. All payments are final.</p>`
-        )), env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `\u{1F4B0} New ${PLAN_NAMES[plan]}: ${email}`, `<p>${email} bought ${PLAN_NAMES[plan]} (${(o.amount_total || 0) / 100} ${String(o.currency || "").toUpperCase()}).</p>`));
+          env.OWNER_EMAIL,
+          `\u{1F4B0} New ${PLAN_NAMES[plan]}: ${email}`,
+          EMAIL.owner(`New ${PLAN_NAMES[plan]} sale`, [["Email", email], ["Plan", PLAN_NAMES[plan]], ["Amount", `${(o.amount_total || 0) / 100} ${String(o.currency || "").toUpperCase()}`]])
+        ));
       }
       if (ev.type === "customer.subscription.updated") {
         let on = ["active", "trialing", "past_due"].includes(o.status) ? 1 : 0;
@@ -3406,13 +3820,32 @@ var worker_default = {
       let bin = Uint8Array.from(atob(og_b64_default), (c) => c.charCodeAt(0));
       return new Response(bin, { headers: { "content-type": "image/png", "cache-control": "public, max-age=86400" } });
     }
-    let CONTENT = { "/about": ABOUT, "/our-position": ABOUT, "/cookie-policy": COOKIES, "/contact": CONTACT, "/blog": BLOG_INDEX, "/tools-like": TOOLS_LIKE, "/alternatives": TOOLS_LIKE, ...ALT_PAGES };
+    if (p === "/blog") {
+      let page2 = Math.max(1, Math.min(500, parseInt(u.searchParams.get("page") || "1", 10) || 1)), o = await blogIndex(env, page2);
+      return o ? infoPage(env, { ...o, path: page2 > 1 ? `/blog?page=${page2}` : "/blog", cache: "public, max-age=600" }) : Response.redirect(`${SITE}/blog`, 302);
+    }
+    let CONTENT = { "/about": ABOUT, "/our-position": ABOUT, "/cookie-policy": COOKIES, "/contact": CONTACT, "/tools-like": TOOLS_LIKE, "/alternatives": TOOLS_LIKE, ...ALT_PAGES };
     if (CONTENT[p]) return infoPage(env, { ...CONTENT[p], path: p === "/our-position" ? "/about" : p === "/alternatives" ? "/tools-like" : p });
     if (p.startsWith("/blog/")) {
       let post = POSTS.find((x) => x.slug === p.slice(6));
       if (post) {
         let o = postPage(post);
         return infoPage(env, { ...o, path: p, ld: { "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.desc, url: SITE + p, author: { "@type": "Person", name: "Kas", url: X_URL }, publisher: { "@type": "Organization", name: "SEO Fights", url: SITE } } });
+      }
+      let ap = await autoPost(env, decodeURIComponent(p.slice(6)).toLowerCase());
+      if (ap) {
+        let iso = new Date(ap.at).toISOString();
+        return infoPage(env, {
+          path: p,
+          title: `${ap.title} \xB7 SEO Fights`,
+          desc: ap.desc,
+          h1: esc2(ap.title),
+          lede: esc2(ap.desc),
+          cache: "public, max-age=3600",
+          body: `${POST_CSS}<article class="panel terms post-body">${ap.body}<p class="muted" style="margin-top:20px">By <a href="${X_URL}" target="_blank" rel="noopener">@${X_HANDLE}</a> \xB7 ${iso.slice(0, 10)} \xB7 Built on a real SEO Fights result</p></article>
+<p style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn fight" href="/" style="grid-column:auto;font-size:20px;padding:13px 22px">Fight your own site</a> <a class="btn ghost" href="/fight/${encodeURIComponent(ap.fight)}">See the full fight</a> <a class="btn ghost" href="/blog">More posts</a></p>`,
+          ld: { "@context": "https://schema.org", "@type": "BlogPosting", headline: ap.title, description: ap.desc, url: SITE + p, datePublished: iso, dateModified: iso, image: SITE + "/og.png", mainEntityOfPage: SITE + p, author: { "@type": "Person", name: "Kas", url: X_URL }, publisher: { "@type": "Organization", name: "SEO Fights", url: SITE } }
+        });
       }
     }
     if (p === "/terms") return infoPage(env, { path: p, title: "Terms \xB7 SEO Fights", h1: "Terms", lede: "Short and plain.", body: TERMS_HTML });
@@ -3426,7 +3859,12 @@ var worker_default = {
     if (p === "/fights") return boardPage(env);
     if (TOOL_PAGES[p]) return toolPage(env, p, u);
     if (p === "/sitemap.xml") {
-      let rows = env.DB ? (await env.DB.prepare("SELECT slug, updated_at FROM fights WHERE category IS NOT NULL OR COALESCE(votes_a,0) + COALESCE(votes_b,0) >= 5 ORDER BY views DESC LIMIT 45000").all()).results : [], urls = ["/", "/fights", ...Object.keys(TOOL_PAGES), "/about", "/blog", ...POSTS.map((x) => "/blog/" + x.slug), "/tools-like", ...Object.keys(ALT_PAGES), "/contact", "/terms", "/privacy", "/cookie-policy"].map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(rows.map((r) => `<url><loc>${SITE}/fight/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`));
+      let rows = env.DB ? (await env.DB.prepare("SELECT slug, updated_at FROM fights WHERE category IS NOT NULL OR COALESCE(votes_a,0) + COALESCE(votes_b,0) >= 5 ORDER BY views DESC LIMIT 45000").all()).results : [], posts = [];
+      try {
+        await tables(env), posts = env.DB ? (await env.DB.prepare("SELECT slug, at FROM posts ORDER BY at DESC LIMIT 5000").all()).results : [];
+      } catch {
+      }
+      let urls = ["/", "/fights", ...Object.keys(TOOL_PAGES), "/about", "/blog", ...POSTS.map((x) => "/blog/" + x.slug), "/tools-like", ...Object.keys(ALT_PAGES), "/contact", "/terms", "/privacy", "/cookie-policy"].map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(posts.map((r) => `<url><loc>${SITE}/blog/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.at).toISOString().slice(0, 10)}</lastmod></url>`)).concat(rows.map((r) => `<url><loc>${SITE}/fight/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`));
       return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join("")}</urlset>`, { headers: { "content-type": "application/xml" } });
     }
     return p === "/robots.txt" ? new Response(`User-agent: *
@@ -3452,7 +3890,16 @@ Free: 1 fight per week. Pro: $19/month. Agency: $99/month. Lifetime: founder pri
 `, { headers: { "content-type": "text/plain; charset=utf-8" } }) : p === "/" ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), night: await nightData(env), a: "", b: "", cache: "public, max-age=120" }) : page(env, { ...HOME, status: 404, cache: "no-store" });
   },
   async scheduled(event, env, ctx) {
-    env.SITE_URL && (SITE = env.SITE_URL), new Date(event.scheduledTime).getUTCDay() === 1 && new Date(event.scheduledTime).getUTCHours() === 15 ? ctx.waitUntil(weekly(env)) : ctx.waitUntil(autoFights(env, 12));
+    env.SITE_URL && (SITE = env.SITE_URL), new Date(event.scheduledTime).getUTCDay() === 1 && new Date(event.scheduledTime).getUTCHours() === 15 ? ctx.waitUntil(weekly(env)) : ctx.waitUntil((async () => {
+      try {
+        await autoFights(env, 12);
+      } catch {
+      }
+      try {
+        await autoBlog(env);
+      } catch {
+      }
+    })());
   }
 };
 export {
