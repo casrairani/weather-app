@@ -285,7 +285,7 @@ async function battle(env, a, b, keywords, gl) {
     let res = [], find = (h) => res.find((r) => r.host === h || r.host.endsWith("." + h));
     for (let page2 = 1; page2 <= DEPTH; page2++) {
       let got = await serp(env, kw, gl, page2);
-      if (res.push(...got), find(a) && find(b) || got.length < 8) break;
+      if (res.push(...got), find(a) && find(b) || !got.length) break;
     }
     let pa = find(a), pb = find(b), top = res[0];
     return {
@@ -3282,7 +3282,10 @@ function toText(html2) {
 var ROUNDS = [["onpage", "On-page"], ["content", "Content"], ["technical", "Technical"], ["ai", "AI-ready"], ["social", "Social"]], MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), monthYear = (t) => {
   let d = new Date(t);
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
-}, brand = (h) => h.replace(/^www\./, "").split(".").slice(0, -1).join("-") || h, postSlug = (a, b) => `${brand(a)}-vs-${brand(b)}-seo`.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-"), postTitle = (d, at) => `${d.a.host} vs ${d.b.host} SEO: who wins and why (${monthYear(at)})`;
+}, brand = (h) => h.replace(/^www\./, "").split(".").slice(0, -1).join("-") || h, postSlug = (a, b) => `${brand(a)}-vs-${brand(b)}-seo`.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-"), nice = (h) => {
+  let p = h.split(".");
+  return (p.length > 2 && !/^(co|com)$/.test(p[p.length - 2]) ? p[p.length - 2] : p[0]).split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("-");
+}, postTitle = (d, at) => `${nice(d.a.host)} vs ${nice(d.b.host)} SEO: who wins and why (${monthYear(at)})`;
 function planFor(site) {
   let total = site.checks.reduce((s, k) => s + k.weight, 0) || 1, order = { bad: 0, warn: 1 };
   return site.checks.filter((x) => x.status !== "good").sort((x, y) => order[x.status] - order[y.status] || y.weight - x.weight).map((x) => ({ label: x.label, status: x.status, fix: x.fix, gain: Math.round((x.status === "bad" ? 1 : 0.5) * x.weight / total * 100) }));
@@ -4921,6 +4924,16 @@ var worker_default = {
       let sd = await sdGet(env, decodeURIComponent(p.slice(10)));
       if (!sd) return infoPage(env, { path: p, status: 404, noindex: !0, title: "Showdown not found \xB7 SEO Fights", h1: "Not found", lede: "This showdown doesn't exist.", body: '<p><a class="btn fight" href="/showdowns">See live showdowns</a></p>' });
       ctx.waitUntil(env.DB.prepare("UPDATE showdowns SET views=views+1 WHERE id=?1").bind(sd.id).run());
+      {
+        let day = sdDay(sd), today = sd.ranks.find((r) => r.day === day), empty = today && today.a_pos == null && today.b_pos == null && today.at < Date.now() - 6 * 36e5;
+        sd.status === "live" && env.SERPER_KEY && (!today || empty) && !await env.LIMITS.get("sdlock:" + sd.id) && ctx.waitUntil((async () => {
+          await env.LIMITS.put("sdlock:" + sd.id, "1", { expirationTtl: 3600 });
+          try {
+            await sdCheck(env, sd);
+          } catch {
+          }
+        })());
+      }
       let A = sdName(sd.a), B2 = sdName(sd.b);
       return infoPage(env, {
         path: p,
