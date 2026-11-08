@@ -905,6 +905,17 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
 #suFields input { width: 100%; box-sizing: border-box; min-height: 52px }
 #suForm .btn { width: 100%; box-sizing: border-box }
 @media (prefers-reduced-motion: reduce) { .pg.nudge .pg-s { animation: none } }
+
+.upsell .up.track { border-color: var(--blue); box-shadow: 0 18px 50px rgba(29,78,216,.18) } .upsell .up-tag.blue { background: var(--blue); color: #fff }
+.upsell:has(> .up:not([hidden]):only-of-type), .upsell.one { grid-template-columns: 1fr }
+
+/* checks table: keep labels visible, short winner tag */
+#checks td:first-child { min-width: 130px }
+#checks .edge { display: inline-block; max-width: 110px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle }
+#checks td.v { font-size: 14px }
+/* AI strategy text */
+.ai-out { white-space: normal } .ai-out h4 { font: 800 20px/1.1 var(--f-display); text-transform: uppercase; margin: 18px 0 6px } .ai-out h4:first-child { margin-top: 0 }
+.ai-out p { margin: 0 0 10px; line-height: 1.6 } .ai-out ul, .ai-out ol { margin: 0 0 12px; padding-left: 22px; display: grid; gap: 6px } .ai-out code { font: 500 14px var(--f-mono) }
 </style>
 
 <header class="top"><div class="wrap">
@@ -1007,6 +1018,12 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
           <div class="badge-prev"><img id="badgeImg" alt="SEO Fights winner badge" width="280" height="72"></div>
           <pre class="code" id="badgeCode"></pre>
           <button class="btn sm" type="button" id="badgeCopy">Copy badge code</button>
+        </div>
+        <div class="panel up track" id="upTrack" hidden>
+          <span class="up-tag blue">Pro</span>
+          <h3 id="upTrackTitle">Track this rival every Monday</h3>
+          <p class="sub" id="upTrackText">We re-run this fight every Monday and email you when the score moves. Plus AI strategy and Keyword Battle.</p>
+          <a class="btn fight" href="/go/pro" id="upTrackBtn">Go Pro \xB7 $19/month</a>
         </div>
       </div>
       <div class="sec-head">
@@ -1263,6 +1280,21 @@ let D = DEMO;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 const FOTN = "__FOTN__", NIGHT = __NIGHT__;
+// Small, safe markdown for AI text: headings, bold, lists, paragraphs. Everything is escaped first.
+function mdLite(t) {
+  const lines = esc(String(t || "")).replace(/\\r/g, "").split("\\n"), out = []; let list = null;
+  const inline = x => x.replace(/\\*\\*(.+?)\\*\\*/g, "<b>$1</b>").replace(/\`([^\`]+)\`/g, "<code>$1</code>");
+  const close = () => { if (list) { out.push(\`</\${list}>\`); list = null; } };
+  for (const raw of lines) {
+    const l = raw.trim(); let m;
+    if (!l) { close(); continue; }
+    if ((m = l.match(/^#{1,6}\\s+(.*)$/))) { close(); out.push(\`<h4>\${inline(m[1])}</h4>\`); continue; }
+    if ((m = l.match(/^[-*\u2022]\\s+(.*)$/))) { if (list !== "ul") { close(); out.push("<ul>"); list = "ul"; } out.push(\`<li>\${inline(m[1])}</li>\`); continue; }
+    if ((m = l.match(/^\\d+[.)]\\s+(.*)$/))) { if (list !== "ol") { close(); out.push("<ol>"); list = "ol"; } out.push(\`<li>\${inline(m[1])}</li>\`); continue; }
+    close(); out.push(\`<p>\${inline(l)}</p>\`);
+  }
+  close(); return out.join("");
+}
 function personalizeUpsell(pick) {
   const own = store.get("pick:" + D.slug) === "own" || new URLSearchParams(location.search).get("r") === "1";
   const fix = $("#upFix"), belt = $("#upBadge");
@@ -1279,12 +1311,14 @@ function personalizeUpsell(pick) {
     $("#upFixText").textContent = \`A real person fixes your site, then we re-run the fight against \${brandName(D.b.host)} to prove you won. Fixed price, quoted within 24 hours.\`;
     $("#upFixBtn").textContent = \`Beat \${brandName(D.b.host)} for me\`;
     fix.classList.add("first"); belt.hidden = true;
+    const tr = $("#upTrack"); if (tr && !(window.ME && ["pro", "agency", "owner", "lifetime"].includes(ME.plan))) { tr.hidden = false; $("#upTrackTitle").textContent = \`Catch \${brandName(D.b.host)}. Track them every Monday\`; }
   } else {
     $("#upBadgeTitle").textContent = D.winner ? \`You won \u{1F3C6} Wear the belt\` : "Dead even. Break the tie?";
     $("#upFixTitle").textContent = n ? \`Win by more. \${n} fixes left.\` : "Defend the belt";
     $("#upFixText").textContent = "Rivals catch up. A real person applies every remaining fix so they can't. Fixed price, quoted within 24 hours.";
     belt.classList.add("first");
   }
+  const up = $("#upsell"); if (up) up.classList.toggle("one", [...up.children].filter(x => !x.hidden).length === 1);
 }
 const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
 const site = /claude|localhost/.test(location.host) ? "seofights.com" : location.host.replace(/^www\\./, "");
@@ -1317,7 +1351,7 @@ function render(d, live, keepLabel) {
   let html = "", last = "";
   for (const row of d.rows) {
     if (row.cat !== last) { last = row.cat; html += \`<tr class="cat"><td colspan="4">\${CATS.find(c => c[0] === row.cat)[2]}</td></tr>\`; }
-    const edge = row.edge === "a" ? \`<span class="edge a">\${esc(pretty(d.a.host))}</span>\` : row.edge === "b" ? \`<span class="edge b">\${esc(pretty(d.b.host))}</span>\` : "";
+    const edge = row.edge === "a" ? \`<span class="edge a" title="\${esc(d.a.host)} takes it">\${esc(brandName(d.a.host))}</span>\` : row.edge === "b" ? \`<span class="edge b" title="\${esc(d.b.host)} takes it">\${esc(brandName(d.b.host))}</span>\` : "";
     html += \`<tr><td>\${esc(row.label)}\${NEW_IDS.has(row.id) ? '<span class="new">NEW</span>' : ""}</td><td class="v"><span class="dot \${row.a.status}"></span>\${esc(row.a.value)}</td><td class="v"><span class="dot \${row.b ? row.b.status : "warn"}"></span>\${esc(row.b ? row.b.value : "\u2014")}</td><td>\${edge}</td></tr>\`;
   }
   $("#checks tbody").innerHTML = html;
@@ -1781,7 +1815,7 @@ $("#aiBtn").addEventListener("click", async () => {
     const j = await r.json();
     if (r.status === 402 || r.status === 503) { openLead("ai"); return; }
     if (!r.ok) throw new Error(j.error);
-    $("#aiOut").textContent = j.strategy; $("#aiOut").hidden = false;
+    $("#aiOut").innerHTML = mdLite(j.strategy); $("#aiOut").hidden = false;
   } catch (x) { toast(x.message && !/fetch|JSON/.test(x.message) ? x.message : "AI strategy runs on the live site"); }
   finally { btn.disabled = false; btn.textContent = "Get AI strategy"; }
 });
@@ -2437,6 +2471,17 @@ footer.site-foot .ft-disc { display: block; margin-top: 8px; font-size: 14px; op
 #suFields input { width: 100%; box-sizing: border-box; min-height: 52px }
 #suForm .btn { width: 100%; box-sizing: border-box }
 @media (prefers-reduced-motion: reduce) { .pg.nudge .pg-s { animation: none } }
+
+.upsell .up.track { border-color: var(--blue); box-shadow: 0 18px 50px rgba(29,78,216,.18) } .upsell .up-tag.blue { background: var(--blue); color: #fff }
+.upsell:has(> .up:not([hidden]):only-of-type), .upsell.one { grid-template-columns: 1fr }
+
+/* checks table: keep labels visible, short winner tag */
+#checks td:first-child { min-width: 130px }
+#checks .edge { display: inline-block; max-width: 110px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle }
+#checks td.v { font-size: 14px }
+/* AI strategy text */
+.ai-out { white-space: normal } .ai-out h4 { font: 800 20px/1.1 var(--f-display); text-transform: uppercase; margin: 18px 0 6px } .ai-out h4:first-child { margin-top: 0 }
+.ai-out p { margin: 0 0 10px; line-height: 1.6 } .ai-out ul, .ai-out ol { margin: 0 0 12px; padding-left: 22px; display: grid; gap: 6px } .ai-out code { font: 500 14px var(--f-mono) }
 
 #agOut[hidden] { display: none !important }
 [data-tool] { display: none }
