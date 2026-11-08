@@ -277,7 +277,7 @@ async function localBusinesses(env, industry, city, gl = "us") {
   let seen = /* @__PURE__ */ new Set(), out = [];
   for (let page2 = 1; page2 <= 2 && out.length < 12; page2++)
     for (let r of await serp(env, `${industry} ${city}`, gl, page2))
-      !r.host || seen.has(r.host) || DIRECTORY.test(r.host + ".") || /\.(gov|edu)(\.|$)/.test(r.host) || (seen.add(r.host), out.push(r));
+      !r.host || seen.has(r.host) || DIRECTORY.test(r.host + ".") || /\.(gov|edu|org)(\.|$)/.test(r.host) || /(association|assoc|council|federation|society|institute|guild|chamber)/i.test(r.host) || (seen.add(r.host), out.push(r));
   return out;
 }
 async function battle(env, a, b, keywords, gl) {
@@ -1653,7 +1653,7 @@ function setMode(m, save) {
   if (save) store.set("ringMode", m);
 }
 const prospectCard = (x, id) => \`<div class="prospect"><div class="pr-top"><b>\${ico(x.host)}\${esc(x.host)}</b><span class="pr-score"><i class="r">\${x.score}</i> vs <i class="b">\${x.rivalScore}</i></span></div>
-  <p class="sub" style="margin:0">Google rank #\${esc(x.rank)}. Losing by \${esc(x.gap)} points to \${esc(x.rival)}. Top gaps: \${(x.fixes || []).map(esc).join(", ") || "polish"}.</p>
+  <p class="sub" style="margin:0">\${x.gap > 0 ? \`Google rank #\${esc(x.rank)}. Losing by \${esc(x.gap)} points to \${esc(x.rival)}.\` : \`Google rank #\${esc(x.rank)}. Beats \${esc(x.rival)} on the page by \${esc(-x.gap)}, but still ranks below it.\`} Top gaps: \${(x.fixes || []).map(esc).join(", ") || "polish"}.</p>
   <pre class="out pitch" id="\${id}">\${esc(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
   <div class="pr-act"><button class="btn sm" type="button" data-pitch="\${id}">Copy pitch</button><a class="btn ghost sm" href="\${esc(x.fight)}" target="_blank" rel="noopener">Open the fight</a></div></div>\`;
 document.addEventListener("click", e => { const b = e.target.closest("[data-pitch]"); if (b) copy($("#" + b.dataset.pitch).textContent); });
@@ -1717,8 +1717,8 @@ if (IS_HOME) {
       const j = await r.json(); if (!r.ok) throw new Error(j.error);
       if (!j.prospects.length) { say("No local businesses found for that search. Try a broader industry or a bigger city."); return; }
       say("");
-      $("#huntTitle").textContent = \`\${j.prospects.length} \${j.industry} in \${j.city} losing to \${j.leader.host}\`;
-      $("#huntSub").textContent = "Biggest gap first.";
+      $("#huntTitle").textContent = \`\${j.prospects.length} \${j.industry} in \${j.city} ranking below \${j.leader.host}\`;
+      $("#huntSub").textContent = "Behind on the page first, biggest gap first.";
       $("#huntList").innerHTML = j.prospects.map((x, k) => prospectCard(x, "hn" + k)).join("");
       $("#huntOut").hidden = false; $("#huntOut").scrollIntoView({ behavior: "smooth", block: "start" });
       if (window.ME && ME.ring) { ME.ring.hunts.left = Math.max(0, ME.ring.hunts.left - 1); ringsideBar(ME); }
@@ -2815,10 +2815,10 @@ document.getElementById("agForm").addEventListener("submit", async e => {
     const j = await r.json(); if (!r.ok) throw new Error(j.error);
     $("#agMsg").textContent = "";
     if (!j.prospects.length) { $("#agMsg").textContent = "No local businesses found for that search. Try a broader industry or a bigger city."; return; }
-    $("#agTitle").textContent = \`\${j.prospects.length} \${esc(j.industry)} in \${esc(j.city)} losing to \${j.leader.host}\`;
-    $("#agSub").textContent = "Biggest gap first. Each card links to the full fight. Copy the pitch, add your name, send.";
+    $("#agTitle").textContent = \`\${j.prospects.length} \${esc(j.industry)} in \${esc(j.city)} ranking below \${j.leader.host}\`;
+    $("#agSub").textContent = "Behind on the page first, biggest gap first. Each card links to the full fight. Copy the pitch, add your name, send.";
     $("#agList").innerHTML = j.prospects.map((x, k) => \`<div class="prospect"><div class="pr-top"><b>\${esc(x.host)}</b><span class="pr-score"><i class="r">\${x.score}</i> vs <i class="b">\${x.rivalScore}</i></span></div>
-      <p class="muted">Google rank #\${x.rank}. Losing by \${x.gap} points. Top gaps: \${x.fixes.map(esc).join(", ") || "polish"}.</p>
+      <p class="muted">Google rank #\${x.rank}. \${x.gap > 0 ? \`Losing by \${x.gap} points.\` : \`Beats the leader on the page by \${-x.gap}, but still ranks below it.\`} Top gaps: \${x.fixes.map(esc).join(", ") || "polish"}.</p>
       <pre class="out pitch" id="pitch\${k}">\${esc(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
       <div class="pr-act"><button class="btn sm" type="button" data-copy="pitch\${k}">Copy pitch</button><a class="btn ghost sm" href="\${x.fight}" target="_blank" rel="noopener">Open the fight</a></div></div>\`).join("");
     $("#agList").querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => copyText($("#" + b.dataset.copy).textContent)));
@@ -3652,10 +3652,10 @@ Write my game plan to beat them: 1) why they're ahead (or why I'm ahead), 2) the
   }
   return (await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages, max_tokens: 900 }))?.response || "";
 }
-async function pitchFor(env, d, industry, city) {
+async function pitchFor(env, d, industry, city, rank = "?", leadRank = 1) {
   let fixes = d.plan.slice(0, 3).map((p) => p.label.toLowerCase()).join(", "), msgs = [
     { role: "system", content: "You write short, friendly cold emails for an SEO agency. Plain English, no hype, no jargon, under 110 words. Start with a subject line on its own line like 'Subject: ...'. Never invent numbers beyond the ones given. Sign off as '[Your name]'." },
-    { role: "user", content: `Prospect: ${d.a.host} (${industry} in ${city}). Their top Google competitor: ${d.b.host}. SEO Fights score: ${d.a.host} ${d.a.score}/100 vs ${d.b.host} ${d.b.score}/100. Biggest gaps: ${fixes || "minor polish"}. Write the email offering to fix these so they can outrank ${d.b.host}. Mention they can see the full side-by-side fight at the link [fight link].` }
+    { role: "user", content: d.a.score < d.b.score ? `Prospect: ${d.a.host} (${industry} in ${city}), ranked #${rank} on Google. Their top Google competitor: ${d.b.host}, ranked #${leadRank}. SEO Fights score: ${d.a.host} ${d.a.score}/100 vs ${d.b.host} ${d.b.score}/100, so the prospect is behind by ${d.b.score - d.a.score} points. Biggest gaps: ${fixes || "minor polish"}. Write the email offering to fix these so they can outrank ${d.b.host}. Mention they can see the full side-by-side fight at the link [fight link].` : `Prospect: ${d.a.host} (${industry} in ${city}), ranked #${rank} on Google. The top result is ${d.b.host} at #${leadRank}. On our page checks the prospect actually scores higher (${d.a.score}/100 vs ${d.b.score}/100), yet ranks lower on Google. Do NOT say they are behind on the score. Explain that their page is solid but they are still below ${d.b.host} on Google, and offer to close the remaining gaps (${fixes || "minor polish"}) and help them climb. Mention they can see the full side-by-side fight at the link [fight link].` }
   ];
   try {
     let out = await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages: msgs, max_tokens: 320 });
@@ -3690,10 +3690,10 @@ async function prospectHunt(env, industry, city, gl) {
       gap: d.b.score - d.a.score,
       fixes: d.plan.slice(0, 3).map((p) => p.label),
       fight,
-      pitch: (await pitchFor(env, d, industry, city)).replace(/\[fight link\]/gi, fight)
+      pitch: (await pitchFor(env, d, industry, city, t.pos, leader.pos)).replace(/\[fight link\]/gi, fight)
     };
   }));
-  return out.sort((x, y) => y.gap - x.gap), { leader: { host: leader.host, rank: leader.pos }, prospects: out };
+  return out.sort((x, y) => (y.gap > 0) - (x.gap > 0) || y.gap - x.gap || x.rank - y.rank), { leader: { host: leader.host, rank: leader.pos }, prospects: out };
 }
 async function aiRivals(env, siteHost, pageHtml, kws) {
   let meta = (re) => (pageHtml.match(re) || [])[1] || "", title = meta(/<title[^>]*>([^<]{0,200})/i), desc = meta(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{0,300})/i), text = pageHtml.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 1500), out = await env.AI.run(env.CF_AI_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast", { max_tokens: 200, messages: [
@@ -4249,7 +4249,7 @@ async function dashboardData(env, m) {
 function huntsHtml(list, openFirst = !0) {
   let e = esc2, day = (t) => t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : "";
   return `<div class="dlist">${list.map((h, i) => `<details class="hunt"${i === 0 && openFirst ? " open" : ""}><summary><span><b>${e(h.industry)} in ${e(h.city)}</b><small>${day(h.at)} \xB7 ${(h.prospects || []).length} prospects${h.leader ? ` \xB7 leader ${e(h.leader.host)}` : ""}</small></span></summary><div class="prospects">${(h.prospects || []).map((x, k) => `<div class="prospect"><div class="pr-top"><b>${e(x.host)}</b><span class="pr-score"><i class="r">${x.score}</i> vs <i class="b">${x.rivalScore}</i></span></div>
-<p class="muted">Google rank #${e(x.rank)}. Losing by ${e(x.gap)} points to ${e(x.rival)}. Top gaps: ${(x.fixes || []).map(e).join(", ") || "polish"}.</p>
+<p class="muted">${x.gap > 0 ? `Google rank #${e(x.rank)}. Losing by ${e(x.gap)} points to ${e(x.rival)}.` : `Google rank #${e(x.rank)}. Beats ${e(x.rival)} on the page by ${e(-x.gap)}, but still ranks below it.`} Top gaps: ${(x.fixes || []).map(e).join(", ") || "polish"}.</p>
 <pre class="out pitch" id="hp${h.id}-${k}">${e(x.pitch || "Pitch unavailable for this one. Open the fight and write your own.")}</pre>
 <div class="pr-act"><button class="btn sm" type="button" data-dcopy="hp${h.id}-${k}">Copy pitch</button><a class="btn ghost sm" href="${e(x.fight)}" target="_blank" rel="noopener">Open the fight</a></div></div>`).join("")}</div></details>`).join("")}</div>` + COPY_PITCH;
 }
