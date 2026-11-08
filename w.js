@@ -593,6 +593,17 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.upsell { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 26px }
+.upsell .up { position: relative; padding-top: 30px; border: 2px solid transparent; display: grid; align-content: start; gap: 12px } .upsell .up .sub { margin: 0 } .upsell .up .btn { justify-self: start } .upsell .badge-prev img { width: 280px; height: 72px }
+.upsell .up.fixit { border-color: var(--red, #e0263a); box-shadow: 0 18px 50px rgba(224,38,58,.18) }
+.upsell .up.champ { border-color: #f2c14e }
+.upsell .up h3 { font-size: 30px }
+.upsell .up-tag { position: absolute; top: -12px; left: 20px; background: var(--red, #e0263a); color: #fff; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px }
+.upsell .up-tag.gold { background: #f2c14e; color: #0b0d13 }
+.upsell .up.first { order: -1 }
+@media (max-width: 760px) { .upsell { grid-template-columns: 1fr } }
+.price .pill.gold { background: #f2c14e; color: #0b0d13; left: auto; right: 22px }
+
 .poster.night { outline: 3px solid #f2c14e; outline-offset: -3px } .poster.night .pc-cat { background: #f2c14e; color: #0b0d13 }
 footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 24px }
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
@@ -661,6 +672,22 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 
     <div class="sealed-wrap" id="sealed">
       <div class="verdict" id="verdict" hidden></div>
+      <div class="upsell" id="upsell">
+        <div class="panel up fixit" id="upFix">
+          <span class="up-tag">Done for you</span>
+          <h3 id="upFixTitle">Lost? We'll fix it for you</h3>
+          <p class="sub" id="upFixText">A real person applies every fix on your site, then we re-run the fight to prove you won. Fixed price, quoted within 24 hours.</p>
+          <button class="btn fight" type="button" data-lead="fix" id="upFixBtn">Fix my site for me</button>
+        </div>
+        <div class="panel up champ" id="upBadge">
+          <span class="up-tag gold">Champion badge</span>
+          <h3 id="upBadgeTitle">Won? Wear the belt</h3>
+          <p class="sub">Put the winner badge on your site. Visitors see you won, and it links back to the fight.</p>
+          <div class="badge-prev"><img id="badgeImg" alt="SEO Fight winner badge" width="280" height="72"></div>
+          <pre class="code" id="badgeCode"></pre>
+          <button class="btn sm" type="button" id="badgeCopy">Copy badge code</button>
+        </div>
+      </div>
       <div class="sec-head">
         <h2 class="display">Tale of the tape</h2>
         <span class="tag" id="modeTag">__MODE__</span>
@@ -699,20 +726,6 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
         </div>
       </div>
 
-      <div class="grid2">
-        <div class="panel">
-          <h3>Won? Wear the belt</h3>
-          <p class="sub">Put the winner badge on your site. Visitors see you won, and it links back to the fight.</p>
-          <div class="badge-prev"><img id="badgeImg" alt="SEO Fight winner badge" width="280" height="72"></div>
-          <pre class="code" id="badgeCode"></pre>
-          <button class="btn sm" type="button" id="badgeCopy">Copy badge code</button>
-        </div>
-        <div class="panel fixit">
-          <h3>Lost? We'll fix it</h3>
-          <p class="sub">Send us your site. You get a done-for-you fix plan and a price, from a real person.</p>
-          <button class="btn fight" type="button" data-lead="fix">Fix my site for me</button>
-        </div>
-      </div>
     </div>
   </div></section>
 
@@ -748,7 +761,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
     <div class="sec-head"><h2 class="display">Pick your weight class</h2><span class="tag">Founding prices</span></div>
     <div class="prices">
       <div class="price"><h3>Free</h3><div class="amt">$0<small>forever</small></div>
-        <ul><li>1 fight per week</li><li>Tap-to-reveal fight pages</li><li>TikTok videos and cards</li><li>1 of 10 keywords in Keyword Battle</li><li>All free SEO tools</li></ul>
+        <ul><li>Free account, email only</li><li>1 fight per week</li><li>See every fight result</li><li>1 try of each tool a week</li><li>1 of 10 keywords in Keyword Battle</li></ul>
         <a class="btn ghost" href="#top">Start fighting</a></div>
       <div class="price pop"><span class="pill">Most picked</span><h3>Pro</h3><div class="amt">$19<small>/month</small></div>
         <ul><li>40 fights per month</li><li>AI strategy (4 per month)</li><li>4 Keyword Battles, all 10 keywords</li><li>Any country</li><li>Clean report export</li><li>Monday movement reports</li></ul>
@@ -756,7 +769,7 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
       <div class="price agency"><h3>Agency</h3><div class="amt">$99<small>/month</small></div>
         <ul><li>Prospect Hunter: find clients losing to rivals</li><li>Ready-to-send pitch for each prospect</li><li>200 fights per month</li><li>20 Keyword Battles</li><li>Your logo on reports</li></ul>
         <a class="btn" href="__AGENCY__" data-lead="agency">Get Agency</a></div>
-      <div class="price"><h3>Lifetime</h3><div class="amt">$__LIFEPRICE__<small>once</small></div>
+      <div class="price" style="position:relative"><span class="pill gold">\u{1F525} __LIFEN__</span><h3>Lifetime</h3><div class="amt">$__LIFEPRICE__<small>once</small></div>
         <ul><li>40 fights per month, forever</li><li>Clean exports and all tools</li><li>Pay once, keep it</li><li>Keyword Battle and AI not included</li><li class="left">__LIFELEFT__</li></ul>
         <a class="btn ghost" href="__LIFE__" data-lead="lifetime">Get lifetime</a></div>
     </div>
@@ -873,6 +886,29 @@ let D = DEMO;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 const FOTN = "__FOTN__";
+function personalizeUpsell(pick) {
+  const own = store.get("pick:" + D.slug) === "own" || new URLSearchParams(location.search).get("r") === "1";
+  const fix = $("#upFix"), belt = $("#upBadge");
+  if (!own) { // watching a brand fight: sell the same thing for their own site
+    $("#upFixTitle").textContent = "Want this for your site?";
+    $("#upFixText").textContent = "We fight your site against your biggest rival, then a real person fixes everything you lose on. Fixed price, quoted within 24 hours.";
+    $("#upFixBtn").textContent = "Fix my site for me";
+    $("#upBadgeTitle").textContent = \`\${brandName(D.winner ? D[D.winner].host : D.a.host)} wears the belt\`;
+    fix.classList.add("first"); return;
+  }
+  const lost = D.winner === "b", gap = Math.abs(D.a.score - D.b.score), n = (D.plan || []).length;
+  if (lost) {
+    $("#upFixTitle").textContent = \`You lost by \${gap}. We'll fix all \${n} problems.\`;
+    $("#upFixText").textContent = \`A real person fixes your site, then we re-run the fight against \${brandName(D.b.host)} to prove you won. Fixed price, quoted within 24 hours.\`;
+    $("#upFixBtn").textContent = \`Beat \${brandName(D.b.host)} for me\`;
+    fix.classList.add("first"); belt.hidden = true;
+  } else {
+    $("#upBadgeTitle").textContent = D.winner ? \`You won \u{1F3C6} Wear the belt\` : "Dead even. Break the tie?";
+    $("#upFixTitle").textContent = n ? \`Win by more. \${n} fixes left.\` : "Defend the belt";
+    $("#upFixText").textContent = "Rivals catch up. A real person applies every remaining fix so they can't. Fixed price, quoted within 24 hours.";
+    belt.classList.add("first");
+  }
+}
 const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
 const site = /claude|localhost/.test(location.host) ? "seofight.app" : location.host.replace(/^www\\./, "");
 const pretty = h => h.replace(/\\.(com|co|io|org|net|app)$/i, "");
@@ -1060,12 +1096,18 @@ function reveal(pick, votes) {
     v.innerHTML = \`<b>\${right ? "You called it \u{1F3AF}" : "Upset! \u{1F62E}"}</b><span>\${share}% of \${total.toLocaleString()} fans picked \${esc(D[pick].host)}.</span>\`;
     v.hidden = false;
   }
+  personalizeUpsell(pick);
   document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 let pendingPick = null, pendingVotes = null;
+async function fullFight() { // locked pages only carry the names; fetch the result once signed in
+  if (!D.locked) return true;
+  try { const r = await fetch("/api/fight?slug=" + encodeURIComponent(D.slug)); if (!(await gateCheck(r))) return false; const j = await r.json(); if (!r.ok) throw 0; D = j; return true; }
+  catch { toast("Couldn't load the result. Refresh the page."); return false; }
+}
 async function needUnlock(pick, votes) {
   await meReady;
-  if (ME || D.slug === FOTN) { reveal(pick, votes); return; }
+  if (ME || D.slug === FOTN) { if (await fullFight()) reveal(pick, votes); return; }
   pendingPick = pick; pendingVotes = votes;
   $("#gate").hidden = true; $("#unlock").hidden = false;
   $("#unlockEyebrow").textContent = pick === "a" || pick === "b" ? \`You picked \${D[pick].host}\` : "Result is ready";
@@ -1084,7 +1126,7 @@ $("#unlock").addEventListener("submit", async e => {
   } catch { toast("Try again"); $("#unlockBtn").disabled = false; $("#unlockBtn").textContent = "Show me"; return; }
   store.set("fan", email);
   $("#unlock").hidden = true;
-  reveal(pendingPick, pendingVotes);
+  if (await fullFight()) reveal(pendingPick, pendingVotes);
 });
 if (VIEW === "fight") {
   $("#pickA").textContent = D.a.host; $("#pickB").textContent = D.b.host;
@@ -1474,6 +1516,17 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.upsell { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 26px }
+.upsell .up { position: relative; padding-top: 30px; border: 2px solid transparent; display: grid; align-content: start; gap: 12px } .upsell .up .sub { margin: 0 } .upsell .up .btn { justify-self: start } .upsell .badge-prev img { width: 280px; height: 72px }
+.upsell .up.fixit { border-color: var(--red, #e0263a); box-shadow: 0 18px 50px rgba(224,38,58,.18) }
+.upsell .up.champ { border-color: #f2c14e }
+.upsell .up h3 { font-size: 30px }
+.upsell .up-tag { position: absolute; top: -12px; left: 20px; background: var(--red, #e0263a); color: #fff; font: 700 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px }
+.upsell .up-tag.gold { background: #f2c14e; color: #0b0d13 }
+.upsell .up.first { order: -1 }
+@media (max-width: 760px) { .upsell { grid-template-columns: 1fr } }
+.price .pill.gold { background: #f2c14e; color: #0b0d13; left: auto; right: 22px }
+
 .poster.night { outline: 3px solid #f2c14e; outline-offset: -3px } .poster.night .pc-cat { background: #f2c14e; color: #0b0d13 }
 footer .fcols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 24px }
 footer .fcols > div { display: grid; gap: 8px; align-content: start }
@@ -2221,7 +2274,7 @@ async function refreshLife(env) {
 }
 function lifeTier(env) {
   let i = LADDER.findIndex(([cap2]) => LIFE_SOLD < cap2), [cap, price, key] = LADDER[i], left = cap === 1 / 0 ? null : cap - LIFE_SOLD;
-  return { price, link: env[key] || env.STRIPE_LIFETIME_LINK || "#pricing", label: left === null ? "Final price" : `${left} of ${cap - (i ? LADDER[i - 1][0] : 0)} left at $${price}, then $${LADDER[i + 1][1]}` };
+  return { price, left, link: env[key] || env.STRIPE_LIFETIME_LINK || "#pricing", label: left === null ? "Final price" : `${left} of ${cap - (i ? LADDER[i - 1][0] : 0)} left at $${price}, then $${LADDER[i + 1][1]}` };
 }
 function page(env, o) {
   let d = o.data || demo_default, fill = {
@@ -2236,15 +2289,16 @@ function page(env, o) {
     __LIFE__: esc(lifeTier(env).link),
     __LIFEPRICE__: String(lifeTier(env).price),
     __LIFELEFT__: esc(lifeTier(env).label),
+    __LIFEN__: lifeTier(env).left === null ? "Final price" : `Only ${lifeTier(env).left} left`,
     __AGENCY__: esc(env.STRIPE_AGENCY_LINK || "#pricing"),
     __VIEW__: o.view || "home",
     __CARDS__: JSON.stringify(o.cards || []).replace(/</g, "\\u003c"),
     __SUMMARY__: o.summary || "",
     __FOTN__: esc(FOTN),
-    __DATA__: JSON.stringify(withReport(d, !1)).replace(/</g, "\\u003c"),
+    __DATA__: JSON.stringify(d.locked ? d : withReport(d, !1)).replace(/</g, "\\u003c"),
     __LIVE__: o.live ? "true" : "false"
   };
-  return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE|FOTN)__/g, (m) => fill[m]), o);
+  return html(head(o) + template_default.replace(/__(TITLE|DESC|H1|LEDE|A|B|MODE|PRO|LIFEPRICE|LIFELEFT|LIFEN|LIFE|AGENCY|VIEW|CARDS|SUMMARY|DATA|LIVE|FOTN)__/g, (m) => fill[m]), o);
 }
 var HOME = {
   title: "SEO Fight \xB7 Compare website SEO side by side",
@@ -2253,15 +2307,16 @@ var HOME = {
   lede: "Enter your website and a competitor. 31 real checks, a clear winner, and the exact moves to take the belt.",
   mode: "Example fight"
 };
-function fightPage(env, d, path) {
-  let w = d.winner ? d[d.winner].host : null, hi = Math.max(d.a.score, d.b.score), lo = Math.min(d.a.score, d.b.score), loser = d.winner === "a" ? d.b : d.a, title = `${d.a.host} vs ${d.b.host}: who wins the SEO fight?`, rounds = [["onpage", "On-page"], ["content", "Content"], ["technical", "Technical"], ["ai", "AI-ready"], ["social", "Social"]], summary = `<section class="wrap seo-sum" aria-label="Fight summary"><h2>${esc(d.a.host)} vs ${esc(d.b.host)}: the result</h2>
+function fightPage(env, d, path, locked) {
+  let w = d.winner ? d[d.winner].host : null, hi = Math.max(d.a.score, d.b.score), lo = Math.min(d.a.score, d.b.score), loser = d.winner === "a" ? d.b : d.a, title = `${d.a.host} vs ${d.b.host}: who wins the SEO fight?`, rounds = [["onpage", "On-page"], ["content", "Content"], ["technical", "Technical"], ["ai", "AI-ready"], ["social", "Social"]], summary = locked ? `<section class="wrap seo-sum" aria-label="Fight summary"><h2>${esc(d.a.host)} vs ${esc(d.b.host)}: SEO fight</h2><p>${esc(d.a.host)} and ${esc(d.b.host)} go head to head on 31 live checks across 5 rounds: on-page, content, technical, AI-ready and social. Sign up free to see who wins and every round.</p></section>` : `<section class="wrap seo-sum" aria-label="Fight summary"><h2>${esc(d.a.host)} vs ${esc(d.b.host)}: the result</h2>
 <p>${w ? `<b>${esc(w)}</b> wins the SEO fight with ${hi} points against ${lo}.` : `It's a tie at ${d.a.score} points each.`}
 Round scores: ${rounds.map(([k, n]) => `${n} ${d.a.scores[k]}\u2013${d.b.scores[k]}`).join(", ")}.
 ${d.plan.length ? `To win, ${esc(d.a.host)} should start with: ${d.plan.slice(0, 3).map((p) => esc(p.label.toLowerCase())).join(", ")}.` : ""}
 Checked ${new Date(d.at || Date.now()).toISOString().slice(0, 10)}.</p></section>`;
   return page(env, {
     path,
-    data: d,
+    data: locked ? { slug: d.slug, a: { host: d.a.host }, b: { host: d.b.host }, votes_a: d.votes_a, votes_b: d.votes_b, category: d.category, locked: !0 } : d,
+    cache: "private, max-age=60",
     live: !0,
     mode: "Saved fight",
     title,
@@ -2771,6 +2826,13 @@ var worker_default = {
          ON CONFLICT(email, a, b) DO UPDATE SET active=1`
       ).bind(m.email, a, b, f?.a_score ?? 0, f?.b_score ?? 0, crypto.randomUUID(), Date.now()).run(), json({ ok: !0, email: m.email });
     }
+    if (p === "/api/fight") {
+      FOTN || (FOTN_AT = 0), await refreshFotn(env);
+      let slug = String(u.searchParams.get("slug") || "").toLowerCase(), m = await member(req, env);
+      if (!m && slug !== FOTN) return NEED_ACCOUNT();
+      let f = await storedFight(env, slug);
+      return f ? json(withReport(f.d, paid(m)), 200, { "cache-control": "no-store" }) : json({ error: "Fight not found." }, 404);
+    }
     if (p === "/api/me") {
       let m = await member(req, env);
       return json(m ? { plan: planOf(m), name: PLAN_NAMES[planOf(m)], email: m.email } : {}, 200, { "cache-control": "no-store" });
@@ -2785,10 +2847,11 @@ var worker_default = {
       let email = String(body.email || "").trim().toLowerCase();
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 200) return json({ error: "Enter a valid email." }, 400);
       if (!env.DB) return json({ error: "Not set up" }, 503);
-      let k = `su:${ipOf(req)}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`, n = env.LIMITS ? parseInt(await env.LIMITS.get(k) || "0", 10) : 0;
-      if (n >= 5) return json({ error: "Too many sign-ups from here today." }, 429);
-      env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
-      let old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
+      let k = `su:${ipOf(req)}:${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`, n = env.LIMITS ? parseInt(await env.LIMITS.get(k) || "0", 10) : 0, old = await env.DB.prepare("SELECT key, plan, active FROM members WHERE email=?1").bind(email).first();
+      if (!(old && old.plan === "free")) {
+        if (n >= 20) return json({ error: "Too many sign-ups from here today." }, 429);
+        env.LIMITS && ctx.waitUntil(env.LIMITS.put(k, String(n + 1), { expirationTtl: 9e4 }));
+      }
       if (old && old.plan !== "free" && old.active) return json({ error: "This email has a paid plan. Get your access link on the Account page." }, 409);
       let key = old && old.plan === "free" ? old.key : null;
       return key || (key = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, "0")).join(""), old ? await env.DB.prepare("UPDATE members SET key=?1, plan='free', active=1 WHERE email=?2").bind(key, email).run() : await env.DB.prepare("INSERT INTO members (key, email, plan, active, created_at) VALUES (?1, ?2, 'free', 1, ?3)").bind(key, email, Date.now()).run(), env.RESEND_KEY && env.OWNER_EMAIL && ctx.waitUntil(sendEmail(env, env.OWNER_EMAIL, `New free sign-up: ${email}`, `<p>${esc(email)}</p>`))), json({ plan: "free", name: "Free", email }, 200, { "set-cookie": cookieFor(key) });
@@ -2931,7 +2994,7 @@ var worker_default = {
     if (p === "/privacy") return infoPage(env, { path: p, title: "Privacy \xB7 SEO Fight", h1: "Privacy", lede: "What we collect and why.", body: PRIVACY_HTML });
     if (p.startsWith("/fight/")) {
       let slug = decodeURIComponent(p.slice(7)).toLowerCase(), old = await storedFight(env, slug);
-      if (old) return fightPage(env, old.d, `/fight/${encodeURIComponent(slug)}`);
+      if (old) return fightPage(env, old.d, `/fight/${encodeURIComponent(slug)}`, slug !== FOTN && !await member(req, env));
       let mm = slug.match(/^(.+\.[a-z]{2,})-vs-(.+\.[a-z]{2,})$/);
       return mm ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: mm[1], b: mm[2], path: p, cache: "no-store" }) : page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: "", b: "", status: 404, cache: "no-store" });
     }
