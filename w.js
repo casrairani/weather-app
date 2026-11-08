@@ -599,6 +599,14 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.nc-checks { position: relative; border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.04); max-height: 300px }
+.ncc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; padding: 14px 16px; filter: blur(5px); user-select: none; pointer-events: none }
+.ncc-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 13px }
+.ncc-l { color: rgba(255,255,255,.85) } .ncc-v { color: rgba(255,255,255,.6); font-family: var(--f-mono) }
+.ncc-lock { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 6px; text-align: center; padding: 16px; background: linear-gradient(180deg, rgba(11,13,19,.35), rgba(11,13,19,.85)) }
+.ncc-lock .ncc-ico { font-size: 26px } .ncc-lock b { font: 800 clamp(22px, 3.4vw, 30px)/1 var(--f-display); text-transform: uppercase } .ncc-lock span { color: rgba(255,255,255,.7); font-size: 14px } .ncc-lock .btn { margin-top: 6px }
+@media (max-width: 640px) { .ncc-grid { grid-template-columns: 1fr } }
+
 .hero h1 .l1 { display: block; white-space: nowrap }
 .hero h1 .rot { position: relative; display: block; height: 1.05em; overflow: hidden }
 .hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
@@ -675,14 +683,18 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 
   <section id="night" hidden><div class="wrap">
     <div class="night-card">
-      <div class="nc-head"><span class="nc-tag">\u{1F319} Rivalry of the Night \xB7 free result</span><span class="nc-votes" id="ncVotes"></span></div>
+      <div class="nc-head"><span class="nc-tag">\u{1F319} Rivalry of the Night result</span><span class="nc-votes" id="ncVotes"></span></div>
       <div class="nc-tape">
         <div class="nc-f a"><span class="nc-host" id="ncA"></span><span class="nc-score" id="ncSA"></span><span class="nc-belt" id="ncBA"></span></div>
         <div class="nc-vs">VS</div>
         <div class="nc-f b"><span class="nc-host" id="ncB"></span><span class="nc-score" id="ncSB"></span><span class="nc-belt" id="ncBB"></span></div>
       </div>
       <div class="nc-rounds" id="ncRounds"></div>
-      <div class="nc-cta"><a class="btn fight" id="ncMine" href="#top">Can your site beat them?</a><a class="btn ghost" id="ncFull" href="#">See all 31 checks</a></div>
+      <div class="nc-checks" id="ncChecks">
+        <div class="ncc-grid" id="ncGrid" aria-hidden="true"></div>
+        <div class="ncc-lock"><span class="ncc-ico">\u{1F512}</span><b id="ncLockT">See all 31 checks</b><span>Every punch, side by side, plus the fix list.</span><a class="btn fight" id="ncFull" href="#">Sign in to see all 31</a></div>
+      </div>
+      <div class="nc-cta"><a class="btn fight" id="ncMine" href="#top">Can your site beat them?</a></div>
     </div>
   </div></section>
 
@@ -1120,11 +1132,11 @@ function renderCards(cat) {
     const picks = (c.votes_a || 0) + (c.votes_b || 0);
     const night = c.slug === FOTN;
     return \`<a class="poster\${night ? " night" : ""}" href="/fight/\${encodeURIComponent(c.slug)}">
-      <span class="pc-cat">\${night ? "\u{1F319} Rivalry of the Night \xB7 free" : esc(c.category || "Featured")}</span>
+      <span class="pc-cat">\${night ? "\u{1F319} Rivalry of the Night" : esc(c.category || "Featured")}</span>
       <span class="pc-a">\${esc(pretty(c.a))}</span>
       <span class="pc-vs">VS</span>
       <span class="pc-b">\${esc(pretty(c.b))}</span>
-      <span class="pc-foot"><b>\${night ? "Free tonight" : "Tap to reveal"}</b><span>\${picks ? picks.toLocaleString() + " picks" : "Be the first to pick"}</span></span>
+      <span class="pc-foot"><b>Tap to reveal</b><span>\${picks ? picks.toLocaleString() + " picks" : "Be the first to pick"}</span></span>
     </a>\`;
   }).join("") || \`<p class="sub">No fights here yet.</p>\`;
 }
@@ -1141,7 +1153,11 @@ function renderNight() {
   const champ = W ? NIGHT[W].host : NIGHT.b.host;
   $("#ncMine").textContent = \`Can your site beat \${brandName(champ)}?\`;
   $("#ncMine").addEventListener("click", e => { e.preventDefault(); $("#b").value = champ; $("#a").value = ""; $("#test").scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#a").focus(), 500); });
-  $("#ncFull").href = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
+  const full = \`/fight/\${encodeURIComponent(NIGHT.slug)}\`;
+  $("#ncFull").href = full; $("#ncLockT").textContent = \`See all \${NIGHT.checks || 31} checks\`;
+  const fake = ["\u2713 0.4s", "\u2717 Missing", "\u2713 1,240 words", "\u2713 Yes", "\u26A0 3 found", "\u2713 200", "\u2717 Blocked", "\u2713 64 chars"];
+  $("#ncGrid").innerHTML = (NIGHT.labels || []).map(([cat, label], k) => \`<div class="ncc-row"><span class="ncc-l">\${esc(label)}</span><span class="ncc-v">\${fake[k % fake.length]}</span><span class="ncc-v">\${fake[(k + 3) % fake.length]}</span></div>\`).join("");
+  $("#ncFull").addEventListener("click", e => { e.preventDefault(); withAccount(() => { location.href = full; }, \`See all \${NIGHT.checks || 31} checks\`, "Free account. Every fight result, 1 fight a week, every tool.", full); });
   $("#night").hidden = false;
 }
 renderNight();
@@ -1173,7 +1189,7 @@ function headerRivals() {
 headerRivals();
 // Every other result needs an account: tapping a poster opens sign-in first.
 document.addEventListener("click", async e => {
-  const a = e.target.closest("a.poster"); if (!a || a.classList.contains("night")) return;
+  const a = e.target.closest("a.poster"); if (!a) return;
   e.preventDefault(); const href = a.getAttribute("href");
   withAccount(() => { location.href = href; }, "Sign in to see who wins", "Free account. See every fight result, run 1 fight a week, try every tool.", href);
 });
@@ -1216,7 +1232,7 @@ async function fullFight() { // locked pages only carry the names; fetch the res
 async function needUnlock(pick, votes) {
   await meReady;
   if (window.AUTH && AUTH.google) { const g = $("#unlockGoogle"); g.href = "/auth/google?next=" + encodeURIComponent(location.pathname); g.hidden = false; }
-  if (ME || D.slug === FOTN) { if (await fullFight()) reveal(pick, votes); return; }
+  if (ME) { if (await fullFight()) reveal(pick, votes); return; }
   pendingPick = pick; pendingVotes = votes;
   $("#gate").hidden = true; $("#unlock").hidden = false;
   $("#unlockEyebrow").textContent = pick === "a" || pick === "b" ? \`You picked \${D[pick].host}\` : "Result is ready";
@@ -1626,6 +1642,14 @@ pre.code { margin: 0 0 12px; padding: 12px; border-radius: 12px; background: var
 .price.agency .btn { background: var(--blue); color: #fff }
 .final { text-align: center; color: var(--muted); font-size: 14px; margin: 18px auto 0; max-width: 640px } .final a { color: inherit }
 footer a { color: inherit }
+.nc-checks { position: relative; border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.04); max-height: 300px }
+.ncc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; padding: 14px 16px; filter: blur(5px); user-select: none; pointer-events: none }
+.ncc-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 13px }
+.ncc-l { color: rgba(255,255,255,.85) } .ncc-v { color: rgba(255,255,255,.6); font-family: var(--f-mono) }
+.ncc-lock { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 6px; text-align: center; padding: 16px; background: linear-gradient(180deg, rgba(11,13,19,.35), rgba(11,13,19,.85)) }
+.ncc-lock .ncc-ico { font-size: 26px } .ncc-lock b { font: 800 clamp(22px, 3.4vw, 30px)/1 var(--f-display); text-transform: uppercase } .ncc-lock span { color: rgba(255,255,255,.7); font-size: 14px } .ncc-lock .btn { margin-top: 6px }
+@media (max-width: 640px) { .ncc-grid { grid-template-columns: 1fr } }
+
 .hero h1 .l1 { display: block; white-space: nowrap }
 .hero h1 .rot { position: relative; display: block; height: 1.05em; overflow: hidden }
 .hero h1 .rot-in { position: absolute; inset: 0; display: block; white-space: nowrap; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; line-height: 1.05 }
@@ -2412,7 +2436,7 @@ async function nightData(env) {
   let f = await storedFight(env, FOTN);
   if (!f) return null;
   let d = f.d;
-  return { slug: d.slug, winner: d.winner, votes_a: d.votes_a, votes_b: d.votes_b, a: { host: d.a.host, score: d.a.score, scores: d.a.scores }, b: { host: d.b.host, score: d.b.score, scores: d.b.scores }, checks: (d.rows || []).length };
+  return { slug: d.slug, winner: d.winner, votes_a: d.votes_a, votes_b: d.votes_b, a: { host: d.a.host, score: d.a.score, scores: d.a.scores }, b: { host: d.b.host, score: d.b.score, scores: d.b.scores }, checks: (d.rows || []).length, labels: (d.rows || []).map((r) => [r.cat, r.label]) };
 }
 async function refreshFotn(env) {
   if (!(!env.DB || Date.now() - FOTN_AT < 6e5)) {
@@ -2875,9 +2899,8 @@ var worker_default = {
       }
     }
     if (p === "/api/fight") {
-      FOTN || (FOTN_AT = 0), await refreshFotn(env);
       let slug = String(u.searchParams.get("slug") || "").toLowerCase(), m = await member(req, env);
-      if (!m && slug !== FOTN) return NEED_ACCOUNT();
+      if (!m) return NEED_ACCOUNT();
       let f = await storedFight(env, slug);
       return f ? json(withReport(f.d, paid(m)), 200, { "cache-control": "no-store" }) : json({ error: "Fight not found." }, 404);
     }
@@ -3202,7 +3225,7 @@ var worker_default = {
     if (p === "/privacy") return infoPage(env, { path: p, title: "Privacy \xB7 SEO Fights", h1: "Privacy", lede: "What we collect and why.", body: PRIVACY_HTML });
     if (p.startsWith("/fight/")) {
       let slug = decodeURIComponent(p.slice(7)).toLowerCase(), old = await storedFight(env, slug);
-      if (old) return fightPage(env, old.d, `/fight/${encodeURIComponent(slug)}`, slug !== FOTN && !await member(req, env));
+      if (old) return fightPage(env, old.d, `/fight/${encodeURIComponent(slug)}`, !await member(req, env));
       let mm = slug.match(/^(.+\.[a-z]{2,})-vs-(.+\.[a-z]{2,})$/);
       return mm ? page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: mm[1], b: mm[2], path: p, cache: "no-store" }) : page(env, { ...HOME, view: "home", cards: await cardsList(env, 24), a: "", b: "", status: 404, cache: "no-store" });
     }
