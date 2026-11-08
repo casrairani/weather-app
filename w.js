@@ -675,23 +675,50 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 .contact .field { display: grid; gap: 6px } .contact textarea, .contact select { font: inherit; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink) }
 .price .left { color: var(--red, #e0263a); font-weight: 700 }
 
+
+/* ===== 2026 polish: fight-poster type, arena navy, belt gold, punch buttons ===== */
+:root { --bg: #EEF0F3; --ink: #10131A; --red: #E1232E; --blue: #1D4ED8; --gold: #E8B21C; --arena: #0F1B3D; --arena-2: #172654;
+  --punch: 4px 4px 0 var(--ink) }
+.logo { gap: 4px; font-size: 26px; letter-spacing: .01em } .logo .gloves { width: 40px; height: 25px; display: block; margin: 0 1px } .logo i { display: none }
+.logo:hover .gloves { animation: touch .5s ease } @keyframes touch { 40% { transform: scaleX(.86) } }
+.hero { padding-block: 52px 8px } .hero.test-wrap { padding-top: 0; padding-bottom: 28px } #test .test-yours { margin-top: 24px }
+form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink) }
+.hero h1 { letter-spacing: -.005em }
+/* the ring: hard edge, punch shadow */
+.ring { border-radius: 22px; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink) !important; outline: 0 !important }
+.corner { border-radius: 14px }
+.fight { background: var(--red) !important; color: #fff; border-radius: 14px; box-shadow: var(--punch); border: 2px solid var(--ink); transition: transform .08s ease, box-shadow .08s ease }
+.fight:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink) }
+.fight:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); opacity: 1 }
+.night-card .fight, .upsell .fight { border-color: #fff; box-shadow: 4px 4px 0 #fff }
+.night-card .fight:active, .upsell .fight:active { box-shadow: 0 0 0 #fff }
+.test-yours { font-size: clamp(24px, 3.6vw, 34px); letter-spacing: .01em; margin-top: 8px }
+/* arena navy instead of black */
+.night-card { background: radial-gradient(120% 80% at 50% 0%, var(--arena-2), var(--arena) 70%); outline: 3px solid var(--gold); border-radius: 26px; box-shadow: 8px 8px 0 var(--ink) }
+.nc-tag, .ncc-head { color: var(--gold) } .nc-belt { color: var(--gold) }
+.nc-checks { background: rgba(255,255,255,.05) }
+.poster { box-shadow: 5px 5px 0 var(--ink); border: 2px solid var(--ink) }
+.poster.night { outline-color: var(--gold) }
+.price { border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink) } .price.pop { border-color: var(--red); box-shadow: 5px 5px 0 var(--red) } .price.agency { border-color: var(--blue); box-shadow: 5px 5px 0 var(--blue) }
+.price .pill.gold { background: var(--gold); color: var(--ink) }
+.btn:not(.fight):not(.ghost):not(.google) { border: 2px solid var(--ink) }
+@media (prefers-reduced-motion: reduce) { .fight, .logo .gloves { transition: none; animation: none } }
 </style>
 
 <header class="top"><div class="wrap">
-  <a class="logo" href="/" aria-label="SEO Fights home"><i></i>SEO Fights</a>
+  <a class="logo" href="/" aria-label="SEO Fights home"><span>SEO</span><svg class="gloves" viewBox="4 0 64 40" aria-hidden="true"><defs><symbol id="glv" viewBox="0 0 40 40"><path d="M9 15.5C9 9 13.6 5 20.2 5h3.6C31 5 36 9.6 36 16.4v3.4c0 4.8-3.2 8.3-7.7 9.1L27 29v3.2H11.6v-4.6C9.9 26.1 9 23.8 9 21.2z"/><path d="M13.5 18.2c0-3.2 2.3-5.4 5.6-5.4h4.6" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/><rect x="10.6" y="31" width="17.4" height="6" rx="2"/><rect x="10.6" y="31" width="17.4" height="2" rx="1" fill="rgba(255,255,255,.35)"/></symbol></defs><g transform="rotate(-14 24 22)"><use href="#glv" width="40" height="40" fill="#E1232E"/></g><g transform="rotate(14 48 22)"><use href="#glv" x="-72" width="40" height="40" fill="#1D4ED8" transform="scale(-1,1)"/></g></svg><span>Fights</span></a>
   <nav class="links"><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
   <a class="btn sm" href="/#top">Start a fight</a>
 </div></header>
 
 <main id="top">
   <div class="wrap hero">
-    <span class="live"><b></b>Live SEO fights \xB7 Google + AI</span>
-    <h1 class="display">__H1__</h1>
+        <h1 class="display">__H1__</h1>
     <p class="lede">__LEDE__</p>
   </div>
 
   <section id="test"><div class="wrap hero test-wrap">
-    <p class="test-yours" id="testYours">\u26A1 Now test yours. Your site vs your rival.</p>
+    <p class="test-yours" id="testYours">Now put your site in the ring</p>
     <form class="ring" id="duelForm" novalidate>
       <div class="corner red"><label for="a">Red corner \xB7 You</label><input id="a" name="a" inputmode="url" autocomplete="off" placeholder="yoursite.com" value="__A__"></div>
       <div class="vs" aria-hidden="true">VS</div>
@@ -1184,7 +1211,7 @@ function headerRivals() {
   ["apple.com-vs-samsung.com", "nike.com-vs-adidas.com", "coca-cola.com-vs-pepsi.com", "openai.com-vs-anthropic.com", "uber.com-vs-lyft.com", "netflix.com-vs-disneyplus.com", "playstation.com-vs-xbox.com", "instagram.com-vs-tiktok.com"].forEach(sl => { const c = CARDS.find(x => x.slug === sl); if (c) add(c.a, c.b); });
   CARDS.filter(c => c.category).slice(0, 8).forEach(c => add(c.a, c.b));
   if (!pairs.length) return;
-  const items = [\`<span class="r">Yours</span> <small>or</small> <span class="b">your rival's?</span>\`, ...pairs.slice(0, 10).map(([a, b]) => \`<span class="r">\${esc(a)}</span> <small>or</small> <span class="b">\${esc(b)}?</span>\`)];
+  const items = [\`<span class="r">You</span> <small>or</small> <span class="b">your rival?</span>\`, ...pairs.slice(0, 10).map(([a, b]) => \`<span class="r">\${esc(a)}</span> <small>or</small> <span class="b">\${esc(b)}?</span>\`)];
   h1.innerHTML = \`<span class="l1">Whose <span class="r">SEO</span> wins?</span><span class="rot" aria-live="polite"><span class="rot-in">\${items[0]}</span></span>\`;
   const rot = h1.querySelector(".rot"), still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fit = el => { el.style.fontSize = ""; let f = 1; while (el.scrollWidth > rot.clientWidth + 2 && f > .45) { f -= .05; el.style.fontSize = f + "em"; } };
@@ -1733,6 +1760,34 @@ a.panel.post h3 { font-size: 22px; line-height: 1.1 }
 .price .left { color: var(--red, #e0263a); font-weight: 700 }
 
 
+/* ===== 2026 polish: fight-poster type, arena navy, belt gold, punch buttons ===== */
+:root { --bg: #EEF0F3; --ink: #10131A; --red: #E1232E; --blue: #1D4ED8; --gold: #E8B21C; --arena: #0F1B3D; --arena-2: #172654;
+  --punch: 4px 4px 0 var(--ink) }
+.logo { gap: 4px; font-size: 26px; letter-spacing: .01em } .logo .gloves { width: 40px; height: 25px; display: block; margin: 0 1px } .logo i { display: none }
+.logo:hover .gloves { animation: touch .5s ease } @keyframes touch { 40% { transform: scaleX(.86) } }
+.hero { padding-block: 52px 8px } .hero.test-wrap { padding-top: 0; padding-bottom: 28px } #test .test-yours { margin-top: 24px }
+form.panel, .tool form.panel { border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink) }
+.hero h1 { letter-spacing: -.005em }
+/* the ring: hard edge, punch shadow */
+.ring { border-radius: 22px; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink) !important; outline: 0 !important }
+.corner { border-radius: 14px }
+.fight { background: var(--red) !important; color: #fff; border-radius: 14px; box-shadow: var(--punch); border: 2px solid var(--ink); transition: transform .08s ease, box-shadow .08s ease }
+.fight:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink) }
+.fight:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); opacity: 1 }
+.night-card .fight, .upsell .fight { border-color: #fff; box-shadow: 4px 4px 0 #fff }
+.night-card .fight:active, .upsell .fight:active { box-shadow: 0 0 0 #fff }
+.test-yours { font-size: clamp(24px, 3.6vw, 34px); letter-spacing: .01em; margin-top: 8px }
+/* arena navy instead of black */
+.night-card { background: radial-gradient(120% 80% at 50% 0%, var(--arena-2), var(--arena) 70%); outline: 3px solid var(--gold); border-radius: 26px; box-shadow: 8px 8px 0 var(--ink) }
+.nc-tag, .ncc-head { color: var(--gold) } .nc-belt { color: var(--gold) }
+.nc-checks { background: rgba(255,255,255,.05) }
+.poster { box-shadow: 5px 5px 0 var(--ink); border: 2px solid var(--ink) }
+.poster.night { outline-color: var(--gold) }
+.price { border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink) } .price.pop { border-color: var(--red); box-shadow: 5px 5px 0 var(--red) } .price.agency { border-color: var(--blue); box-shadow: 5px 5px 0 var(--blue) }
+.price .pill.gold { background: var(--gold); color: var(--ink) }
+.btn:not(.fight):not(.ghost):not(.google) { border: 2px solid var(--ink) }
+@media (prefers-reduced-motion: reduce) { .fight, .logo .gloves { transition: none; animation: none } }
+
 html:not([data-me]) pre.out { filter: blur(5px); user-select: none; -webkit-user-select: none }
 [data-tool] { display: none }
 .tools-hero { padding-block: 56px 8px }
@@ -1777,7 +1832,7 @@ td.url { max-width: 340px; overflow-wrap: anywhere; font-size: 13px } td.url sma
 <style>__SHOW__</style>
 
 <header class="top"><div class="wrap">
-  <a class="logo" href="/" aria-label="SEO Fights home"><i></i>SEO Fights</a>
+  <a class="logo" href="/" aria-label="SEO Fights home"><span>SEO</span><svg class="gloves" viewBox="4 0 64 40" aria-hidden="true"><defs><symbol id="glv" viewBox="0 0 40 40"><path d="M9 15.5C9 9 13.6 5 20.2 5h3.6C31 5 36 9.6 36 16.4v3.4c0 4.8-3.2 8.3-7.7 9.1L27 29v3.2H11.6v-4.6C9.9 26.1 9 23.8 9 21.2z"/><path d="M13.5 18.2c0-3.2 2.3-5.4 5.6-5.4h4.6" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/><rect x="10.6" y="31" width="17.4" height="6" rx="2"/><rect x="10.6" y="31" width="17.4" height="2" rx="1" fill="rgba(255,255,255,.35)"/></symbol></defs><g transform="rotate(-14 24 22)"><use href="#glv" width="40" height="40" fill="#E1232E"/></g><g transform="rotate(14 48 22)"><use href="#glv" x="-72" width="40" height="40" fill="#1D4ED8" transform="scale(-1,1)"/></g></svg><span>Fights</span></a>
   <nav class="links"><a href="/keywords-battle">Keyword Battle</a><a href="/tools">Free tools</a><a href="/agency">For agencies</a><a href="/blog">Blog</a><a href="/#pricing">Pricing</a></nav>
   <a class="btn sm" href="/">Start a fight</a>
 </div></header>
@@ -2537,7 +2592,7 @@ function badgeSvg(d) {
 function head(o) {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 ${o.noindex ? '<meta name="robots" content="noindex,follow">' : ""}<link rel="canonical" href="${SITE}${o.path || "/"}"><meta property="og:title" content="${esc(o.title)}"><meta property="og:description" content="${esc(o.desc)}"><meta property="og:url" content="${SITE}${o.path || "/"}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 30 16 16 30 2 16Z' fill='%23e0263a'/%3E%3Cpath d='M16 2 30 16 16 30Z' fill='%232457f5'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='4 0 64 40'%3E%3Cdefs%3E%3Csymbol id='g' viewBox='0 0 40 40'%3E%3Cpath d='M9 15.5C9 9 13.6 5 20.2 5h3.6C31 5 36 9.6 36 16.4v3.4c0 4.8-3.2 8.3-7.7 9.1L27 29v3.2H11.6v-4.6C9.9 26.1 9 23.8 9 21.2z'/%3E%3Crect x='10.6' y='31' width='17.4' height='6' rx='2'/%3E%3C/symbol%3E%3C/defs%3E%3Cg transform='rotate(-14 24 22)'%3E%3Cuse href='%23g' width='40' height='40' fill='%23E1232E'/%3E%3C/g%3E%3Cg transform='rotate(14 48 22)'%3E%3Cuse href='%23g' x='-72' width='40' height='40' fill='%231D4ED8' transform='scale(-1,1)'/%3E%3C/g%3E%3C/svg%3E">
 <script type="application/ld+json">${JSON.stringify(o.ld || { "@context": "https://schema.org", "@graph": [{ "@type": "WebSite", name: "SEO Fights", url: SITE }, { "@type": "SoftwareApplication", name: "SEO Fights", applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }] }).replace(/</g, "\\u003c")}</script>
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 `;
