@@ -13,7 +13,13 @@ export const RULES = {
   minCycle: 7,
   maxCycle: 365,
   defaultCycle: 42,       // used when we only know one gap that looks odd
+  trialMinDays: 2,        // intro buyers: give them a couple of days to take their first class
+  trialMaxDays: 120,      // after 4 months an intro buyer is treated like any other past customer
 };
+
+// Intro / trial offers, and the paid plans that mean someone joined. Matched against item names in sales.
+export const TRIAL_RE = /\b(intro|introductory|trial|new (client|student|member|customer)s?|first (class|visit|session|time)|starter|welcome|taster)\b/i;
+export const PLAN_RE = /\b(member(ship)?s?|unlimited|monthly|annual|yearly|auto.?renew\w*|packs?|packages?|bundles?|\d+\s*(class|session|visit|ride)e?s?|punch ?card|class card|subscription)\b/i;
 
 const median = (a) => {
   const s = [...a].sort((x, y) => x - y);
@@ -33,14 +39,22 @@ export function profile(visits, now = Date.now()) {
   let cycle = null;
   if (gaps.length) cycle = Math.round(Math.min(RULES.maxCycle, Math.max(RULES.minCycle, median(gaps))));
   const p = { visits: n, first, last, since, cycle, total_cents: total, avg_cents: Math.round(total / visits.length) || 0 };
+  // Intro buyers: bought a trial offer, and no membership or class pack since.
+  const trials = visits.filter((v) => v.item && TRIAL_RE.test(v.item));
+  if (trials.length) {
+    const t0 = Math.min(...trials.map((v) => v.at));
+    p.trial_days = Math.floor((now - t0) / DAY);
+    p.joined = visits.some((v) => v.item && v.at >= t0 && !TRIAL_RE.test(v.item) && PLAN_RE.test(v.item));
+  }
   p.segment = segmentOf(p);
   p.due_at = cycle ? last + cycle * DAY : null;
   return p;
 }
 
-export function segmentOf({ visits, since, cycle }) {
+export function segmentOf({ visits, since, cycle, trial_days, joined }) {
   if (!visits) return "none";
   if (since > RULES.maxAgeDays) return "too_old";
+  if (trial_days != null && !joined && trial_days <= RULES.trialMaxDays) return trial_days >= RULES.trialMinDays ? "trial" : "new";
   if (visits === 1) return since >= RULES.oneTimerMinDays ? "one_timer" : "new";
   if (since >= Math.max(RULES.lostDays, cycle * RULES.lostFactor)) return "lost";
   if (since >= cycle * RULES.overdueFactor) return "overdue";
@@ -49,12 +63,13 @@ export function segmentOf({ visits, since, cycle }) {
 
 // Which segments each campaign targets.
 export const CAMPAIGNS = {
+  trial: { segment: "trial", name: "Intro → member", blurb: "Bought an intro offer but haven't joined yet." },
   overdue: { segment: "overdue", name: "Overdue regulars", blurb: "Regulars who are late for their usual visit." },
   lost: { segment: "lost", name: "Lost regulars", blurb: "Regulars who stopped coming months ago." },
   one_timer: { segment: "one_timer", name: "One-time visitors", blurb: "People who came once and never came back." },
 };
 
 export const SEGMENT_LABEL = {
-  active: "On track", overdue: "Overdue", lost: "Lost", one_timer: "One-timer", new: "New",
+  trial: "Tried, not joined", active: "On track", overdue: "Overdue", lost: "Lost", one_timer: "One-timer", new: "New",
   too_old: "Over 2 years (never contacted)", none: "No visits",
 };

@@ -12,7 +12,7 @@ export const HOLDOUT_PCT = 10;     // 10% of eligible people get no email: the h
 // 1) Recompute every customer's rhythm and segment from their visits. Only changed customers are written.
 export async function recompute(env, biz, now = Date.now()) {
   const [vis, cur] = await env.DB.batch([
-    env.DB.prepare("SELECT customer_id, at, amount_cents FROM visits WHERE biz_id = ?1 AND customer_id IS NOT NULL").bind(biz.id),
+    env.DB.prepare("SELECT customer_id, at, amount_cents, item FROM visits WHERE biz_id = ?1 AND customer_id IS NOT NULL").bind(biz.id),
     env.DB.prepare("SELECT id, visits, last_visit, cycle_days, segment, total_cents FROM customers WHERE biz_id = ?1").bind(biz.id),
   ]);
   const by = new Map();
@@ -49,7 +49,7 @@ export async function enroll(env, biz, now = Date.now()) {
   if (!room) return 0;
   const camps = (await env.DB.prepare("SELECT kind FROM campaigns WHERE biz_id = ?1 AND enabled = 1").bind(biz.id).all()).results.map((r) => r.kind);
   let n = 0;
-  for (const kind of ["overdue", "one_timer", "lost"].filter((k) => camps.includes(k))) {
+  for (const kind of ["trial", "overdue", "one_timer", "lost"].filter((k) => camps.includes(k))) {
     if (!room) break;
     const people = await eligible(env, biz, kind, now, room);
     const stmts = [];
@@ -63,7 +63,7 @@ export async function enroll(env, biz, now = Date.now()) {
     }
     for (let i = 0; i < stmts.length; i += 80) await env.DB.batch(stmts.slice(i, i + 80));
   }
-  if (n) await logEvent(env, biz.id, "enrolled", `${plural(n, "overdue customer")} added to win-back`, now);
+  if (n) await logEvent(env, biz.id, "enrolled", `${plural(n, "customer")} added to campaigns`, now);
   return n;
 }
 
@@ -105,7 +105,7 @@ export async function sendDue(env, biz, site, now = Date.now(), force = false) {
     if (r.ok) sent++;
   }
   for (let i = 0; i < writes.length; i += 80) await env.DB.batch(writes.slice(i, i + 80));
-  if (sent) await logEvent(env, biz.id, "sent", `${plural(sent, "win-back email")} sent`, now);
+  if (sent) await logEvent(env, biz.id, "sent", `${plural(sent, "email")} sent`, now);
   return sent;
 }
 
@@ -171,13 +171,39 @@ export async function stats(env, biz, now = Date.now()) {
   };
 }
 
+// The Leak Report: a realistic yearly win-back from people who stopped coming or never joined.
+// Deliberately conservative: assumes only a small share comes back (LEAK_RATES), so the number holds up in front of an owner.
+export const LEAK_RATES = { trial: 0.10, overdue: 0.10, lost: 0.03, one_timer: 0.03 };
+// Only counts people we're allowed to email (have an email, not unsubscribed, bought in the last 2 years).
+// Overdue and lost regulars: what they used to spend in a year (average sale x visits per year).
+// Intro buyers and one-time visitors: what a typical regular spends in a year, since that's what they'd be worth if they stayed.
+export async function leak(env, biz) {
+  const rows = (await env.DB.prepare(`SELECT segment, COUNT(*) n,
+      SUM(CASE WHEN cycle_days > 0 THEN avg_cents * 365.0 / cycle_days ELSE 0 END) yearly
+    FROM customers WHERE biz_id = ?1 AND email IS NOT NULL AND provider_unsub = 0 AND segment IN ('trial','overdue','lost','one_timer')
+      AND NOT EXISTS (SELECT 1 FROM consents k WHERE k.customer_id = customers.id AND k.channel = 'email' AND k.status = 'opt_out')
+    GROUP BY segment`).bind(biz.id).all()).results;
+  const regs = (await env.DB.prepare("SELECT avg_cents * 365.0 / cycle_days v FROM customers WHERE biz_id = ?1 AND segment IN ('active','overdue') AND cycle_days > 0 AND avg_cents > 0").bind(biz.id).all()).results.map((r) => r.v).sort((a, b) => a - b);
+  const dollars = (c) => Math.round(c / 100) * 100; // estimates: whole dollars only
+  const typical = regs.length >= 5 ? dollars(regs[regs.length >> 1]) : 0;
+  const by = Object.fromEntries(rows.map((r) => [r.segment, r]));
+  const line = (k, own) => {
+    const r = by[k] || { n: 0, yearly: 0 };
+    const worth = Math.round(own ? r.yearly : r.n * typical); // what they spend(t) in a year as regulars
+    return { k, n: r.n, worth, rate: LEAK_RATES[k], cents: dollars(worth * LEAK_RATES[k]) };
+  };
+  const lines = [line("trial", false), line("overdue", true), line("lost", true), line("one_timer", false)];
+  const sum = (f) => lines.reduce((a, l) => a + f(l), 0);
+  return { lines, total: sum((l) => l.cents), worth: sum((l) => l.worth), typical, people: sum((l) => l.n) };
+}
+
 export async function ensureCampaigns(env, biz) {
   await env.DB.batch(Object.keys(CAMPAIGNS).map((k) => env.DB.prepare("INSERT OR IGNORE INTO campaigns (biz_id, kind, enabled, offer) VALUES (?1, ?2, 0, ?3)").bind(biz.id, k, DEFAULT_OFFERS[k])));
 }
 
 // One full pass for one business (cron).
 export async function run(env, biz, site, { sync, now = Date.now(), force = false } = {}) {
-  if (sync) await sync(env, biz);
+  if (sync && biz.provider === "square") await sync(env, biz);
   await recompute(env, biz, now);
   await matchReturns(env, biz, now);
   await enroll(env, biz, now);

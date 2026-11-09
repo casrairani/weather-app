@@ -16,7 +16,7 @@ export const SCHEMA = [
     provider_unsub INTEGER DEFAULT 0, visits INTEGER DEFAULT 0, first_visit INTEGER, last_visit INTEGER, cycle_days INTEGER,
     avg_cents INTEGER, total_cents INTEGER, segment TEXT, updated_at INTEGER)`,
   `CREATE INDEX IF NOT EXISTS customers_biz ON customers (biz_id, segment)`,
-  `CREATE TABLE IF NOT EXISTS visits (id TEXT PRIMARY KEY, biz_id TEXT NOT NULL, customer_id TEXT, at INTEGER NOT NULL, amount_cents INTEGER DEFAULT 0, source TEXT)`,
+  `CREATE TABLE IF NOT EXISTS visits (id TEXT PRIMARY KEY, biz_id TEXT NOT NULL, customer_id TEXT, at INTEGER NOT NULL, amount_cents INTEGER DEFAULT 0, source TEXT, item TEXT)`,
   `CREATE INDEX IF NOT EXISTS visits_cust ON visits (customer_id, at)`,
   `CREATE TABLE IF NOT EXISTS bookings (id TEXT PRIMARY KEY, biz_id TEXT NOT NULL, customer_id TEXT, start_at INTEGER NOT NULL, status TEXT, updated_at INTEGER)`,
   `CREATE INDEX IF NOT EXISTS bookings_cust ON bookings (customer_id, start_at)`,
@@ -35,10 +35,14 @@ export const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS events_biz ON events (biz_id, at)`,
 ];
 
+const MIGRATIONS = ["ALTER TABLE visits ADD COLUMN item TEXT"];
+
 let ready = false;
 export async function tables(env) {
   if (ready) return;
   await env.DB.batch(SCHEMA.map((s) => env.DB.prepare(s)));
+  // Columns added after launch. Each fails harmlessly if it already exists.
+  for (const s of MIGRATIONS) { try { await env.DB.prepare(s).run(); } catch {} }
   ready = true;
 }
 

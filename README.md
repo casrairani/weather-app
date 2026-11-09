@@ -15,6 +15,21 @@ Live as the Cloudflare Worker **rebooked** (D1 database `rebooked`). A public de
 5. **Comparison group**: 10% of eligible people get no email, so the dashboard shows how many returns the emails actually caused.
 6. **Verified returns** (`matchReturns`): first paid sale within 30 days of being added. Fee: 12% of that sale, min $5, max $500/month. Comparison-group returns never create fees.
 
+
+## Getting customer data in
+
+- **Upload any export (CSV).** `/app/import`. Works with Mindbody, Momence, Mariana Tek, Arketa, Glofox, Vagaro, Fresha, Jane, Square, spreadsheets. The browser parses the file (`src/importer.js`), detects columns from their names and contents, and shows the owner the mapping to confirm. Handles one-row-per-visit and one-row-per-customer files, title lines above the header, `Last, First` names, many date formats, refunds and cancelled/no-show rows. Only mapped fields are sent, in chunks; re-uploading the same file never double counts.
+- **Square.** Live sync every 30 minutes (read-only OAuth).
+- Later: a Zapier/Make webhook, then direct connectors for the systems pilots use.
+
+## Leak Report
+
+The first thing an owner sees. A conservative yearly win-back estimate: 1 in 10 overdue regulars and intro buyers come back, 1 in 33 lost regulars and one-time visitors (`LEAK_RATES` in `src/engine.js`). Only counts people who can legally be emailed.
+
+## Intro → member
+
+Sales whose item name looks like an intro or trial offer (`TRIAL_RE` in `src/rhythm.js`) with no membership or class pack bought since (`PLAN_RE`) put the customer in the `trial` segment for up to 120 days. Its campaign: how was your first class, book your next one, membership options.
+
 ## Messaging rules built in
 
 - Only customers with a purchase in the last 2 years; only email (no texts) unless the customer opts in.

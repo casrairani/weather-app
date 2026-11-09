@@ -7,6 +7,7 @@ import { sync } from "./square.js";
 import { recompute, enroll, sendDue, matchReturns, ensureCampaigns } from "./engine.js";
 
 const ID = "demo";
+const VERSION = 3; // bump to rebuild the demo after changing the sample data
 const HISTORY = 30;
 
 const get = (env) => env.DB.prepare("SELECT * FROM businesses WHERE id = ?1").bind(ID).first();
@@ -19,6 +20,7 @@ export async function resetDemo(env) {
 // Returns { biz, ready }. Call on every /demo request; does a bounded amount of work.
 export async function demoStep(env, site) {
   let biz = await get(env);
+  if (biz && JSON.parse(biz.sync_state || "{}").v !== VERSION) { await resetDemo(env); biz = null; }
   const mockEnv = { ...env, SQUARE_MOCK: "1", RESEND_KEY: "" };
   if (!biz) {
     const start = Date.now() - HISTORY * DAY;
@@ -30,7 +32,7 @@ export async function demoStep(env, site) {
     await sync(mockEnv, biz); // imports the sample customers and 2 years of sales
     // Sample bookings are dated from the start of the history; move them to the demo's "today".
     await env.DB.prepare("UPDATE bookings SET start_at = start_at + ?2 WHERE biz_id = ?1").bind(ID, HISTORY * DAY).run();
-    await env.DB.prepare("UPDATE businesses SET sync_state = ?2 WHERE id = ?1").bind(ID, JSON.stringify({ mockDone: true, day: HISTORY })).run();
+    await env.DB.prepare("UPDATE businesses SET sync_state = ?2 WHERE id = ?1").bind(ID, JSON.stringify({ v: VERSION, mockDone: true, day: HISTORY })).run();
     return { biz: await get(env), ready: false };
   }
   const st = JSON.parse(biz.sync_state || "{}");

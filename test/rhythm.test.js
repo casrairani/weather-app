@@ -37,3 +37,15 @@ test("same-day visits count once", () => {
 test("segmentOf handles empty", () => {
   assert.equal(segmentOf({ visits: 0 }), "none");
 });
+
+test("intro buyers who haven't joined are 'trial'; joining or 4 months later ends it", async () => {
+  const { profile } = await import("../src/rhythm.js");
+  const now = Date.UTC(2026, 10, 9);
+  const D = 86400000;
+  const intro = [{ at: now - 20 * D, amount_cents: 5900, item: "Intro Offer - 3 Classes" }, { at: now - 14 * D, amount_cents: 0, item: "Intro Offer - 3 Classes" }];
+  assert.equal(profile(intro, now).segment, "trial");
+  assert.equal(profile([...intro, { at: now - 5 * D, amount_cents: 18900, item: "Monthly Unlimited" }], now).segment, "active");
+  assert.equal(profile([...intro, { at: now - 5 * D, amount_cents: 3500, item: "Drop-in Class" }], now).segment, "trial");
+  assert.equal(profile([{ at: now - 1 * D, amount_cents: 5900, item: "New Client Special" }], now).segment, "new");
+  assert.equal(profile([{ at: now - 200 * D, amount_cents: 5900, item: "Intro week" }], now).segment, "one_timer");
+});

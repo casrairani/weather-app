@@ -7,12 +7,18 @@ const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial
 const C = { bg: "#F4F5F7", ink: "#0B1220", muted: "#6B7280", line: "#E5E7EB", blue: "#2456F5" };
 
 export const DEFAULT_OFFERS = {
+  trial: "Join this week and get 15% off your first month.",
   overdue: "",
   lost: "Come back this month and your next visit is 20% off.",
   one_timer: "Your second visit is 20% off when you book this month.",
 };
 
 const COPY = {
+  trial: [
+    { subject: (f, b) => `${f ? f + ", how" : "How"} was your first class?`, lines: (f, b) => [`Hi ${f || "there"},`, `Thanks for trying ${b}! How did it feel? Most people notice the real difference around their third class, so the best move now is to book your next one while it's fresh.`] },
+    { subject: (f, b) => `Your next class at ${b}`, lines: (f, b) => [`Hi ${f || "there"},`, `Quick one: classes at ${b} fill up, so booking a few days ahead keeps your spot. Want to lock in your next one?`] },
+    { subject: (f, b) => `Keep it going at ${b}`, button: "See membership options", lines: (f, b) => [`Hi ${f || "there"},`, `If you enjoyed your intro, a membership is the easiest way to keep going: a regular spot, a lower price per class, and a routine that sticks. Pick the option that fits how often you want to come.`] },
+  ],
   overdue: [
     { subject: (f, b) => `${f || "Hi"}, ready for your next visit?`, lines: (f, b, wk) => [`Hi ${f || "there"},`, `It's been about ${wk} since your last visit to ${b}. We'd love to see you again. Want to grab a spot this week?`] },
     { subject: (f, b) => `Still a spot for you this week`, lines: (f, b) => [`Hi ${f || "there"},`, `Just a quick nudge: there are still open spots at ${b} this week. Booking takes less than a minute.`] },
@@ -41,7 +47,7 @@ export function buildEmail({ biz, customer, campaign, step, offer, links, daysSi
   const lines = c.lines(esc(first), esc(biz.name), weeks(daysSince || 30));
   const p = (t) => `<p style="margin:0 0 14px;font:400 16px/1.6 ${FONT};color:${C.ink}">${t}</p>`;
   const offerBox = offer ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 18px"><tr><td style="background:#EEF3FF;border-radius:12px;padding:14px 16px;font:600 15px/1.45 ${FONT};color:${C.ink}">${esc(offer)}</td></tr></table>` : "";
-  const button = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 22px"><tr><td style="background:${C.blue};border-radius:999px"><a href="${esc(links.book)}" style="display:inline-block;padding:14px 26px;font:600 16px/1 ${FONT};color:#fff;text-decoration:none">Book your next visit</a></td></tr></table>`;
+  const button = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 22px"><tr><td style="background:${C.blue};border-radius:999px"><a href="${esc(links.book)}" style="display:inline-block;padding:14px 26px;font:600 16px/1 ${FONT};color:#fff;text-decoration:none">${esc(c.button || (campaign === "trial" ? "Book your next class" : "Book your next visit"))}</a></td></tr></table>`;
   const textOpt = `<p style="margin:0;font:400 14px/1.5 ${FONT};color:${C.muted}">Prefer texts? <a href="${esc(links.optin)}" style="color:${C.blue}">Get openings and offers by text</a>.</p>`;
   const footer = `<p style="margin:0 0 6px;font:400 12px/1.6 ${FONT};color:${C.muted}"><b style="color:${C.ink}">${esc(biz.name)}</b>${biz.address ? ` · ${esc(biz.address)}` : ""}${biz.phone ? ` · ${esc(biz.phone)}` : ""}</p>
 <p style="margin:0;font:400 12px/1.6 ${FONT};color:${C.muted}">You're getting this because you're a customer of ${esc(biz.name)}. <a href="${esc(links.unsub)}" style="color:${C.muted};text-decoration:underline">Unsubscribe</a> anytime.<br>Sent by Rebooked on behalf of ${esc(biz.name)}.</p>`;
@@ -56,7 +62,7 @@ ${lines.map(p).join("")}${offerBox}${button}${textOpt}
 <tr><td style="padding:18px 8px 0">${footer}</td></tr>
 </table></td></tr></table></body></html>`;
   const text = [...lines.map((l) => l.replace(/&[a-z#0-9]+;/g, (m) => ({ "&amp;": "&", "&#39;": "'", "&quot;": '"', "&lt;": "<", "&gt;": ">" }[m] || m))),
-    offer || "", `Book your next visit: ${links.book}`, `Prefer texts? ${links.optin}`, "",
+    offer || "", `${c.button || (campaign === "trial" ? "Book your next class" : "Book your next visit")}: ${links.book}`, `Prefer texts? ${links.optin}`, "",
     `${biz.name}${biz.address ? ", " + biz.address : ""}`, `Unsubscribe: ${links.unsub}`, `Sent by Rebooked on behalf of ${biz.name}.`].filter((x) => x !== null).join("\n");
   return { subject, html: body, text };
 }

@@ -1,4 +1,4 @@
-// Rebooked: brings past customers back to businesses on Square.
+// Rebooked: brings past customers back. Works with Square (live sync) or an uploaded export from any system.
 // Routes, owner sign-in, Square connect, public email links (book / unsubscribe / text opt-in), demo, and the cron.
 
 import { html, json, redirect, cookie, setCookie, randomId, sha256, encrypt, isEmail, esc, DAY } from "./util.js";
@@ -9,6 +9,7 @@ import { dashboard, customers, preview, connectPage } from "./app.js";
 import { authorizeUrl, exchange, sync, revoke } from "./square.js";
 import { run, recompute, ensureCampaigns } from "./engine.js";
 import { demoStep, resetDemo } from "./demo.js";
+import { importPage, importApi } from "./importPage.js";
 import { ownerEmail } from "./email.js";
 import { CAMPAIGNS } from "./rhythm.js";
 
@@ -185,9 +186,12 @@ async function handle(req, env) {
   }
 
   const biz = await bizOf(env, owner.id);
+  if (p === "/app/import" && req.method === "GET") return html(importPage({ biz, email: owner.email }));
+  if (p.startsWith("/app/import/") && req.method === "POST") return importApi(env, req, owner, biz, p);
   if (p === "/app") {
     if (!biz) return html(connectPage(owner.email));
     const flash = url.searchParams.get("connected") ? "Square is connected. We've sorted your customers by their usual rhythm. Check the campaigns, then turn on autopilot when you're ready."
+      : url.searchParams.get("imported") ? "Imported. Here's what's leaking: who's overdue, who stopped coming, and who tried an intro and never joined. Nothing is emailed until you turn on autopilot."
       : url.searchParams.get("saved") ? "Saved." : url.searchParams.get("ran") ? "Checked Square and sent anything that was due." : "";
     return html(await dashboard(env, biz, { flash, site }));
   }
@@ -239,10 +243,10 @@ async function handle(req, env) {
       return redirect("/app");
     }
     if (p === "/app/delete") {
-      await revoke(env, biz);
+      if (biz.provider === "square") await revoke(env, biz);
       for (const t of ["customers", "visits", "bookings", "enrollments", "messages", "links", "events", "campaigns", "consents"]) await env.DB.prepare(`DELETE FROM ${t} WHERE biz_id = ?1`).bind(biz.id).run();
       await env.DB.prepare("DELETE FROM businesses WHERE id = ?1").bind(biz.id).run();
-      return html(simple("Deleted", `<h1 style="font-size:26px">All your data is deleted</h1><p class="muted">Square is disconnected and every customer record is gone.</p><p><a href="/">Home</a></p>`));
+      return html(simple("Deleted", `<h1 style="font-size:26px">All your data is deleted</h1><p class="muted">${biz.provider === "square" ? "Square is disconnected and every" : "Every"} customer record is gone.</p><p><a href="/">Home</a></p>`));
     }
   }
   return html(simple("Not found", `<h1 style="font-size:26px">Page not found</h1><p><a href="/">Home</a></p>`), 404);
@@ -253,7 +257,7 @@ export default {
     try { return await handle(req, env); }
     catch (e) { console.error(e); return html(simple("Something went wrong", `<h1 style="font-size:24px">Something went wrong</h1><p class="muted">Please try again in a moment.</p>`), 500); }
   },
-  // Every 30 minutes: for each connected business, sync Square, then enrol, send and match returns.
+  // Every 30 minutes: for each connected business, sync Square (if connected), then enrol, send and match returns.
   async scheduled(event, env, ctx) {
     await tables(env);
     const site = (env.SITE_URL || "https://rebooked.app").replace(/\/$/, "");

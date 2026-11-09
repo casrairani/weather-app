@@ -101,9 +101,9 @@ export async function saveBookings(env, biz, list) {
 
 async function saveVisits(env, biz, list) {
   // A visit = one paid sale. Keyed by order id; a later payment can fill in the customer.
-  const stmts = list.map((o) => env.DB.prepare(`INSERT INTO visits (id, biz_id, customer_id, at, amount_cents, source) VALUES (?1, ?2, ?3, ?4, ?5, ?6)
-      ON CONFLICT(id) DO UPDATE SET customer_id = COALESCE(visits.customer_id, ?3)`)
-    .bind(`${biz.id}:${o.id}`, biz.id, o.customer_ext ? `${biz.id}:${o.customer_ext}` : null, o.at, o.amount_cents || 0, o.source || "order"));
+  const stmts = list.map((o) => env.DB.prepare(`INSERT INTO visits (id, biz_id, customer_id, at, amount_cents, source, item) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+      ON CONFLICT(id) DO UPDATE SET customer_id = COALESCE(visits.customer_id, ?3), item = COALESCE(visits.item, ?7)`)
+    .bind(`${biz.id}:${o.id}`, biz.id, o.customer_ext ? `${biz.id}:${o.customer_ext}` : null, o.at, o.amount_cents || 0, o.source || "order", o.item || null));
   for (let i = 0; i < stmts.length; i += 100) await env.DB.batch(stmts.slice(i, i + 100));
 }
 
@@ -139,7 +139,7 @@ export async function sync(env, biz, pagesPerRun = 12) {
         location_ids: locs.slice(li, li + 10), limit: 500, cursor: state.ordCursor || undefined, return_entries: false,
         query: { filter: { state_filter: { states: ["COMPLETED"] }, date_time_filter: { closed_at: { start_at: new Date(state.ordFrom).toISOString() } } }, sort: { sort_field: "CLOSED_AT", sort_order: "ASC" } },
       });
-      await saveVisits(env, biz, (j.orders || []).map((o) => ({ id: o.id, customer_ext: o.customer_id || null, at: Date.parse(o.closed_at || o.created_at), amount_cents: o.total_money?.amount || 0 })));
+      await saveVisits(env, biz, (j.orders || []).map((o) => ({ id: o.id, customer_ext: o.customer_id || null, at: Date.parse(o.closed_at || o.created_at), amount_cents: o.total_money?.amount || 0, item: (o.line_items || []).map((li) => li.name).filter(Boolean).join(", ").slice(0, 120) || null })));
       state.ordCursor = j.cursor || null; pages++; more = !!j.cursor;
     }
   }
@@ -198,7 +198,7 @@ async function mockSync(env, biz, state) {
       const b = await bucket("ret2" + e.customer_id);
       const delay = (2 + (b % 8)) * DAY;
       if (b < (e.holdout ? 7 : 22) && now > e.enrolled_at + delay) {
-        add.push({ id: "RET" + e.id, customer_ext: e.customer_id.split(":").pop(), at: e.enrolled_at + delay, amount_cents: [3200, 3500, 15900, 18900][b % 4] });
+        add.push({ id: "RET" + e.id, customer_ext: e.customer_id.split(":").pop(), at: e.enrolled_at + delay, amount_cents: [3200, 3500, 15900, 18900][b % 4], item: ["Drop-in Class", "Drop-in Class", "Monthly Membership (8 classes)", "Monthly Unlimited"][b % 4] });
       }
     }
     if (add.length) await saveVisits(env, biz, add);
