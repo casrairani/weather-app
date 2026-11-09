@@ -1,0 +1,13 @@
+name = "rebooked"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+DEV = "1"
+SQUARE_MOCK = "1"
+SITE_URL = "http://localhost:8810"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "rebooked"
+database_id = "local-rebooked"

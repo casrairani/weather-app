@@ -1,0 +1,18 @@
+name = "rebooked"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+account_id = "e9143f0daba8898317598db7ea6608cd"
+keep_vars = true   # don't wipe variables set in the Cloudflare dashboard on deploy
+
+[vars]
+SQUARE_ENV = "sandbox"   # switch to "production" once Square approves the live app
+
+[triggers]
+crons = ["*/30 * * * *"] # every 30 min: sync Square, enrol overdue customers, send due emails, match returns
+
+[[d1_databases]]
+binding = "DB"
+database_name = "rebooked"
+database_id = "7975281d-b626-4ee9-826e-bea9d8cb2197"
+
+# Secrets (set in Cloudflare > Workers > rebooked > Settings > Variables): see README.md

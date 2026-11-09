@@ -1,0 +1,6 @@
+{ "name": "rebooked", "private": true, "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "bundle": "esbuild src/worker.js --bundle --format=esm --platform=neutral --minify-syntax --outfile=dist/rebooked-worker.js && node --check dist/rebooked-worker.js",
+    "dev": "wrangler dev -c wrangler.local.toml --port 8810"
+  } }
