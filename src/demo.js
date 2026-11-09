@@ -12,7 +12,7 @@ const HISTORY = 30;
 const get = (env) => env.DB.prepare("SELECT * FROM businesses WHERE id = ?1").bind(ID).first();
 
 export async function resetDemo(env) {
-  await env.DB.batch(["customers", "visits", "enrollments", "messages", "links", "events", "campaigns", "consents"].map((t) => env.DB.prepare(`DELETE FROM ${t} WHERE biz_id = ?1`).bind(ID)));
+  await env.DB.batch(["customers", "visits", "bookings", "enrollments", "messages", "links", "events", "campaigns", "consents"].map((t) => env.DB.prepare(`DELETE FROM ${t} WHERE biz_id = ?1`).bind(ID)));
   await env.DB.prepare("DELETE FROM businesses WHERE id = ?1").bind(ID).run();
 }
 
@@ -28,6 +28,8 @@ export async function demoStep(env, site) {
     await ensureCampaigns(env, biz);
     await env.DB.prepare("UPDATE campaigns SET enabled = 1 WHERE biz_id = ?1").bind(ID).run();
     await sync(mockEnv, biz); // imports the sample customers and 2 years of sales
+    // Sample bookings are dated from the start of the history; move them to the demo's "today".
+    await env.DB.prepare("UPDATE bookings SET start_at = start_at + ?2 WHERE biz_id = ?1").bind(ID, HISTORY * DAY).run();
     await env.DB.prepare("UPDATE businesses SET sync_state = ?2 WHERE id = ?1").bind(ID, JSON.stringify({ mockDone: true, day: HISTORY })).run();
     return { biz: await get(env), ready: false };
   }
@@ -60,6 +62,7 @@ export async function demoStep(env, site) {
     const sh = (t, cols) => env.DB.prepare(`UPDATE ${t} SET ${cols.map((c) => `${c} = ${c} + ?2`).join(", ")} WHERE biz_id = ?1`).bind(ID, delta);
     await env.DB.batch([
       sh("visits", ["at"]),
+      sh("bookings", ["start_at"]),
       sh("customers", ["first_visit", "last_visit", "updated_at"]),
       sh("enrollments", ["enrolled_at", "next_at", "clicked_at", "returned_at", "last_visit_before"]),
       env.DB.prepare("UPDATE enrollments SET fee_month = strftime('%Y-%m', returned_at / 1000, 'unixepoch') WHERE biz_id = ?1 AND returned_at IS NOT NULL").bind(ID),

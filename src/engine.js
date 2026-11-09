@@ -36,8 +36,9 @@ export async function eligible(env, biz, kind, now = Date.now(), limit = 500) {
         AND c.last_visit > ?3
         AND NOT EXISTS (SELECT 1 FROM enrollments e WHERE e.customer_id = c.id AND e.enrolled_at > ?4)
         AND NOT EXISTS (SELECT 1 FROM consents k WHERE k.customer_id = c.id AND k.channel = 'email' AND k.status = 'opt_out')
+        AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.customer_id = c.id AND b.start_at > ?6 AND b.status IN ('ACCEPTED','PENDING'))
       ORDER BY c.total_cents DESC LIMIT ?5`)
-    .bind(biz.id, seg, now - RULES.maxAgeDays * DAY, now - COOLDOWN_DAYS * DAY, limit).all()).results;
+    .bind(biz.id, seg, now - RULES.maxAgeDays * DAY, now - COOLDOWN_DAYS * DAY, limit, now).all()).results;
 }
 
 // 2) Enrol eligible customers into switched-on campaigns, up to the daily cap.
@@ -77,7 +78,8 @@ export async function sendDue(env, biz, site, now = Date.now(), force = false) {
   if (!force && !inSendWindow(biz, now)) return 0;
   const due = (await env.DB.prepare(`SELECT e.*, c.first_name, c.email, c.last_visit, l.token,
         EXISTS (SELECT 1 FROM consents k WHERE k.customer_id = e.customer_id AND k.channel = 'email' AND k.status = 'opt_out') unsub,
-        EXISTS (SELECT 1 FROM visits v WHERE v.customer_id = e.customer_id AND v.at > e.enrolled_at AND v.at <= ?2) back
+        EXISTS (SELECT 1 FROM visits v WHERE v.customer_id = e.customer_id AND v.at > e.enrolled_at AND v.at <= ?2) back,
+        EXISTS (SELECT 1 FROM bookings b WHERE b.customer_id = e.customer_id AND b.start_at > ?2 AND b.status IN ('ACCEPTED','PENDING')) booked
       FROM enrollments e JOIN customers c ON c.id = e.customer_id JOIN links l ON l.enrollment_id = e.id
       WHERE e.biz_id = ?1 AND e.status = 'active' AND e.next_at <= ?2 ORDER BY e.next_at LIMIT 40`).bind(biz.id, now).all()).results;
   if (!due.length) return 0;
@@ -86,8 +88,8 @@ export async function sendDue(env, biz, site, now = Date.now(), force = false) {
   const writes = [];
   let sent = 0;
   for (const e of due) {
-    if (e.unsub || e.back || !e.email) { // returns are matched in matchReturns; just stop the emails
-      writes.push(env.DB.prepare("UPDATE enrollments SET status = ?2, next_at = NULL WHERE id = ?1").bind(e.id, e.unsub ? "unsub" : e.back ? "done" : "stopped"));
+    if (e.unsub || e.back || e.booked || !e.email) { // booked or back: stop emailing; the paid visit is matched in matchReturns
+      writes.push(env.DB.prepare("UPDATE enrollments SET status = ?2, next_at = NULL WHERE id = ?1").bind(e.id, e.unsub ? "unsub" : e.back || e.booked ? "done" : "stopped"));
       continue;
     }
     const links = { book: `${site}/r/${e.token}`, unsub: `${site}/u/${e.token}`, optin: `${site}/t/${e.token}` };
@@ -158,9 +160,10 @@ export async function stats(env, biz, now = Date.now()) {
     FROM enrollments WHERE biz_id = ?1`);
   const m = await q("SELECT COUNT(*) back, COALESCE(SUM(return_cents),0) revenue, COALESCE(SUM(fee_cents),0) fees FROM enrollments WHERE biz_id = ?1 AND holdout = 0 AND fee_month = ?2", month);
   const sent = (await q("SELECT COUNT(*) n FROM messages WHERE biz_id = ?1 AND ok = 1")).n;
+  const bookedAhead = (await q("SELECT COUNT(DISTINCT customer_id) n FROM bookings WHERE biz_id = ?1 AND start_at > ?2 AND status IN ('ACCEPTED','PENDING')", now)).n;
   const rate = (a, b) => (b ? a / b : 0);
   return {
-    seg, sent, month,
+    seg, sent, month, bookedAhead,
     treated: t.treated || 0, treatedBack: t.treated_back || 0, held: t.held || 0, heldBack: t.held_back || 0,
     revenue: t.revenue || 0, clicks: t.clicks || 0,
     treatedRate: rate(t.treated_back || 0, t.treated || 0), heldRate: rate(t.held_back || 0, t.held || 0),

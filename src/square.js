@@ -6,7 +6,8 @@ import { DAY, encrypt, decrypt, randomId, bucket } from "./util.js";
 import { logEvent } from "./db.js";
 import { mockData, MOCK_MERCHANT } from "./mock.js";
 
-export const SCOPES = ["MERCHANT_PROFILE_READ", "CUSTOMERS_READ", "ORDERS_READ", "PAYMENTS_READ"];
+// Read-only. APPOINTMENTS_* lets us skip anyone who already has a booking coming up.
+export const SCOPES = ["MERCHANT_PROFILE_READ", "CUSTOMERS_READ", "ORDERS_READ", "PAYMENTS_READ", "APPOINTMENTS_READ", "APPOINTMENTS_ALL_READ"];
 const base = (env) => (env.SQUARE_ENV === "production" ? "https://connect.squareup.com" : "https://connect.squareupsandbox.com");
 const isMock = (env) => env.SQUARE_MOCK === "1";
 
@@ -91,6 +92,13 @@ async function saveCustomers(env, biz, list) {
   for (let i = 0; i < stmts.length; i += 100) await env.DB.batch(stmts.slice(i, i + 100));
 }
 
+export async function saveBookings(env, biz, list) {
+  const stmts = list.map((b) => env.DB.prepare(`INSERT INTO bookings (id, biz_id, customer_id, start_at, status, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+      ON CONFLICT(id) DO UPDATE SET customer_id = ?3, start_at = ?4, status = ?5, updated_at = ?6`)
+    .bind(`${biz.id}:${b.id}`, biz.id, b.customer_ext ? `${biz.id}:${b.customer_ext}` : null, b.start_at, b.status, Date.now()));
+  for (let i = 0; i < stmts.length; i += 100) await env.DB.batch(stmts.slice(i, i + 100));
+}
+
 async function saveVisits(env, biz, list) {
   // A visit = one paid sale. Keyed by order id; a later payment can fill in the customer.
   const stmts = list.map((o) => env.DB.prepare(`INSERT INTO visits (id, biz_id, customer_id, at, amount_cents, source) VALUES (?1, ?2, ?3, ?4, ?5, ?6)
@@ -144,6 +152,23 @@ export async function sync(env, biz, pagesPerRun = 12) {
     await saveVisits(env, biz, ps.map((p) => ({ id: p.order_id || p.id, customer_ext: p.customer_id, at: Date.parse(p.created_at), amount_cents: p.amount_money?.amount || 0, source: "payment" })));
     state.payCursor = j.cursor || null; pages++; payMore = !!j.cursor;
   }
+  // 4) Appointments (Square Appointments users): the last 30 days and the next 60, so nobody with a booking
+  //    coming up gets a "come back" email. Square allows 31-day windows. Businesses without Appointments are skipped.
+  if (!state.noBookings) {
+    try {
+      const wins = [[now - 30 * DAY, now], [now, now + 31 * DAY], [now + 31 * DAY, now + 62 * DAY]];
+      for (const loc of locs.slice(0, 5)) for (const [a, b] of wins) {
+        let cursor = null, n = 0;
+        do {
+          const q = new URLSearchParams({ location_id: loc, start_at_min: new Date(a).toISOString(), start_at_max: new Date(b).toISOString(), limit: "100" });
+          if (cursor) q.set("cursor", cursor);
+          const j = await sq(env, tok, `/bookings?${q}`);
+          await saveBookings(env, biz, (j.bookings || []).map((x) => ({ id: x.id, customer_ext: x.customer_id || null, start_at: Date.parse(x.start_at), status: x.status })));
+          cursor = j.cursor || null; n++;
+        } while (cursor && n < 3);
+      }
+    } catch (e) { state.noBookings = true; await logEvent(env, biz.id, "sync", "No Square Appointments found, using sales only"); }
+  }
   const caughtUp = state.custDone && !state.ordCursor && !state.payCursor;
   if (caughtUp) { state.ordFrom = now - 3 * DAY; state.payFrom = now - 3 * DAY; } // next runs: just the last few days
   await env.DB.prepare("UPDATE businesses SET sync_state = ?2, synced_at = ?3 WHERE id = ?1").bind(biz.id, JSON.stringify(state), now).run();
@@ -159,11 +184,12 @@ const sqCustomer = (c) => ({
 async function mockSync(env, biz, state) {
   const now = Date.now();
   if (!state.mockDone) {
-    const { customers, orders } = mockData(biz.created_at, 42);
+    const { customers, orders, bookings } = mockData(biz.created_at, 42);
     await saveCustomers(env, biz, customers);
     await saveVisits(env, biz, orders);
+    await saveBookings(env, biz, bookings);
     state.mockDone = true;
-    await logEvent(env, biz.id, "sync", `Imported ${customers.length} customers and ${orders.length} sales`);
+    await logEvent(env, biz.id, "sync", `Imported ${customers.length} customers, ${orders.length} sales and ${bookings.length} upcoming bookings`);
   } else {
     // ~22% of contacted (and ~7% of held-back) customers come back 2-9 days after the first email.
     const enr = await env.DB.prepare("SELECT id, customer_id, enrolled_at, holdout FROM enrollments WHERE biz_id = ?1 AND status IN ('active','done','held','stopped')").bind(biz.id).all();

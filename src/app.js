@@ -61,7 +61,7 @@ export async function dashboard(env, biz, { demo = false, flash = "", site = "" 
   };
   const waiting = `<h2 class="sh">Who's waiting to come back</h2>
   <div class="waiting">${wcard("overdue", "Overdue regulars", "Late for their usual visit.")}${wcard("lost", "Lost regulars", "Used to come often, gone for months.")}${wcard("one_timer", "One-time visitors", "Came once, never returned.")}</div>
-  <div class="excl"><span class="pill g"><span class="dot"></span>${seg("active").n} on track</span><span class="pill n">${seg("too_old").n} over 2 years: never contacted</span><span class="pill n">${seg("new").n} new this month</span><a class="pill" href="${demo ? "/demo" : "/app"}/customers">See all customers →</a></div>`;
+  <div class="excl"><span class="pill g"><span class="dot"></span>${seg("active").n} on track</span><span class="pill n">${seg("too_old").n} over 2 years: never contacted</span><span class="pill">${s.bookedAhead} already booked, so not emailed</span><span class="pill n">${seg("new").n} new this month</span><a class="pill" href="${demo ? "/demo" : "/app"}/customers">See all customers →</a></div>`;
 
   const auto = `<div class="auto"><div><h3>Autopilot ${biz.autopilot ? `<span class="pill g" style="vertical-align:3px;margin-left:6px"><span class="dot"></span>On</span>` : `<span class="pill n" style="vertical-align:3px;margin-left:6px">Off</span>`}</h3>
     <p>${biz.autopilot ? `Checks Square every 30 minutes and emails overdue customers during business hours (up to ${biz.daily_cap || 60} new people a day).` : "Turn on to start bringing customers back. Nothing is sent until you do."}</p></div>
@@ -164,7 +164,7 @@ export function connectPage(email) {
     <div style="margin-bottom:18px">${LOGO(44)}</div>
     <h1 style="font-size:32px;margin-bottom:10px">Connect your Square account</h1>
     <p class="muted" style="margin:0 0 20px">Rebooked reads your customers and sales to find who's overdue. It can't charge cards, issue refunds, or change anything in Square.</p>
-    <ul style="margin:0 0 24px;padding-left:20px;line-height:1.9"><li>Customers: names and contact details</li><li>Sales: dates and amounts, to learn each customer's rhythm and confirm returns</li><li>Business profile: name, address and time zone for your emails</li></ul>
+    <ul style="margin:0 0 24px;padding-left:20px;line-height:1.9"><li>Customers: names and contact details</li><li>Sales: dates and amounts, to learn each customer's rhythm and confirm returns</li><li>Appointments (if you use Square Appointments): anyone with a booking coming up is never emailed</li><li>Business profile: name, address and time zone for your emails</li></ul>
     <a class="btn" href="/square/connect">Connect with Square</a>
     <p class="tiny muted" style="margin:16px 0 0">Signed in as ${esc(email)}. Nothing is emailed until you turn on autopilot.</p>
   </div></main>`;

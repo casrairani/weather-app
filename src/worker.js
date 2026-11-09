@@ -240,7 +240,7 @@ async function handle(req, env) {
     }
     if (p === "/app/delete") {
       await revoke(env, biz);
-      for (const t of ["customers", "visits", "enrollments", "messages", "links", "events", "campaigns", "consents"]) await env.DB.prepare(`DELETE FROM ${t} WHERE biz_id = ?1`).bind(biz.id).run();
+      for (const t of ["customers", "visits", "bookings", "enrollments", "messages", "links", "events", "campaigns", "consents"]) await env.DB.prepare(`DELETE FROM ${t} WHERE biz_id = ?1`).bind(biz.id).run();
       await env.DB.prepare("DELETE FROM businesses WHERE id = ?1").bind(biz.id).run();
       return html(simple("Deleted", `<h1 style="font-size:26px">All your data is deleted</h1><p class="muted">Square is disconnected and every customer record is gone.</p><p><a href="/">Home</a></p>`));
     }

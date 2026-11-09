@@ -16,10 +16,10 @@ export const MOCK_MERCHANT = {
   booking_url: "https://kitspilates.example/book",
 };
 
-// Returns { customers: [{ext_id, first_name, last_name, email, phone, provider_unsub}], orders: [{id, customer_ext, at, amount_cents}] }
+// Returns { customers, orders: [{id, customer_ext, at, amount_cents}], bookings: [{id, customer_ext, start_at, status}] }
 export function mockData(now = Date.now(), seed = 42) {
   const r = rng(seed);
-  const customers = [], orders = [];
+  const customers = [], orders = [], bookings = [];
   const N = 700;
   for (let i = 0; i < N; i++) {
     const fn = FIRST[Math.floor(r() * FIRST.length)], ln = LAST[Math.floor(r() * LAST.length)];
@@ -46,6 +46,9 @@ export function mockData(now = Date.now(), seed = 42) {
       let d = since;
       for (let k = 0; k < count; k++) { visits.push(d); d += Math.max(3, Math.round(cycle * (0.75 + r() * 0.5))); }
     }
+    // Some customers already have their next appointment booked (mostly regulars on track, a few overdue ones).
+    const lastAgo = Math.min(...visits);
+    if (lastAgo < 400 && r() < (lastAgo < 30 ? 0.45 : 0.08)) bookings.push({ id: `SQB${i}`, customer_ext: ext, start_at: now + Math.floor(1 + r() * 12) * DAY + 10 * 3600000, status: "ACCEPTED" });
     visits.forEach((daysAgo, k) => {
       if (daysAgo > 1000) return;
       orders.push({ id: `SQO${i}_${k}`, customer_ext: ext, at: now - daysAgo * DAY - Math.floor(r() * 8) * 3600000, amount_cents: price });
@@ -53,5 +56,5 @@ export function mockData(now = Date.now(), seed = 42) {
   }
   // Walk-ins with no customer attached (Square sales without a profile). These can't be contacted.
   for (let j = 0; j < 120; j++) orders.push({ id: `SQW${j}`, customer_ext: null, at: now - Math.floor(r() * 700) * DAY, amount_cents: 2800 });
-  return { customers, orders };
+  return { customers, orders, bookings };
 }

@@ -18,6 +18,8 @@ export const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS customers_biz ON customers (biz_id, segment)`,
   `CREATE TABLE IF NOT EXISTS visits (id TEXT PRIMARY KEY, biz_id TEXT NOT NULL, customer_id TEXT, at INTEGER NOT NULL, amount_cents INTEGER DEFAULT 0, source TEXT)`,
   `CREATE INDEX IF NOT EXISTS visits_cust ON visits (customer_id, at)`,
+  `CREATE TABLE IF NOT EXISTS bookings (id TEXT PRIMARY KEY, biz_id TEXT NOT NULL, customer_id TEXT, start_at INTEGER NOT NULL, status TEXT, updated_at INTEGER)`,
+  `CREATE INDEX IF NOT EXISTS bookings_cust ON bookings (customer_id, start_at)`,
   `CREATE TABLE IF NOT EXISTS campaigns (biz_id TEXT NOT NULL, kind TEXT NOT NULL, enabled INTEGER DEFAULT 0, offer TEXT, PRIMARY KEY (biz_id, kind))`,
   `CREATE TABLE IF NOT EXISTS enrollments (
     id TEXT PRIMARY KEY, biz_id TEXT NOT NULL, customer_id TEXT NOT NULL, campaign TEXT NOT NULL, holdout INTEGER DEFAULT 0,
