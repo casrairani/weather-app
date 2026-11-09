@@ -84,6 +84,7 @@ async function handleLinks(env, req, p) {
 async function handle(req, env) {
   const url = new URL(req.url), p = url.pathname, site = siteOf(env, url);
   await tables(env);
+  globalThis.__TEST_MODE = env.TEST_MODE === "1";
 
   if (req.method === "POST" && !p.startsWith("/u/")) { // same-origin check for every form post (one-click unsubscribe comes from mail apps)
     const o = req.headers.get("origin");
@@ -136,7 +137,7 @@ async function handle(req, env) {
       await fetch("https://api.resend.com/emails", { method: "POST", headers: { authorization: `Bearer ${env.RESEND_KEY}`, "content-type": "application/json" },
         body: JSON.stringify({ from: `Rebooked <${env.FROM_ADDRESS || "hello@send.rebooked.app"}>`, to: email, subject: "Your Rebooked sign-in link", html: ownerEmail("Sign in to Rebooked", "Tap the button to sign in. No password needed.", { text: "Sign in", href }), text: `Sign in to Rebooked: ${href}` }) });
     }
-    const dev = env.DEV === "1" && !env.RESEND_KEY ? `<p class="small" style="margin-top:14px">Dev mode: <a href="${esc(href)}">open the sign-in link</a></p>` : "";
+    const dev = (env.DEV === "1" || env.TEST_MODE === "1") && !env.RESEND_KEY ? `<p class="small" style="margin-top:14px">Test mode: <a href="${esc(href)}">open the sign-in link</a></p>` : "";
     return html(simple("Check your email", `<h1 style="font-size:26px">Check your email</h1><p class="muted">We sent a sign-in link to <b>${esc(email)}</b>. It works for 30 minutes.</p>${dev}`));
   }
   if (p === "/auth") {
@@ -228,7 +229,7 @@ async function handle(req, env) {
       return redirect("/app?saved=1");
     }
     if (p === "/app/run") {
-      await run(env, biz, site, { sync, force: env.DEV === "1" });
+      await run(env, biz, site, { sync, force: env.DEV === "1" || env.TEST_MODE === "1" });
       return redirect("/app?ran=1");
     }
     if (p === "/app/disconnect") {

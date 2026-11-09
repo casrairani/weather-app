@@ -6,6 +6,8 @@ keep_vars = true   # don't wipe variables set in the Cloudflare dashboard on dep
 
 [vars]
 SQUARE_ENV = "sandbox"   # switch to "production" once Square approves the live app
+TEST_MODE = "1"          # TEMPORARY: sign-in link on screen. Remove before real businesses join
+SQUARE_MOCK = "1"        # TEMPORARY: pretend Square data. Remove once the Square app keys are added
 
 [triggers]
 crons = ["*/30 * * * *"] # every 30 min: sync Square, enrol overdue customers, send due emails, match returns

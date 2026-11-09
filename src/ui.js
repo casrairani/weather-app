@@ -49,7 +49,7 @@ export function page({ title, body, nav = "", head = "", desc = "Rebooked brings
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(LOGO(32))}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>${CSS}</style>${head}</head><body>
-<nav class="nav"><div class="wrap"><a class="brand" href="/">${LOGO(26)}Rebooked</a><span class="sp"></span>${nav}</div></nav>
+${globalThis.__TEST_MODE ? `<div style="background:#FEF3E2;color:#92400E;font:600 13.5px/1.4 var(--f);text-align:center;padding:8px 16px">Test mode: pretend Square data, sign-in links on screen, no real emails sent.</div>` : ""}<nav class="nav"><div class="wrap"><a class="brand" href="/">${LOGO(26)}Rebooked</a><span class="sp"></span>${nav}</div></nav>
 ${body}
 <footer class="foot"><div class="wrap"><span>© ${new Date().getFullYear()} Rebooked · Vancouver, BC</span><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/demo">Live demo</a><a href="mailto:hello@rebooked.app">Contact</a></div></footer>
 </body></html>`;
